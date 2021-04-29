@@ -1,5 +1,7 @@
 # Project Streamtab
 
+![](https://github.com/DimaMzk/project-streamtab/blob/a0b052eb2201536c7dfd42dcf9742a84fccd3323/readme_assets/demogif.gif)
+
 ## What is it?
 This project aims to allow any user to convert their old device into a macro keypad. Similar to the Elgato Stream Deck.
 
