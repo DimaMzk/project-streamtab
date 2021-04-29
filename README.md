@@ -13,7 +13,7 @@ Currently, is has 20 functional macro keys. It uses uses `ctrl` + `shift` + `F1 
 Traffic between the client and server are currently un-encrypted.
 
 ## How do I use it?
-1. Install the latest release from the releases tab.
+1. Download the latest release from the releases tab.
 2. Extract the zip file.
 3. Open a terminal to the root of the extracted folder, and run `pip install -r requirements.txt` to install the projects dependencies.
      1. If the above does not work, try `py -m pip install -r requirements.txt` or `python3 -m pip install -r requirements.txt`
