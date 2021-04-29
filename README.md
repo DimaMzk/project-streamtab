@@ -8,7 +8,7 @@ This project aims to allow any user to convert their old device into a macro key
 ## What's the status of this project?
 This project is currently in the prototyping phase.
 
-Currently is has 20 functional macro keys. It uses uses `ctrl` + `shift` + `F1 - F20` for the macros.
+Currently, is has 20 functional macro keys. It uses uses `ctrl` + `shift` + `F1 - F20` for the macros.
 
 Traffic between the client and server are currently un-encrypted.
 
@@ -22,7 +22,7 @@ Traffic between the client and server are currently un-encrypted.
      1. If the above does not work, try `py ./server/server.py`
 6. In a second terminal, navigate to `/webserver` and run `python3 -m http.server 8080`.
      1. If the above does not work, try `py -m http.server 8080`
-7. On a device of your chosing, navigate a web browser to `http://<YOUR IP ADDRESS>:8080`
+7. On a device of your choosing, navigate a web browser to `http://<YOUR IP ADDRESS>:8080`
 
 Please note that this project is still in the prototyping phase, and should only be used for testing or development purposes. Running this in a production environment could put you and your data at risk.
 
@@ -34,7 +34,7 @@ Please note that this project is still in the prototyping phase, and should only
  5. If the server is able to successfully input those key, it returns a success.
      1. If the client receives a success, it will highlight the key in green for 250ms
  6. If the server encounters an issues, it returns an error
-     1. If the client receices an error, it will highlight the key in red for 250ms.
+     1. If the client receives an error, it will highlight the key in red for 250ms.
      
 ## What is the future of this project.
 On no particular order, these are the features I would like to add.
@@ -44,7 +44,7 @@ On no particular order, these are the features I would like to add.
  - [ ] Allow the macro that is run to be modified. Ex. The server enters `alt`+`shift`+`a` instead of `ctrl`+`shift`+`F1 - F20`
  - [ ] Folders
  - [ ] Pages
- - [ ] Then the webclient page loads, it automatically enters fullscreen mode.
+ - [ ] Then the webclient page loads, it automatically enters full-screen mode.
  - [ ] Allow Macros to be Named
  - [ ] Allow Images to be used for the buttons.
 
