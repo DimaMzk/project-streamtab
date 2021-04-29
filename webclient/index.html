@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>project-streamtab</title>
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+      }
+      .buttonrow {
+        height:25vh;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        display:flex;
+        /* background-color: rgba(0, 0, 255, 0.13); */
+      }
+      .button {
+        width: calc(1/6 * 100% );
+        height: 25vh;
+        /* background-color:pink; */
+        padding: 0;
+        margin: 0;
+        display: inline-flex;
+      }
+      .buttoninner{
+        background-color: rgba(0, 0, 0, 0.13);
+        border-radius: 10px;
+        width: 100%;
+        /* height: 100%; */
+        margin: 5px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="buttonrow">
+      <div class="button"><div class="buttoninner" id="mk01">Macro 01</div></div>
+      <div class="button"><div class="buttoninner" id="mk02">Macro 02</div></div>
+      <div class="button"><div class="buttoninner" id="mk03">Macro 03</div></div>
+      <div class="button"><div class="buttoninner" id="mk04">Macro 04</div></div>
+      <div class="button"><div class="buttoninner" id="mk05">Macro 05</div></div>
+      <div class="button"><div class="buttoninner" id="mk06">Macro 06</div></div>
+    </div>
+    <div class="buttonrow">
+      <div class="button"><div class="buttoninner" id="mk07">Macro 07</div></div>
+      <div class="button"><div class="buttoninner" id="mk08">Macro 08</div></div>
+      <div class="button"><div class="buttoninner" id="mk09">Macro 09</div></div>
+      <div class="button"><div class="buttoninner" id="mk10">Macro 10</div></div>
+      <div class="button"><div class="buttoninner" id="mk11">Macro 11</div></div>
+      <div class="button"><div class="buttoninner" id="mk12">Macro 12</div></div>
+    </div>
+    <div class="buttonrow">
+      <div class="button"><div class="buttoninner" id="mk13">Macro 13</div></div>
+      <div class="button"><div class="buttoninner" id="mk14">Macro 14</div></div>
+      <div class="button"><div class="buttoninner" id="mk15">Macro 15</div></div>
+      <div class="button"><div class="buttoninner" id="mk16">Macro 16</div></div>
+      <div class="button"><div class="buttoninner" id="mk17">Macro 17</div></div>
+      <div class="button"><div class="buttoninner" id="mk18">Macro 18</div></div>
+    </div>
+    <div class="buttonrow">
+      <div class="button"><div class="buttoninner" id="mk19">Macro 19</div></div>
+      <div class="button"><div class="buttoninner" id="mk20">Macro 20</div></div>
+      <div class="button"><div class="buttoninner" id="mk21">Macro 21</div></div>
+      <div class="button"><div class="buttoninner" id="mk22">Macro 22</div></div>
+      <div class="button"><div class="buttoninner" id="mk23">Macro 23</div></div>
+      <div class="button"><div class="buttoninner" id="mk24">Macro 24</div></div>
+    </div>
+    <script>
+      socket = new WebSocket("ws://192.168.1.148:8765");
+
+      socket.onopen = function (event) {
+        socket.send("Client Connected");
+        let el = document.querySelectorAll(".buttoninner");
+
+        for (var i = 0; i < el.length; i++){
+          el[i].onclick = (event) => {
+            console.log("ONCLICK");
+            console.log(event.target.id);
+            socket.send(event.target.id);
+          }
+        }
+      };
+
+      socket.onmessage = function (event) {
+
+        let successString = "success - ";
+        let errorString = "An Error Occured - "
+        if(event.data.substring(0, 10) == successString){
+          let sstring = event.data.substring(10, 15)
+          document.getElementById(sstring).style.backgroundColor = "rgba(0, 114, 38, 0.616)";
+          setTimeout(() => {resetBackground(sstring)}, 250);
+        }
+        if(event.data.substring(0, 19) == errorString){
+          let sstring = event.data.substring(19, 24)
+          document.getElementById(sstring).style.backgroundColor = "rgba(92, 0, 0, 0.575)";
+          setTimeout(() => {resetBackground(sstring)}, 250);
+        }
+        console.log("[Message] : " + event.data);
+      };
+
+      function resetBackground(id){
+        document.getElementById(id).style.backgroundColor = "rgba(0, 0, 0, 0.13)";
+      }
+    </script>
+  </body>
+</html>
