@@ -32,7 +32,7 @@ Please note that this project is still in the prototyping phase, and should only
  5. If the server is able to successfully input those key, it returns a success.
      1. If the client receives a success, it will highlight the key in green for 250ms
  6. If the server encounters an issues, it returns an error
-     1. If the client receices an errir, it will highlight the key in red for 250ms.
+     1. If the client receices an error, it will highlight the key in red for 250ms.
      
 ## What is the future of this project.
 On no particular order, these are the features I would like to add.
