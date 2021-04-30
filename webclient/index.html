@@ -77,32 +77,51 @@
       socket = new WebSocket("ws://192.168.1.148:8765");
 
       socket.onopen = function (event) {
-        socket.send("Client Connected");
+        msg = {
+              type: "update",
+              msg: "Client Connected",
+              date: Date.now()
+            };
+        socket.send(JSON.stringify(msg));
         let el = document.querySelectorAll(".buttoninner");
 
         for (var i = 0; i < el.length; i++){
           el[i].onclick = (event) => {
+            msg = {
+              type: "macro",
+              id: event.target.id,
+              date: Date.now()
+            };
             console.log("ONCLICK");
             console.log(event.target.id);
-            socket.send(event.target.id);
+            socket.send(JSON.stringify(msg));
           }
         }
       };
 
       socket.onmessage = function (event) {
+        jsonData = JSON.parse(event.data)
 
-        let successString = "success - ";
-        let errorString = "An Error Occured - "
-        if(event.data.substring(0, 10) == successString){
-          let sstring = event.data.substring(10, 15)
-          document.getElementById(sstring).style.backgroundColor = "rgba(0, 114, 38, 0.616)";
-          setTimeout(() => {resetBackground(sstring)}, 250);
+        if(jsonData.type == "auth_challenge"){
+          password = prompt("A Password is Required to Connect to this computer.");
+          msg = {
+            type: "auth",
+            password: password, // TODO: HASH
+            data: Date.now
+          };
+          socket.send(JSON.stringify(msg));
+          return
         }
-        if(event.data.substring(0, 19) == errorString){
-          let sstring = event.data.substring(19, 24)
-          document.getElementById(sstring).style.backgroundColor = "rgba(92, 0, 0, 0.575)";
-          setTimeout(() => {resetBackground(sstring)}, 250);
+
+        if(jsonData.type == "success"){
+          document.getElementById(jsonData.id).style.backgroundColor = "rgba(0, 114, 38, 0.616)";
+          setTimeout(() => {resetBackground(jsonData.id)}, 250);
         }
+        if(jsonData.type == "error"){
+          document.getElementById(jsonData.id).style.backgroundColor = "rgba(92, 0, 0, 0.575)";
+          setTimeout(() => {resetBackground(jsonData.id)}, 250);
+        }
+
         console.log("[Message] : " + event.data);
       };
 

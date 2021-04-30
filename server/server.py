@@ -1,6 +1,14 @@
 import asyncio
+from enum import auto
 import websockets
+import json
 from pynput.keyboard import Key, Controller
+from websockets import auth
+from websockets.http import d
+
+PASSWORD = "PASSWORD123" # TODO: Not Have Hardcoded.
+PASSWORD_REQUIRED = True
+authenticated = False
 
 keyboard = Controller()
 
@@ -78,16 +86,60 @@ def handle_macro(num):
 
 async def echo(websocket, path):
     async for message in websocket:
-        print(message)
-        if(message[0:2] != "mk"):
-            await websocket.send("Invalid MK")
+        global authenticated 
+        decoded_message = json.loads(message)
+        print(decoded_message)
+
+        # Client Sending Update
+        if decoded_message["type"] == "update":
+            print("[UDPATE]: " + decoded_message["msg"])
+            if PASSWORD_REQUIRED and not authenticated:
+                # Send Challenge
+                msg = {"type": "auth_challenge"}
+                await websocket.send(json.dumps(msg))
             continue
-        macronum = message[2:]
-        status = handle_macro(macronum)
-        if(status != 0):
-            await websocket.send("An Error Occured - " + message )
+
+        # Client sending password.
+        if decoded_message["type"] == "auth":
+            if(decoded_message["password"] == PASSWORD):
+                authenticated = True
+                msg = {"type": "update", "msg": "authenticated"}
+                await websocket.send(json.dumps(msg))
+                continue
+            print("Incorrect Password")
+            msg = {"type": "auth_challenge"}
+            await websocket.send(json.dumps(msg))
             continue
-        await websocket.send("success - " + message )
+
+        if decoded_message["type"] == "request":
+            print("Received Request")
+            # if not Authenticated:
+            #     print("Not Authenticated")
+            #     continue
+            # TODO: This
+            # Send what was requested, if authenticated
+            continue
+
+        if decoded_message["type"] == "macro":
+            # if not authenticated:
+            #     print("Not Authenticated")
+            #     await websocket.send("An Error Occured - " +  decoded_message["id"] )
+            #     continue
+        
+            if(decoded_message["id"][0:2] != "mk"):
+                await websocket.send("Invalid MK")
+                continue
+
+            macro_num = decoded_message["id"][2:]
+            status = handle_macro(macro_num)
+            if(status != 0):
+                msg = {"type": "error", "id": decoded_message["id"]}
+                await websocket.send(json.dumps(msg))
+                continue
+            msg = {"type": "success", "id": decoded_message["id"]}
+            await websocket.send(json.dumps(msg))
+            continue
+        await websocket.send("--")
 
 asyncio.get_event_loop().run_until_complete(
     websockets.serve(echo, '0.0.0.0', 8765))

@@ -17,10 +17,10 @@ Traffic between the client and server are currently un-encrypted.
 2. Extract the zip file.
 3. Open a terminal to the root of the extracted folder, and run `pip install -r requirements.txt` to install the projects dependencies.
      1. If the above does not work, try `py -m pip install -r requirements.txt` or `python3 -m pip install -r requirements.txt`
-4. Open `/webserver/index.html` in a text editor of your choice, and replace the IP address in line **77** with the IP address of your local machine.
+4. Open `/webclient/index.html` in a text editor of your choice, and replace the IP address in line **77** with the IP address of your local machine.
 5. In the same terminal, run `python3 ./server/server.py`
      1. If the above does not work, try `py ./server/server.py`
-6. In a second terminal, navigate to `/webserver` and run `python3 -m http.server 8080`.
+6. In a second terminal, navigate to `/webclient` and run `python3 -m http.server 8080`.
      1. If the above does not work, try `py -m http.server 8080`
 7. On a device of your choosing, navigate a web browser to `http://<YOUR IP ADDRESS>:8080`
 
@@ -44,7 +44,7 @@ On no particular order, these are the features I would like to add.
  - [ ] Allow the macro that is run to be modified. Ex. The server enters `alt`+`shift`+`a` instead of `ctrl`+`shift`+`F1 - F20`
  - [ ] Folders
  - [ ] Pages
- - [ ] Then the webclient page loads, it automatically enters full-screen mode.
+ - [ ] When the webclient page loads, it automatically enters full-screen mode.
  - [ ] Allow Macros to be Named
  - [ ] Allow Images to be used for the buttons.
 
