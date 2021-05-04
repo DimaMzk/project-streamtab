@@ -131,11 +131,10 @@
       let passwordSaved = false;
       let connectionConfirmed = false;
       let wasGivenAuthChallenge = false;
-
-      //TODO: Dictionary of all button ids, to keep track of which button is doing what
       let buttonDictionary = {};
 
-      socket = new WebSocket("ws://192.168.1.148:8765");
+      // TODO: This Setup Should be a login screen.
+      socket = new WebSocket("ws://" + prompt("IP Address To Connect To ex 192.168.1.148:8765"));
 
       socket.onopen = function (event) {
         // Initial Connection
@@ -193,7 +192,6 @@
           // TODO: If pageID is not "home" set A1 as a "home" button
           Object.keys(jsonData).forEach((key) => {
             if (key == "type" || key == "page_id")
-              // TODO: This check could be better
               return; // the `continue` of forEach loops
             let value = jsonData[key];
             console.log("KEY : " + key);
@@ -217,7 +215,7 @@
           if (jsonData.success_type == "press"){
             // Highlight the button for 250 ms
             console.log("Scdsfs")
-            document.getElementById(jsonData.location).style.backgroundColor = "rgba(6, 36, 23, 0.753)";
+            document.getElementById(jsonData.location).style.backgroundColor = "rgba(0, 114, 38, 0.616)";
             setTimeout(() => {resetBackground(jsonData.location)}, 250);
           }
         }
