@@ -11,29 +11,23 @@ PASSWORD = "PASSWORD123"  # TODO: Not Have Hardcoded.
 PASSWORD_REQUIRED = True
 
 # Message Types
+INITIAL_CONNECTION = "initial_connection"
+AUTHENTICATION = 'auth'
+REQUEST = 'request'
+MACRO = 'macro'
+
+# Reply Types
+AUTH_REQUIRED = {"type": "authentication_required"}
+CONNECTION_CONFIRMED = {"type": "connection_confirmed"}
+
+# Request Types
+PAGE_INFO = 'page_info'
 
 
-class MessageType(enum.Enum):
-    INITIAL_CONNECTION = "initial_connection"
-    AUTHENTICATION = 'auth'
-    REQUEST = 'request'
-    MACRO = 'macro'
+# Holddown Types
+PRESS = 'press'
+RELEASE = 'release'
 
-
-class ReplyType(enum.Enum):
-    AUTH_REQUIRED = {"type": "authentication_required"}
-    CONNECTION_CONFIRMED = {"type": "connection_confirmed"}
-
-
-class RequestType(enum.Enum):
-    PAGE_INFO = 'page_info'
-
-class HolddownType(enum.Enum):
-    PRESS = 'press'
-    RELEASE = 'release'
-
-
-authenticated = False
 
 keyboard = Controller()
 
@@ -119,11 +113,14 @@ def is_authorized(message):
     print("[ERROR] : Unhandled Authorization Case")
     return False
 
+
 def press_and_hold(macro_id):
     return True
 
+
 def release(macro_id):
     return True
+
 
 def press(macro_id):
     # TODO: This is based on the dummy data generated on line 166
@@ -131,50 +128,74 @@ def press(macro_id):
     #   should look up the macro_id, and press keyboard button based off of this.
 
     if macro_id == 12345:
-        keyboard.press(Key.ctrl)
-        keyboard.press(Key.shift)
-        keyboard.press(Key.f1)
-        keyboard.release(Key.ctrl)
-        keyboard.release(Key.shift)
-        keyboard.release(Key.f1)
-    
+        
+
+
+        try:
+            keyboard.press(Key.ctrl)
+            keyboard.press(Key.shift)
+            keyboard.press(Key.f1)
+            keyboard.release(Key.ctrl)
+            keyboard.release(Key.shift)
+            keyboard.release(Key.f1)
+            return True
+        except Exception:
+            return False
+
     if macro_id == 12346:
-        keyboard.press(Key.ctrl)
-        keyboard.press(Key.shift)
-        keyboard.press(Key.f5)
-        keyboard.release(Key.ctrl)
-        keyboard.release(Key.shift)
-        keyboard.release(Key.f5)
-    
+        try:
+            keyboard.press(Key.ctrl)
+            keyboard.press(Key.shift)
+            keyboard.press(Key.f5)
+            keyboard.release(Key.ctrl)
+            keyboard.release(Key.shift)
+            keyboard.release(Key.f5)
+            return True
+        except Exception:
+            return False
+        
+
     if macro_id == 12347:
-        keyboard.press(Key.ctrl)
-        keyboard.press(Key.shift)
-        keyboard.press(Key.f5)
-        keyboard.release(Key.ctrl)
-        keyboard.release(Key.shift)
-        keyboard.release(Key.f6)
+        try:
+            keyboard.press(Key.ctrl)
+            keyboard.press(Key.shift)
+            keyboard.press(Key.f6)
+            keyboard.release(Key.ctrl)
+            keyboard.release(Key.shift)
+            keyboard.release(Key.f6)
+            return True
+        except Exception:
+            return False
 
     if macro_id == 12348:
-        keyboard.press(Key.ctrl)
-        keyboard.press(Key.shift)
-        keyboard.press(Key.f11)
-        keyboard.release(Key.ctrl)
-        keyboard.release(Key.shift)
-        keyboard.release(Key.f11)
-    
+        try:
+            keyboard.press(Key.ctrl)
+            keyboard.press(Key.shift)
+            keyboard.press(Key.f11)
+            keyboard.release(Key.ctrl)
+            keyboard.release(Key.shift)
+            keyboard.release(Key.f11)
+            return True
+        except Exception:
+            return False
+
     if macro_id == 12349:
-        keyboard.press(Key.ctrl)
-        keyboard.press(Key.shift)
-        keyboard.press(Key.f12)
-        keyboard.release(Key.ctrl)
-        keyboard.release(Key.shift)
-        keyboard.release(Key.f12)
+        try:
+            keyboard.press(Key.ctrl)
+            keyboard.press(Key.shift)
+            keyboard.press(Key.f12)
+            keyboard.release(Key.ctrl)
+            keyboard.release(Key.shift)
+            keyboard.release(Key.f12)
+            return True
+        except Exception:
+            return False
 
     return False
 
+
 async def echo(websocket, path):
     async for message in websocket:
-        global authenticated
         decoded_message = json.loads(message)
         print(decoded_message)
 
@@ -183,26 +204,26 @@ async def echo(websocket, path):
             continue
 
         # INITIAL CONNECTION
-        if decoded_message["type"] == MessageType.INITIAL_CONNECTION:
+        if decoded_message["type"] == INITIAL_CONNECTION:
             if PASSWORD_REQUIRED:
-                await websocket.send(json.dumps(ReplyType.AUTH_REQUIRED))
+                await websocket.send(json.dumps(AUTH_REQUIRED))
                 continue
-            await websocket.send(json.dumps(ReplyType.CONNECTION_CONFIRMED))
+            await websocket.send(json.dumps(CONNECTION_CONFIRMED))
             continue
 
         # AUTHENTICATION
-        if decoded_message["type"] == MessageType.AUTHENTICATION:
+        if decoded_message["type"] == AUTHENTICATION:
             if is_authorized(decoded_message):
-                await websocket.send(json.dumps(ReplyType.CONNECTION_CONFIRMED))
+                await websocket.send(json.dumps(CONNECTION_CONFIRMED))
                 continue
-            await websocket.send(json.dumps(ReplyType.AUTH_REQUIRED))
+            await websocket.send(json.dumps(AUTH_REQUIRED))
             continue
 
         # REQUEST
-        if decoded_message["type"] == MessageType.REQUEST:
+        if decoded_message["type"] == REQUEST:
             if not is_authorized(decoded_message):
                 continue
-            if decoded_message["request_type"] and decoded_message["request_type"] == RequestType.PAGE_INFO:
+            if decoded_message["request_type"] and decoded_message["request_type"] == PAGE_INFO:
                 # TODO: Generate JSON Data
                 # TODO: Have Mechanism To Store data to Generate JSON Data With
 
@@ -237,41 +258,45 @@ async def echo(websocket, path):
                 }
                 await websocket.send(json.dumps(json_data))
                 continue
-            
+
             print("[ERROR] : Unhandled Request Type")
             continue
 
         # MACRO
-        if decoded_message["type"] == MessageType.MACRO:
+        if decoded_message["type"] == MACRO:
             if not is_authorized(decoded_message):
                 continue
 
             if not decoded_message["hold_down"] and not decoded_message["id"] and not decoded_message["location"]:
                 print("[ERROR] : Malformed Macro Request")
                 continue
-            
+
             if decoded_message["hold_down"] is True:
                 if not decoded_message["hold_down_type"]:
                     print("[ERROR]: Unknown Holddown Type")
                     continue
-                
-                if decoded_message["hold_down_type"] == HolddownType.PRESS:
+
+                if decoded_message["hold_down_type"] == PRESS:
                     status = press_and_hold(decoded_message["id"])
                     if status:
-                        msg = {"type": "macro_success", "success_type": "press_and_hold", "id": decoded_message["id"], "location": decoded_message["location"]}
+                        msg = {"type": "macro_success", "success_type": "press_and_hold",
+                               "id": decoded_message["id"], "location": decoded_message["location"]}
                         await websocket.send(json.dumps(msg))
                     else:
-                        msg = {"type": "macro_error", "id": decoded_message["id"], "location": decoded_message["location"]}
+                        msg = {
+                            "type": "macro_error", "id": decoded_message["id"], "location": decoded_message["location"]}
                         await websocket.send(json.dumps(msg))
                     continue
-            
-                if decoded_message["hold_down_type"] == HolddownType.RELEASE:
+
+                if decoded_message["hold_down_type"] == RELEASE:
                     status = release(decoded_message["id"])
                     if status:
-                        msg = {"type": "macro_success", "success_type": "release", "id": decoded_message["id"], "location": decoded_message["location"]}
+                        msg = {"type": "macro_success", "success_type": "release",
+                               "id": decoded_message["id"], "location": decoded_message["location"]}
                         await websocket.send(json.dumps(msg))
                     else:
-                        msg = {"type": "macro_error", "id": decoded_message["id"], "location": decoded_message["location"]}
+                        msg = {
+                            "type": "macro_error", "id": decoded_message["id"], "location": decoded_message["location"]}
                         await websocket.send(json.dumps(msg))
                     continue
 
@@ -281,16 +306,18 @@ async def echo(websocket, path):
             if decoded_message["hold_down"] is False:
                 status = press(decoded_message["id"])
                 if status:
-                    msg = {"type": "macro_success", "success_type": "press", "id": decoded_message["id"], "location": decoded_message["location"]}
+                    msg = {"type": "macro_success", "success_type": "press",
+                           "id": decoded_message["id"], "location": decoded_message["location"]}
                     await websocket.send(json.dumps(msg))
                 else:
-                    msg = {"type": "macro_error", "id": decoded_message["id"], "location": decoded_message["location"]}
+                    msg = {"type": "macro_error",
+                           "id": decoded_message["id"], "location": decoded_message["location"]}
                     await websocket.send(json.dumps(msg))
                 continue
 
             print("[ERROR] : Unhandled Macro Request")
             continue
-        
+
         print("[ERROR] : Unhandled Message")
 
 asyncio.get_event_loop().run_until_complete(

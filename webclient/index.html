@@ -6,27 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>project-streamtab</title>
     <style>
-      body{
+      body {
         margin: 0;
         padding: 0;
       }
       .buttonrow {
-        height:25vh;
+        height: 25vh;
         width: 100%;
         padding: 0;
         margin: 0;
-        display:flex;
+        display: flex;
         /* background-color: rgba(0, 0, 255, 0.13); */
       }
       .button {
-        width: calc(1/6 * 100% );
+        width: calc(1 / 6 * 100%);
         height: 25vh;
         /* background-color:pink; */
         padding: 0;
         margin: 0;
         display: inline-flex;
       }
-      .buttoninner{
+      .buttoninner {
         background-color: rgba(0, 0, 0, 0.13);
         border-radius: 10px;
         width: 100%;
@@ -38,95 +38,222 @@
         align-items: center;
         user-select: none;
       }
+
+      .buttondisabled {
+        background-color: rgba(0, 0, 0, 0.233);
+        color:rgba(0, 0, 0, 0.13);
+      }
     </style>
   </head>
   <body>
     <div class="buttonrow">
-      <div class="button"><div class="buttoninner" id="mk01">Macro 01</div></div>
-      <div class="button"><div class="buttoninner" id="mk02">Macro 02</div></div>
-      <div class="button"><div class="buttoninner" id="mk03">Macro 03</div></div>
-      <div class="button"><div class="buttoninner" id="mk04">Macro 04</div></div>
-      <div class="button"><div class="buttoninner" id="mk05">Macro 05</div></div>
-      <div class="button"><div class="buttoninner" id="mk06">Macro 06</div></div>
+      <div class="button">
+        <div class="buttoninner" id="a1">Macro 01</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="a2">Macro 02</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="a3">Macro 03</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="a4">Macro 04</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="a5">Macro 05</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="a6">Macro 06</div>
+      </div>
     </div>
     <div class="buttonrow">
-      <div class="button"><div class="buttoninner" id="mk07">Macro 07</div></div>
-      <div class="button"><div class="buttoninner" id="mk08">Macro 08</div></div>
-      <div class="button"><div class="buttoninner" id="mk09">Macro 09</div></div>
-      <div class="button"><div class="buttoninner" id="mk10">Macro 10</div></div>
-      <div class="button"><div class="buttoninner" id="mk11">Macro 11</div></div>
-      <div class="button"><div class="buttoninner" id="mk12">Macro 12</div></div>
+      <div class="button">
+        <div class="buttoninner" id="b1">Macro 07</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="b2">Macro 08</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="b3">Macro 09</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="b4">Macro 10</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="b5">Macro 11</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="b6">Macro 12</div>
+      </div>
     </div>
     <div class="buttonrow">
-      <div class="button"><div class="buttoninner" id="mk13">Macro 13</div></div>
-      <div class="button"><div class="buttoninner" id="mk14">Macro 14</div></div>
-      <div class="button"><div class="buttoninner" id="mk15">Macro 15</div></div>
-      <div class="button"><div class="buttoninner" id="mk16">Macro 16</div></div>
-      <div class="button"><div class="buttoninner" id="mk17">Macro 17</div></div>
-      <div class="button"><div class="buttoninner" id="mk18">Macro 18</div></div>
+      <div class="button">
+        <div class="buttoninner" id="c1">Macro 13</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="c2">Macro 14</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="c3">Macro 15</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="c4">Macro 16</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="c5">Macro 17</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="c6">Macro 18</div>
+      </div>
     </div>
     <div class="buttonrow">
-      <div class="button"><div class="buttoninner" id="mk19">Macro 19</div></div>
-      <div class="button"><div class="buttoninner" id="mk20">Macro 20</div></div>
-      <div class="button"><div class="buttoninner" id="mk21">Macro 21</div></div>
-      <div class="button"><div class="buttoninner" id="mk22">Macro 22</div></div>
-      <div class="button"><div class="buttoninner" id="mk23">Macro 23</div></div>
-      <div class="button"><div class="buttoninner" id="mk24">Macro 24</div></div>
+      <div class="button">
+        <div class="buttoninner" id="d1">Macro 19</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="d2">Macro 20</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="d3">Macro 21</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="d4">Macro 22</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="d5">Macro 23</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="d6">Macro 24</div>
+      </div>
     </div>
     <script>
+      let password = "";
+      let passwordSaved = false;
+      let connectionConfirmed = false;
+      let wasGivenAuthChallenge = false;
+
+      //TODO: Dictionary of all button ids, to keep track of which button is doing what
+      let buttonDictionary = {};
+
       socket = new WebSocket("ws://192.168.1.148:8765");
 
       socket.onopen = function (event) {
+        // Initial Connection
         msg = {
-              type: "update",
-              msg: "Client Connected",
-              date: Date.now()
-            };
+          type: "initial_connection",
+          date: Date.now(),
+        };
         socket.send(JSON.stringify(msg));
-        let el = document.querySelectorAll(".buttoninner");
 
-        for (var i = 0; i < el.length; i++){
-          el[i].onclick = (event) => {
-            msg = {
-              type: "macro",
-              id: event.target.id,
-              date: Date.now()
-            };
-            console.log("ONCLICK");
-            console.log(event.target.id);
-            socket.send(JSON.stringify(msg));
-          }
-        }
+        setOnClickEvents();
       };
 
       socket.onmessage = function (event) {
-        jsonData = JSON.parse(event.data)
+        /** @type {JSON} */
+        let jsonData = JSON.parse(event.data);
 
-        if(jsonData.type == "auth_challenge"){
-          password = prompt("A Password is Required to Connect to this computer.");
+        // Auth Challenge
+        if (jsonData.type == "authentication_required") {
+          password = prompt(
+            "A password is required to connect to this computer"
+          );
+          wasGivenAuthChallenge = true;
           msg = {
             type: "auth",
-            password: password, // TODO: HASH
-            data: Date.now
+            PASSWORD: password,
+            date: Date.now(),
           };
           socket.send(JSON.stringify(msg));
-          return
         }
 
-        if(jsonData.type == "success"){
-          document.getElementById(jsonData.id).style.backgroundColor = "rgba(0, 114, 38, 0.616)";
-          setTimeout(() => {resetBackground(jsonData.id)}, 250);
+        // Connection Confirmation
+        if (jsonData.type == "connection_confirmed") {
+          if (wasGivenAuthChallenge) {
+            passwordSaved = true;
+          }
+          connectionConfirmed = true;
+
+          // request homepage of data
+          let msg = {
+            type: "request",
+            request_type: "page_info",
+            page_id: "home",
+            date: Date.now(),
+          };
+          if (passwordSaved) {
+            msg["PASSWORD"] = password;
+          }
+          console.log(msg);
+          socket.send(JSON.stringify(msg));
         }
-        if(jsonData.type == "error"){
-          document.getElementById(jsonData.id).style.backgroundColor = "rgba(92, 0, 0, 0.575)";
-          setTimeout(() => {resetBackground(jsonData.id)}, 250);
+
+        // Receiving Page Data
+        if (jsonData.type == "page_data") {
+          let pageID = jsonData.page_id;
+          // TODO: If pageID is not "home" set A1 as a "home" button
+          Object.keys(jsonData).forEach((key) => {
+            if (key == "type" || key == "page_id")
+              // TODO: This check could be better
+              return; // the `continue` of forEach loops
+            let value = jsonData[key];
+            console.log("KEY : " + key);
+            console.log("VALUE : " + value);
+            if (value.type == "unassigned") {
+              buttonDictionary[key] = { type: "unassigned" };
+              document.getElementById(key).classList.add("buttondisabled");
+            }
+
+            // Macro Types
+            if (value.type == "macro") {
+              document.getElementById(key).innerText = value.name;
+              document.getElementById(key).classList.remove("buttondisabled");
+            }
+            buttonDictionary = jsonData;
+          });
+        }
+
+        // Macro Status
+        if (jsonData.type == "macro_success"){
+          if (jsonData.success_type == "press"){
+            // Highlight the button for 250 ms
+            console.log("Scdsfs")
+            document.getElementById(jsonData.location).style.backgroundColor = "rgba(6, 36, 23, 0.753)";
+            setTimeout(() => {resetBackground(jsonData.location)}, 250);
+          }
         }
 
         console.log("[Message] : " + event.data);
       };
 
-      function resetBackground(id){
-        document.getElementById(id).style.backgroundColor = "rgba(0, 0, 0, 0.13)";
+      function resetBackground(id) {
+        document.getElementById(id).style.backgroundColor =
+          "rgba(0, 0, 0, 0.13)";
+      }
+
+      function setOnClickEvents() {
+        // Create onclick events for the grid
+        let el = document.querySelectorAll(".buttoninner");
+        for (var i = 0; i < el.length; i++) {
+          el[i].onclick = (event) => {
+            if(buttonDictionary[event.target.id].type == "unassigned"){
+              return;
+            }
+            msg = {
+              type: "macro",
+              hold_down: buttonDictionary[event.target.id].hold_down,
+              location: event.target.id,
+              id: buttonDictionary[event.target.id].id,
+              date: Date.now(),
+            };
+            if (passwordSaved) {
+              msg["PASSWORD"] = password;
+            }
+            console.log("ONCLICK");
+            console.log(event.target.id);
+
+            socket.send(JSON.stringify(msg));
+          };
+        }
       }
     </script>
   </body>
