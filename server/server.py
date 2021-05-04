@@ -1,14 +1,22 @@
 import asyncio
-from enum import auto
 import websockets
 import json
-import enum
 from pynput.keyboard import Key, Controller
 from websockets import auth
 from websockets.http import d
+import keys
+# Load Config Files
+with open("./config.json", "r") as config:
+    CONFIG = json.load(config)
 
-PASSWORD = "PASSWORD123"  # TODO: Not Have Hardcoded.
-PASSWORD_REQUIRED = True
+with open('./pages.json') as pages:
+    PAGES = json.loads(pages.read())
+
+with open('./macros.json') as macros:
+    MACROS = json.loads(macros.read())
+
+# TODO: Create default file if not found
+
 
 # Message Types
 INITIAL_CONNECTION = "initial_connection"
@@ -32,83 +40,12 @@ RELEASE = 'release'
 keyboard = Controller()
 
 
-def handle_macro(num):
-    num = int(num)
-    if (num < 1 or num > 20):
-        return -1  # Invalid Macrokey
-    keyboard.press(Key.ctrl)
-    keyboard.press(Key.shift)
-    if(num == 1):
-        keyboard.press(Key.f1)
-        keyboard.release(Key.f1)
-    if(num == 2):
-        keyboard.press(Key.f2)
-        keyboard.release(Key.f2)
-    if(num == 3):
-        keyboard.press(Key.f3)
-        keyboard.release(Key.f3)
-    if(num == 4):
-        keyboard.press(Key.f4)
-        keyboard.release(Key.f4)
-    if(num == 5):
-        keyboard.press(Key.f5)
-        keyboard.release(Key.f5)
-    if(num == 6):
-        keyboard.press(Key.f6)
-        keyboard.release(Key.f6)
-    if(num == 7):
-        keyboard.press(Key.f7)
-        keyboard.release(Key.f7)
-    if(num == 8):
-        keyboard.press(Key.f8)
-        keyboard.release(Key.f8)
-    if(num == 9):
-        keyboard.press(Key.f9)
-        keyboard.release(Key.f9)
-    if(num == 10):
-        keyboard.press(Key.f10)
-        keyboard.release(Key.f10)
-    if(num == 11):
-        keyboard.press(Key.f11)
-        keyboard.release(Key.f11)
-    if(num == 12):
-        keyboard.press(Key.f12)
-        keyboard.release(Key.f12)
-    if(num == 13):
-        keyboard.press(Key.f13)
-        keyboard.release(Key.f13)
-    if(num == 14):
-        keyboard.press(Key.f14)
-        keyboard.release(Key.f14)
-    if(num == 15):
-        keyboard.press(Key.f15)
-        keyboard.release(Key.f15)
-    if(num == 16):
-        keyboard.press(Key.f16)
-        keyboard.release(Key.f16)
-    if(num == 17):
-        keyboard.press(Key.f17)
-        keyboard.release(Key.f17)
-    if(num == 18):
-        keyboard.press(Key.f18)
-        keyboard.release(Key.f18)
-    if(num == 19):
-        keyboard.press(Key.f19)
-        keyboard.release(Key.f19)
-    if(num == 20):
-        keyboard.press(Key.f20)
-        keyboard.release(Key.f20)
-    keyboard.release(Key.ctrl)
-    keyboard.release(Key.shift)
-    return 0
-
-
 def is_authorized(message):
-    if not PASSWORD_REQUIRED:
+    if not CONFIG["PASSWORD_REQUIRED"]:
         return True
     if not message["PASSWORD"]:
         return False
-    if message["PASSWORD"] == PASSWORD:
+    if message["PASSWORD"] == CONFIG["PASSWORD"]:
         return True
     print("[ERROR] : Unhandled Authorization Case")
     return False
@@ -127,71 +64,21 @@ def press(macro_id):
     #   When a mechanism to store macro data is created, this and the other two functions
     #   should look up the macro_id, and press keyboard button based off of this.
 
-    if macro_id == 12345:
-        
+    if not MACROS[macro_id]:
+        return False
+    
+    try:
+        # Press Down All Buttons
+        for button in MACROS[macro_id]["buttons"]:
+            keys.key_down(button)
+    
+        # Release All Buttons
+        for button in MACROS[macro_id]["buttons"]:
+            keys.key_up(button)
+    except Exception:
+        return False
 
-
-        try:
-            keyboard.press(Key.ctrl)
-            keyboard.press(Key.shift)
-            keyboard.press(Key.f1)
-            keyboard.release(Key.ctrl)
-            keyboard.release(Key.shift)
-            keyboard.release(Key.f1)
-            return True
-        except Exception:
-            return False
-
-    if macro_id == 12346:
-        try:
-            keyboard.press(Key.ctrl)
-            keyboard.press(Key.shift)
-            keyboard.press(Key.f5)
-            keyboard.release(Key.ctrl)
-            keyboard.release(Key.shift)
-            keyboard.release(Key.f5)
-            return True
-        except Exception:
-            return False
-        
-
-    if macro_id == 12347:
-        try:
-            keyboard.press(Key.ctrl)
-            keyboard.press(Key.shift)
-            keyboard.press(Key.f6)
-            keyboard.release(Key.ctrl)
-            keyboard.release(Key.shift)
-            keyboard.release(Key.f6)
-            return True
-        except Exception:
-            return False
-
-    if macro_id == 12348:
-        try:
-            keyboard.press(Key.ctrl)
-            keyboard.press(Key.shift)
-            keyboard.press(Key.f11)
-            keyboard.release(Key.ctrl)
-            keyboard.release(Key.shift)
-            keyboard.release(Key.f11)
-            return True
-        except Exception:
-            return False
-
-    if macro_id == 12349:
-        try:
-            keyboard.press(Key.ctrl)
-            keyboard.press(Key.shift)
-            keyboard.press(Key.f12)
-            keyboard.release(Key.ctrl)
-            keyboard.release(Key.shift)
-            keyboard.release(Key.f12)
-            return True
-        except Exception:
-            return False
-
-    return False
+    return True
 
 
 async def echo(websocket, path):
@@ -205,7 +92,7 @@ async def echo(websocket, path):
 
         # INITIAL CONNECTION
         if decoded_message["type"] == INITIAL_CONNECTION:
-            if PASSWORD_REQUIRED:
+            if CONFIG["PASSWORD_REQUIRED"]:
                 await websocket.send(json.dumps(AUTH_REQUIRED))
                 continue
             await websocket.send(json.dumps(CONNECTION_CONFIRMED))
@@ -224,38 +111,10 @@ async def echo(websocket, path):
             if not is_authorized(decoded_message):
                 continue
             if decoded_message["request_type"] and decoded_message["request_type"] == PAGE_INFO:
-                # TODO: Generate JSON Data
-                # TODO: Have Mechanism To Store data to Generate JSON Data With
+                
+                json_data = PAGES[decoded_message["page_id"]]
 
-                # DUMMY DATA
-                json_data = {
-                    "type": "page_data",
-                    "page_id": "home",
-                    "a1": {"type": "macro", "name": "Google Assistant", "id": 12345, "image": "undefined", "hold_down": False},
-                    "a2": {"type": "unassigned"},
-                    "a3": {"type": "unassigned"},
-                    "a4": {"type": "unassigned"},
-                    "a5": {"type": "macro", "name": "Discord Deafen", "id": 12346, "image": "undefined", "hold_down": False},
-                    "a6": {"type": "macro", "name": "Discord Mute", "id": 12347, "image": "undefined", "hold_down": False},
-                    "b1": {"type": "unassigned"},
-                    "b2": {"type": "unassigned"},
-                    "b3": {"type": "unassigned"},
-                    "b4": {"type": "unassigned"},
-                    "b5": {"type": "macro", "name": "Zoom Toggle Video", "id": 12348, "image": "undefined", "hold_down": False},
-                    "b6": {"type": "macro", "name": "Zoom Mute", "id": 12349, "image": "undefined", "hold_down": False},
-                    "c1": {"type": "unassigned"},
-                    "c2": {"type": "unassigned"},
-                    "c3": {"type": "unassigned"},
-                    "c4": {"type": "unassigned"},
-                    "c5": {"type": "unassigned"},
-                    "c6": {"type": "unassigned"},
-                    "d1": {"type": "unassigned"},
-                    "d2": {"type": "unassigned"},
-                    "d3": {"type": "unassigned"},
-                    "d4": {"type": "unassigned"},
-                    "d5": {"type": "unassigned"},
-                    "d6": {"type": "unassigned"}
-                }
+                
                 await websocket.send(json.dumps(json_data))
                 continue
 
