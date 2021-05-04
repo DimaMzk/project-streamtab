@@ -10,8 +10,20 @@
       "hold_down": false
     },
     "a2": { "type": "unassigned" },
-    "a3": { "type": "unassigned" },
-    "a4": { "type": "unassigned" },
+    "a3": {
+      "type": "macro",
+      "name": "Discord Toggle PTT Mode",
+      "id": "00006",
+      "image": "undefined",
+      "hold_down": false
+    },
+    "a4": {
+      "type": "macro",
+      "name": "Discord PPT",
+      "id": "00005",
+      "image": "undefined",
+      "hold_down": true
+    },
     "a5": {
       "type": "macro",
       "name": "Discord Deafen",

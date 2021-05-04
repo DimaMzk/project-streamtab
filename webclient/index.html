@@ -41,7 +41,7 @@
 
       .buttondisabled {
         background-color: rgba(0, 0, 0, 0.233);
-        color:rgba(0, 0, 0, 0.13);
+        color: rgba(0, 0, 0, 0.13);
       }
     </style>
   </head>
@@ -134,7 +134,9 @@
       let buttonDictionary = {};
 
       // TODO: This Setup Should be a login screen.
-      socket = new WebSocket("ws://" + prompt("IP Address To Connect To ex 192.168.1.148:8765"));
+      socket = new WebSocket(
+        "ws://" + prompt("IP Address To Connect To ex 192.168.1.148:8765")
+      );
 
       socket.onopen = function (event) {
         // Initial Connection
@@ -143,8 +145,6 @@
           date: Date.now(),
         };
         socket.send(JSON.stringify(msg));
-
-        setOnClickEvents();
       };
 
       socket.onmessage = function (event) {
@@ -182,7 +182,6 @@
           if (passwordSaved) {
             msg["PASSWORD"] = password;
           }
-          console.log(msg);
           socket.send(JSON.stringify(msg));
         }
 
@@ -191,11 +190,8 @@
           let pageID = jsonData.page_id;
           // TODO: If pageID is not "home" set A1 as a "home" button
           Object.keys(jsonData).forEach((key) => {
-            if (key == "type" || key == "page_id")
-              return; // the `continue` of forEach loops
+            if (key == "type" || key == "page_id") return; // the `continue` of forEach loops
             let value = jsonData[key];
-            console.log("KEY : " + key);
-            console.log("VALUE : " + value);
             if (value.type == "unassigned") {
               buttonDictionary[key] = { type: "unassigned" };
               document.getElementById(key).classList.add("buttondisabled");
@@ -206,18 +202,38 @@
               document.getElementById(key).innerText = value.name;
               document.getElementById(key).classList.remove("buttondisabled");
             }
-            buttonDictionary = jsonData;
           });
+          buttonDictionary = jsonData;
+          setOnClickEvents();
         }
 
         // Macro Status
-        if (jsonData.type == "macro_success"){
-          if (jsonData.success_type == "press"){
+        if (jsonData.type == "macro_success") {
+          if (jsonData.success_type == "press") {
             // Highlight the button for 250 ms
-            console.log("Scdsfs")
-            document.getElementById(jsonData.location).style.backgroundColor = "rgba(0, 114, 38, 0.616)";
-            setTimeout(() => {resetBackground(jsonData.location)}, 250);
+            document.getElementById(jsonData.location).style.backgroundColor =
+              "rgba(0, 114, 38, 0.616)";
+            setTimeout(() => {
+              resetBackground(jsonData.location);
+            }, 250);
           }
+
+          if(jsonData.success_type == "press_and_hold"){
+            document.getElementById(jsonData.location).style.backgroundColor =
+              "rgba(0, 114, 38, 0.616)";
+          }
+
+          if(jsonData.success_type == "release"){
+            resetBackground(jsonData.location)
+          }
+        }
+
+        if (jsonData.type == "macro_error") {
+          document.getElementById(jsonData.location).style.backgroundColor =
+            "rgba(139, 0, 0, 0.616)";
+          setTimeout(() => {
+            resetBackground(jsonData.location);
+          }, 250);
         }
 
         console.log("[Message] : " + event.data);
@@ -232,25 +248,102 @@
         // Create onclick events for the grid
         let el = document.querySelectorAll(".buttoninner");
         for (var i = 0; i < el.length; i++) {
-          el[i].onclick = (event) => {
-            if(buttonDictionary[event.target.id].type == "unassigned"){
-              return;
-            }
-            msg = {
-              type: "macro",
-              hold_down: buttonDictionary[event.target.id].hold_down,
-              location: event.target.id,
-              id: buttonDictionary[event.target.id].id,
-              date: Date.now(),
-            };
-            if (passwordSaved) {
-              msg["PASSWORD"] = password;
-            }
-            console.log("ONCLICK");
-            console.log(event.target.id);
+          console.log(el[i].id);
+          el[i].onclick = () => {};
+          el[i].onmousedown = () => {};
+          el[i].onmouseup = () => {};
+          el[i].ontouchstart = () => {};
+          el[i].ontouchend = () => {};
 
-            socket.send(JSON.stringify(msg));
-          };
+
+          if (buttonDictionary[el[i].id].hold_down == true) {
+            el[i].onmousedown = (event) => {
+              msg = {
+                type: "macro",
+                hold_down: true,
+                hold_down_type: "press",
+                location: event.target.id,
+                id: buttonDictionary[event.target.id].id,
+                date: Date.now(),
+              };
+              if (passwordSaved) {
+                msg["PASSWORD"] = password;
+              }
+              console.log("ONMOUSEDOWN");
+              console.log(event.target.id);
+
+              socket.send(JSON.stringify(msg));
+            };
+            el[i].ontouchstart = (event) => {
+              msg = {
+                type: "macro",
+                hold_down: true,
+                hold_down_type: "press",
+                location: event.target.id,
+                id: buttonDictionary[event.target.id].id,
+                date: Date.now(),
+              };
+              if (passwordSaved) {
+                msg["PASSWORD"] = password;
+              }
+              console.log("ONMOUSEDOWN");
+              console.log(event.target.id);
+
+              socket.send(JSON.stringify(msg));
+            };
+
+            el[i].onmouseup = (event) => {
+              msg = {
+                type: "macro",
+                hold_down: true,
+                hold_down_type: "release",
+                location: event.target.id,
+                id: buttonDictionary[event.target.id].id,
+                date: Date.now(),
+              };
+              if (passwordSaved) {
+                msg["PASSWORD"] = password;
+              }
+              console.log("ONMOUSEUP");
+              console.log(event.target.id);
+
+              socket.send(JSON.stringify(msg));
+            };
+            el[i].ontouchend = (event) => {
+              msg = {
+                type: "macro",
+                hold_down: true,
+                hold_down_type: "release",
+                location: event.target.id,
+                id: buttonDictionary[event.target.id].id,
+                date: Date.now(),
+              };
+              if (passwordSaved) {
+                msg["PASSWORD"] = password;
+              }
+              console.log("ONMOUSEUP");
+              console.log(event.target.id);
+
+              socket.send(JSON.stringify(msg));
+            };
+          } else {
+            el[i].onclick = (event) => {
+              msg = {
+                type: "macro",
+                hold_down: buttonDictionary[event.target.id].hold_down,
+                location: event.target.id,
+                id: buttonDictionary[event.target.id].id,
+                date: Date.now(),
+              };
+              if (passwordSaved) {
+                msg["PASSWORD"] = password;
+              }
+              console.log("ONCLICK");
+              console.log(event.target.id);
+
+              socket.send(JSON.stringify(msg));
+            };
+          }
         }
       }
     </script>

@@ -33,5 +33,19 @@
         "name": "Zoom Mute",
         "image": "undefined",
         "buttons": ["ctrl", "shift", "f12"]
+    },
+    "00005": {
+        "type": "macro",
+        "hold_down": true,
+        "name": "Discord PPT",
+        "image": "undefined",
+        "buttons": ["ctrl", "shift", "f4"]
+    },
+    "00006": {
+        "type": "macro",
+        "hold_down": false,
+        "name": "Discord Toggle PPT Mode",
+        "image": "undefined",
+        "buttons": ["ctrl", "shift", "f3"]
     }
 }

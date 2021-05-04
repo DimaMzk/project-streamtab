@@ -52,17 +52,32 @@ def is_authorized(message):
 
 
 def press_and_hold(macro_id):
+    if not MACROS[macro_id]:
+        return False
+    try:
+        # Press Down All Buttons
+        for button in MACROS[macro_id]["buttons"]:
+            keys.key_down(button)
+    except Exception:
+        return False
+
     return True
 
 
 def release(macro_id):
+    if not MACROS[macro_id]:
+        return False
+    try:
+        # Press Down All Buttons
+        for button in MACROS[macro_id]["buttons"]:
+            keys.key_up(button)
+    except Exception:
+        return False
+
     return True
 
 
 def press(macro_id):
-    # TODO: This is based on the dummy data generated on line 166
-    #   When a mechanism to store macro data is created, this and the other two functions
-    #   should look up the macro_id, and press keyboard button based off of this.
 
     if not MACROS[macro_id]:
         return False
