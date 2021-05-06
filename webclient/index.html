@@ -193,6 +193,7 @@
             if (key == "type" || key == "page_id") return; // the `continue` of forEach loops
             let value = jsonData[key];
             if (value.type == "unassigned") {
+              // TODO: Remove Name From unassigned buttons
               buttonDictionary[key] = { type: "unassigned" };
               document.getElementById(key).classList.add("buttondisabled");
             }
