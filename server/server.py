@@ -1,15 +1,14 @@
 import asyncio
-from server.config import read_config_file, read_pages_and_macros_file
 import websockets
 import json
 from websockets import auth
 from websockets.http import d
-import keys
-import config
+import key_manager
+import config_loader
 
 # Load Config Files 
-CONFIG = config.read_config_file()
-PAGES, MACROS = config.read_pages_and_macros_file()
+CONFIG = config_loader.read_config_file()
+PAGES, MACROS = config_loader.read_pages_and_macros_file()
 
 # Message Types
 INITIAL_CONNECTION = "initial_connection"
@@ -40,43 +39,10 @@ def is_authorized(message):
     print("[ERROR] : Unhandled Authorization Case")
     return False
 
-def press_and_hold(macro_id):
-    if macro_id not in MACROS:
-        return False
-    try:
-        # Press Down All Buttons
-        for button in MACROS[macro_id]["buttons"]:
-            keys.key_down(button)
-    except Exception:
-        return False
-    return True
-
-def release(macro_id):
-    if macro_id not in MACROS:
-        return False
-    try:
-        # Press Down All Buttons
-        for button in MACROS[macro_id]["buttons"]:
-            keys.key_up(button)
-    except Exception:
-        return False
-
-    return True
-
-
-def press(macro_id):
-    if macro_id not in MACROS:
-        return False
-    try:
-        # Press Down All Buttons
-        for button in MACROS[macro_id]["buttons"]:
-            keys.key_down(button)
-        # Release All Buttons
-        for button in MACROS[macro_id]["buttons"]:
-            keys.key_up(button)
-    except Exception:
-        return False
-    return True
+def handle_initial_connection():
+    if CONFIG["PASSWORD_REQUIRED"]:
+        return json.dumps(AUTH_REQUIRED)
+    return json.dumps(CONNECTION_CONFIRMED)
 
 async def echo(websocket, path):
     async for message in websocket:
@@ -89,10 +55,7 @@ async def echo(websocket, path):
 
         # INITIAL CONNECTION
         if decoded_message["type"] == INITIAL_CONNECTION:
-            if CONFIG["PASSWORD_REQUIRED"]:
-                await websocket.send(json.dumps(AUTH_REQUIRED))
-                continue
-            await websocket.send(json.dumps(CONNECTION_CONFIRMED))
+            await websocket.send(handle_initial_connection())
             continue
 
         # AUTHENTICATION
@@ -127,7 +90,7 @@ async def echo(websocket, path):
                     print("[ERROR]: Unknown Holddown Type")
                     continue
                 if decoded_message["hold_down_type"] == PRESS:
-                    status = press_and_hold(decoded_message["id"])
+                    status = key_manager.press_and_hold(decoded_message["id"])
                     if status:
                         msg = {"type": "macro_success", "success_type": "press_and_hold",
                                "id": decoded_message["id"], "location": decoded_message["location"]}
@@ -139,7 +102,7 @@ async def echo(websocket, path):
                     continue
 
                 if decoded_message["hold_down_type"] == RELEASE:
-                    status = release(decoded_message["id"])
+                    status = key_manager.release(decoded_message["id"])
                     if status:
                         msg = {"type": "macro_success", "success_type": "release",
                                "id": decoded_message["id"], "location": decoded_message["location"]}
@@ -153,7 +116,7 @@ async def echo(websocket, path):
                 continue
 
             if decoded_message["hold_down"] is False:
-                status = press(decoded_message["id"])
+                status = key_manager.press(decoded_message["id"])
                 if status:
                     msg = {"type": "macro_success", "success_type": "press",
                            "id": decoded_message["id"], "location": decoded_message["location"]}
