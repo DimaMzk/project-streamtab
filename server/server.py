@@ -26,7 +26,7 @@ PAGE_INFO = 'page_info'
 
 # Holddown Types
 PRESS = 'press'
-RELEASE = 'release'
+RELEASE = 'release' 
 
 
 def is_authorized(message):
