@@ -19,6 +19,7 @@ MACRO = 'macro'
 # Reply Types
 AUTH_REQUIRED = {"type": "authentication_required"}
 CONNECTION_CONFIRMED = {"type": "connection_confirmed"}
+GENERAL_ERROR = {"type": "general_error"}
 
 # Request Types
 PAGE_INFO = 'page_info'
@@ -49,8 +50,14 @@ def handle_authentication_message(decoded_message):
         return json.dumps(CONNECTION_CONFIRMED)
     return json.dumps(AUTH_REQUIRED)
 
-# def handle_request_message(decoded_message):
-
+def handle_request_message(decoded_message):
+    if not is_authorized(decoded_message):
+        return json.dumps(AUTH_REQUIRED)
+    if ("request_type" in decoded_message) and (decoded_message["request_type"] == PAGE_INFO):
+        json_data = PAGES[decoded_message["page_id"]]
+        return json.dumps(json_data)
+    print("[ERROR] : Unhandled Request Type")
+    return json.dumps(GENERAL_ERROR)
 
 async def echo(websocket, path):
     async for message in websocket:
@@ -70,17 +77,10 @@ async def echo(websocket, path):
         if decoded_message["type"] == AUTHENTICATION:
             await websocket.send(handle_authentication_message(decoded_message))
             continue
-        
+
         # REQUEST
         if decoded_message["type"] == REQUEST:
-
-            if not is_authorized(decoded_message):
-                continue
-            if ("request_type" in decoded_message) and (decoded_message["request_type"] == PAGE_INFO):
-                json_data = PAGES[decoded_message["page_id"]]
-                await websocket.send(json.dumps(json_data))
-                continue
-            print("[ERROR] : Unhandled Request Type")
+            await websocket.send(handle_request_message(decoded_message))
             continue
 
         # MACRO
