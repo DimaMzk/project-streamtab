@@ -40,15 +40,18 @@ def is_authorized(message):
     print("[ERROR] : Unhandled Authorization Case")
     return False
 
+
 def handle_initial_connection():
     if CONFIG["PASSWORD_REQUIRED"]:
         return json.dumps(AUTH_REQUIRED)
     return json.dumps(CONNECTION_CONFIRMED)
 
+
 def handle_authentication_message(decoded_message):
     if is_authorized(decoded_message):
         return json.dumps(CONNECTION_CONFIRMED)
     return json.dumps(AUTH_REQUIRED)
+
 
 def handle_request_message(decoded_message):
     if not is_authorized(decoded_message):
@@ -57,6 +60,64 @@ def handle_request_message(decoded_message):
         json_data = PAGES[decoded_message["page_id"]]
         return json.dumps(json_data)
     print("[ERROR] : Unhandled Request Type")
+    return json.dumps(GENERAL_ERROR)
+
+
+def handle_holddown_macro_message(decoded_message):
+    if "hold_down_type" not in decoded_message:
+        print("[ERROR]: Unknown Holddown Type")
+        return json.dumps(GENERAL_ERROR)
+    if decoded_message["hold_down_type"] == PRESS:
+        status = key_manager.press_and_hold(decoded_message["id"])
+        if status:
+            msg = {"type": "macro_success", "success_type": "press_and_hold",
+                    "id": decoded_message["id"], "location": decoded_message["location"]}
+            return json.dumps(msg)
+        else:
+            msg = {
+                "type": "macro_error", "id": decoded_message["id"], "location": decoded_message["location"]}
+            return json.dumps(msg)
+
+    if decoded_message["hold_down_type"] == RELEASE:
+        status = key_manager.release(decoded_message["id"])
+        if status:
+            msg = {"type": "macro_success", "success_type": "release",
+                    "id": decoded_message["id"], "location": decoded_message["location"]}
+            return json.dumps(msg)
+        else:
+            msg = {
+                "type": "macro_error", "id": decoded_message["id"], "location": decoded_message["location"]}
+            return json.dumps(msg)
+    print("[ERROR] : Unhandled HoldDown Type")
+    return json.dumps(GENERAL_ERROR)
+
+
+def handle_button_macro_message(decoded_message):
+    status = key_manager.press(decoded_message["id"])
+    if status:
+        msg = {"type": "macro_success", "success_type": "press",
+                "id": decoded_message["id"], "location": decoded_message["location"]}
+        return json.dumps(msg)
+    else:
+        msg = {"type": "macro_error",
+                "id": decoded_message["id"], "location": decoded_message["location"]}
+        return json.dumps(msg)
+
+
+def handle_macro_message(decoded_message):
+    if not is_authorized(decoded_message):
+        return json.dumps(AUTH_REQUIRED)
+    if ("hold_down" not in decoded_message) and ("id" not in decoded_message) and ("location" not in decoded_message):
+        print("[ERROR] : Malformed Macro Request")
+        return json.dumps(GENERAL_ERROR)
+
+    if decoded_message["hold_down"] is True:
+        return handle_holddown_macro_message(decoded_message)
+
+    if decoded_message["hold_down"] is False:
+        return handle_button_macro_message(decoded_message)
+
+    print("[ERROR] : Unhandled Macro Request")
     return json.dumps(GENERAL_ERROR)
 
 async def echo(websocket, path):
@@ -85,55 +146,7 @@ async def echo(websocket, path):
 
         # MACRO
         if decoded_message["type"] == MACRO:
-            if not is_authorized(decoded_message):
-                continue
-            if ("hold_down" not in decoded_message) and ("id" not in decoded_message) and ("location" not in decoded_message):
-                print("[ERROR] : Malformed Macro Request")
-                continue
-
-            if decoded_message["hold_down"] is True:
-                if "hold_down_type" not in decoded_message:
-                    print("[ERROR]: Unknown Holddown Type")
-                    continue
-                if decoded_message["hold_down_type"] == PRESS:
-                    status = key_manager.press_and_hold(decoded_message["id"])
-                    if status:
-                        msg = {"type": "macro_success", "success_type": "press_and_hold",
-                               "id": decoded_message["id"], "location": decoded_message["location"]}
-                        await websocket.send(json.dumps(msg))
-                    else:
-                        msg = {
-                            "type": "macro_error", "id": decoded_message["id"], "location": decoded_message["location"]}
-                        await websocket.send(json.dumps(msg))
-                    continue
-
-                if decoded_message["hold_down_type"] == RELEASE:
-                    status = key_manager.release(decoded_message["id"])
-                    if status:
-                        msg = {"type": "macro_success", "success_type": "release",
-                               "id": decoded_message["id"], "location": decoded_message["location"]}
-                        await websocket.send(json.dumps(msg))
-                    else:
-                        msg = {
-                            "type": "macro_error", "id": decoded_message["id"], "location": decoded_message["location"]}
-                        await websocket.send(json.dumps(msg))
-                    continue
-                print("[ERROR] : Unhandled HoldDown Type")
-                continue
-
-            if decoded_message["hold_down"] is False:
-                status = key_manager.press(decoded_message["id"])
-                if status:
-                    msg = {"type": "macro_success", "success_type": "press",
-                           "id": decoded_message["id"], "location": decoded_message["location"]}
-                    await websocket.send(json.dumps(msg))
-                else:
-                    msg = {"type": "macro_error",
-                           "id": decoded_message["id"], "location": decoded_message["location"]}
-                    await websocket.send(json.dumps(msg))
-                continue
-
-            print("[ERROR] : Unhandled Macro Request")
+            await websocket.send(handle_macro_message(decoded_message))
             continue
 
         print("[ERROR] : Unhandled Message")
