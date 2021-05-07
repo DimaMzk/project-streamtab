@@ -44,6 +44,14 @@ def handle_initial_connection():
         return json.dumps(AUTH_REQUIRED)
     return json.dumps(CONNECTION_CONFIRMED)
 
+def handle_authentication_message(decoded_message):
+    if is_authorized(decoded_message):
+        return json.dumps(CONNECTION_CONFIRMED)
+    return json.dumps(AUTH_REQUIRED)
+
+# def handle_request_message(decoded_message):
+
+
 async def echo(websocket, path):
     async for message in websocket:
         decoded_message = json.loads(message)
@@ -60,14 +68,12 @@ async def echo(websocket, path):
 
         # AUTHENTICATION
         if decoded_message["type"] == AUTHENTICATION:
-            if is_authorized(decoded_message):
-                await websocket.send(json.dumps(CONNECTION_CONFIRMED))
-                continue
-            await websocket.send(json.dumps(AUTH_REQUIRED))
+            await websocket.send(handle_authentication_message(decoded_message))
             continue
-
+        
         # REQUEST
         if decoded_message["type"] == REQUEST:
+
             if not is_authorized(decoded_message):
                 continue
             if ("request_type" in decoded_message) and (decoded_message["request_type"] == PAGE_INFO):
