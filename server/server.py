@@ -6,7 +6,7 @@ from websockets.http import d
 import key_manager
 import config_loader
 
-# Load Config Files 
+# Load Config Files
 CONFIG = config_loader.read_config_file()
 PAGES, MACROS = config_loader.read_pages_and_macros_file()
 
@@ -71,7 +71,7 @@ def handle_holddown_macro_message(decoded_message):
         status = key_manager.press_and_hold(decoded_message["id"])
         if status:
             msg = {"type": "macro_success", "success_type": "press_and_hold",
-                    "id": decoded_message["id"], "location": decoded_message["location"]}
+                   "id": decoded_message["id"], "location": decoded_message["location"]}
             return json.dumps(msg)
         else:
             msg = {
@@ -82,7 +82,7 @@ def handle_holddown_macro_message(decoded_message):
         status = key_manager.release(decoded_message["id"])
         if status:
             msg = {"type": "macro_success", "success_type": "release",
-                    "id": decoded_message["id"], "location": decoded_message["location"]}
+                   "id": decoded_message["id"], "location": decoded_message["location"]}
             return json.dumps(msg)
         else:
             msg = {
@@ -96,11 +96,11 @@ def handle_button_macro_message(decoded_message):
     status = key_manager.press(decoded_message["id"])
     if status:
         msg = {"type": "macro_success", "success_type": "press",
-                "id": decoded_message["id"], "location": decoded_message["location"]}
+               "id": decoded_message["id"], "location": decoded_message["location"]}
         return json.dumps(msg)
     else:
         msg = {"type": "macro_error",
-                "id": decoded_message["id"], "location": decoded_message["location"]}
+               "id": decoded_message["id"], "location": decoded_message["location"]}
         return json.dumps(msg)
 
 
@@ -120,7 +120,8 @@ def handle_macro_message(decoded_message):
     print("[ERROR] : Unhandled Macro Request")
     return json.dumps(GENERAL_ERROR)
 
-async def echo(websocket, path):
+
+async def echo(websocket):
     async for message in websocket:
         decoded_message = json.loads(message)
         print(decoded_message)
