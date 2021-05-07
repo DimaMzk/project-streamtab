@@ -43,7 +43,7 @@ keyboard = Controller()
 def is_authorized(message):
     if not CONFIG["PASSWORD_REQUIRED"]:
         return True
-    if not message["PASSWORD"]:
+    if not "PASSWORD" not in message:
         return False
     if message["PASSWORD"] == CONFIG["PASSWORD"]:
         return True
@@ -52,7 +52,7 @@ def is_authorized(message):
 
 
 def press_and_hold(macro_id):
-    if not MACROS[macro_id]:
+    if not macro_id not in MACROS:
         return False
     try:
         # Press Down All Buttons
@@ -65,7 +65,7 @@ def press_and_hold(macro_id):
 
 
 def release(macro_id):
-    if not MACROS[macro_id]:
+    if macro_id not in MACROS:
         return False
     try:
         # Press Down All Buttons
@@ -79,14 +79,14 @@ def release(macro_id):
 
 def press(macro_id):
 
-    if not MACROS[macro_id]:
+    if macro_id not in MACROS:
         return False
-    
+
     try:
         # Press Down All Buttons
         for button in MACROS[macro_id]["buttons"]:
             keys.key_down(button)
-    
+
         # Release All Buttons
         for button in MACROS[macro_id]["buttons"]:
             keys.key_up(button)
@@ -102,7 +102,7 @@ async def echo(websocket, path):
         print(decoded_message)
 
         # Ensure Message Type Exists
-        if not decoded_message["type"]:
+        if "type" not in decoded_message:
             continue
 
         # INITIAL CONNECTION
@@ -125,11 +125,10 @@ async def echo(websocket, path):
         if decoded_message["type"] == REQUEST:
             if not is_authorized(decoded_message):
                 continue
-            if decoded_message["request_type"] and decoded_message["request_type"] == PAGE_INFO:
-                
+            if ("request_type" in decoded_message) and (decoded_message["request_type"] == PAGE_INFO):
+
                 json_data = PAGES[decoded_message["page_id"]]
 
-                
                 await websocket.send(json.dumps(json_data))
                 continue
 
@@ -141,12 +140,12 @@ async def echo(websocket, path):
             if not is_authorized(decoded_message):
                 continue
 
-            if not decoded_message["hold_down"] and not decoded_message["id"] and not decoded_message["location"]:
+            if ("hold_down" not in decoded_message) and ("id" not in decoded_message) and ("location" not in decoded_message):
                 print("[ERROR] : Malformed Macro Request")
                 continue
 
             if decoded_message["hold_down"] is True:
-                if not decoded_message["hold_down_type"]:
+                if "hold_down_type" not in decoded_message:
                     print("[ERROR]: Unknown Holddown Type")
                     continue
 
