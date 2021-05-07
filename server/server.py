@@ -1,22 +1,15 @@
 import asyncio
+from server.config import read_config_file, read_pages_and_macros_file
 import websockets
 import json
-from pynput.keyboard import Key, Controller
 from websockets import auth
 from websockets.http import d
 import keys
-# Load Config Files
-with open("./config.json", "r") as config:
-    CONFIG = json.load(config)
+import config
 
-with open('./pages.json') as pages:
-    PAGES = json.loads(pages.read())
-
-with open('./macros.json') as macros:
-    MACROS = json.loads(macros.read())
-
-# TODO: Create default file if not found
-
+# Load Config Files 
+CONFIG = config.read_config_file()
+PAGES, MACROS = config.read_pages_and_macros_file()
 
 # Message Types
 INITIAL_CONNECTION = "initial_connection"
@@ -31,28 +24,24 @@ CONNECTION_CONFIRMED = {"type": "connection_confirmed"}
 # Request Types
 PAGE_INFO = 'page_info'
 
-
 # Holddown Types
 PRESS = 'press'
 RELEASE = 'release'
 
 
-keyboard = Controller()
-
-
 def is_authorized(message):
     if not CONFIG["PASSWORD_REQUIRED"]:
         return True
-    if not "PASSWORD" not in message:
+    if "PASSWORD" not in message:
+        print("No Pasword in message")
         return False
     if message["PASSWORD"] == CONFIG["PASSWORD"]:
         return True
     print("[ERROR] : Unhandled Authorization Case")
     return False
 
-
 def press_and_hold(macro_id):
-    if not macro_id not in MACROS:
+    if macro_id not in MACROS:
         return False
     try:
         # Press Down All Buttons
@@ -60,9 +49,7 @@ def press_and_hold(macro_id):
             keys.key_down(button)
     except Exception:
         return False
-
     return True
-
 
 def release(macro_id):
     if macro_id not in MACROS:
@@ -78,23 +65,18 @@ def release(macro_id):
 
 
 def press(macro_id):
-
     if macro_id not in MACROS:
         return False
-
     try:
         # Press Down All Buttons
         for button in MACROS[macro_id]["buttons"]:
             keys.key_down(button)
-
         # Release All Buttons
         for button in MACROS[macro_id]["buttons"]:
             keys.key_up(button)
     except Exception:
         return False
-
     return True
-
 
 async def echo(websocket, path):
     async for message in websocket:
@@ -126,12 +108,9 @@ async def echo(websocket, path):
             if not is_authorized(decoded_message):
                 continue
             if ("request_type" in decoded_message) and (decoded_message["request_type"] == PAGE_INFO):
-
                 json_data = PAGES[decoded_message["page_id"]]
-
                 await websocket.send(json.dumps(json_data))
                 continue
-
             print("[ERROR] : Unhandled Request Type")
             continue
 
@@ -139,7 +118,6 @@ async def echo(websocket, path):
         if decoded_message["type"] == MACRO:
             if not is_authorized(decoded_message):
                 continue
-
             if ("hold_down" not in decoded_message) and ("id" not in decoded_message) and ("location" not in decoded_message):
                 print("[ERROR] : Malformed Macro Request")
                 continue
@@ -148,7 +126,6 @@ async def echo(websocket, path):
                 if "hold_down_type" not in decoded_message:
                     print("[ERROR]: Unknown Holddown Type")
                     continue
-
                 if decoded_message["hold_down_type"] == PRESS:
                     status = press_and_hold(decoded_message["id"])
                     if status:
@@ -172,7 +149,6 @@ async def echo(websocket, path):
                             "type": "macro_error", "id": decoded_message["id"], "location": decoded_message["location"]}
                         await websocket.send(json.dumps(msg))
                     continue
-
                 print("[ERROR] : Unhandled HoldDown Type")
                 continue
 
