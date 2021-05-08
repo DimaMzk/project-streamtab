@@ -6,7 +6,7 @@ def is_authorized(message):
     if not constants.CONFIG["PASSWORD_REQUIRED"]:
         return True
     if "PASSWORD" not in message:
-        print("No Pasword in message")
+        print("No Password in message")
         return False
     if message["PASSWORD"] == constants.CONFIG["PASSWORD"]:
         return True
