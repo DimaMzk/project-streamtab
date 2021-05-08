@@ -1,3 +1,7 @@
+dictionaries:
+  - en
+  - en_GB
+
 # Any files/folders we should ignore?
 excluded_files:
   - "vendor/**/*"
@@ -15,3 +19,10 @@ excluded_files:
   - ".typo-ci.yml"
   - ".gitignore"
   - "requirements.txt"
+
+  # Any typos we should ignore?
+excluded_words:
+  - typoci
+
+# Would you like filenames to also be spellchecked?
+spellcheck_filenames: true
