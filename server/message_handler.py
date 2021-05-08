@@ -80,7 +80,7 @@ def handle_button_macro_message(decoded_message):
 def handle_macro_message(decoded_message):
     if not is_authorized(decoded_message):
         return json.dumps(constants.AUTH_REQUIRED)
-    if ("hold_down" not in decoded_message) and ("id" not in decoded_message) and ("location" not in decoded_message):
+    if ("hold_down" not in decoded_message) or ("id" not in decoded_message) or ("location" not in decoded_message):
         print("[ERROR] : Malformed Macro Request")
         return json.dumps(constants.GENERAL_ERROR)
 
