@@ -1,0 +1,51 @@
+{
+    "00000": {
+        "type": "macro",
+        "hold_down": false,
+        "name": "Google Assistant",
+        "image": "undefined",
+        "buttons": ["ctrl", "shift", "f1"]
+    },
+    "00001": {
+        "type": "macro",
+        "hold_down": false,
+        "name": "Discord Deafen",
+        "image": "undefined",
+        "buttons": ["ctrl", "shift", "f5"]
+    },
+    "00002": {
+        "type": "macro",
+        "hold_down": false,
+        "name": "Discord Mute",
+        "image": "undefined",
+        "buttons": ["ctrl", "shift", "f6"]
+    },
+    "00003": {
+        "type": "macro",
+        "hold_down": false,
+        "name": "Zoom Toggle Video",
+        "image": "undefined",
+        "buttons": ["ctrl", "shift", "f11"]
+    },
+    "00004": {
+        "type": "macro",
+        "hold_down": false,
+        "name": "Zoom Mute",
+        "image": "undefined",
+        "buttons": ["ctrl", "shift", "f12"]
+    },
+    "00005": {
+        "type": "macro",
+        "hold_down": true,
+        "name": "Discord PPT",
+        "image": "undefined",
+        "buttons": ["ctrl", "shift", "f4"]
+    },
+    "00006": {
+        "type": "macro",
+        "hold_down": false,
+        "name": "Discord Toggle PPT Mode",
+        "image": "undefined",
+        "buttons": ["ctrl", "shift", "f3"]
+    }
+}

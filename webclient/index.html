@@ -1,114 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>project-streamtab</title>
-    <style>
-      body{
-        margin: 0;
-        padding: 0;
-      }
-      .buttonrow {
-        height:25vh;
-        width: 100%;
-        padding: 0;
-        margin: 0;
-        display:flex;
-        /* background-color: rgba(0, 0, 255, 0.13); */
-      }
-      .button {
-        width: calc(1/6 * 100% );
-        height: 25vh;
-        /* background-color:pink; */
-        padding: 0;
-        margin: 0;
-        display: inline-flex;
-      }
-      .buttoninner{
-        background-color: rgba(0, 0, 0, 0.13);
-        border-radius: 10px;
-        width: 100%;
-        /* height: 100%; */
-        margin: 5px;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        user-select: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="buttonrow">
-      <div class="button"><div class="buttoninner" id="mk01">Macro 01</div></div>
-      <div class="button"><div class="buttoninner" id="mk02">Macro 02</div></div>
-      <div class="button"><div class="buttoninner" id="mk03">Macro 03</div></div>
-      <div class="button"><div class="buttoninner" id="mk04">Macro 04</div></div>
-      <div class="button"><div class="buttoninner" id="mk05">Macro 05</div></div>
-      <div class="button"><div class="buttoninner" id="mk06">Macro 06</div></div>
-    </div>
-    <div class="buttonrow">
-      <div class="button"><div class="buttoninner" id="mk07">Macro 07</div></div>
-      <div class="button"><div class="buttoninner" id="mk08">Macro 08</div></div>
-      <div class="button"><div class="buttoninner" id="mk09">Macro 09</div></div>
-      <div class="button"><div class="buttoninner" id="mk10">Macro 10</div></div>
-      <div class="button"><div class="buttoninner" id="mk11">Macro 11</div></div>
-      <div class="button"><div class="buttoninner" id="mk12">Macro 12</div></div>
-    </div>
-    <div class="buttonrow">
-      <div class="button"><div class="buttoninner" id="mk13">Macro 13</div></div>
-      <div class="button"><div class="buttoninner" id="mk14">Macro 14</div></div>
-      <div class="button"><div class="buttoninner" id="mk15">Macro 15</div></div>
-      <div class="button"><div class="buttoninner" id="mk16">Macro 16</div></div>
-      <div class="button"><div class="buttoninner" id="mk17">Macro 17</div></div>
-      <div class="button"><div class="buttoninner" id="mk18">Macro 18</div></div>
-    </div>
-    <div class="buttonrow">
-      <div class="button"><div class="buttoninner" id="mk19">Macro 19</div></div>
-      <div class="button"><div class="buttoninner" id="mk20">Macro 20</div></div>
-      <div class="button"><div class="buttoninner" id="mk21">Macro 21</div></div>
-      <div class="button"><div class="buttoninner" id="mk22">Macro 22</div></div>
-      <div class="button"><div class="buttoninner" id="mk23">Macro 23</div></div>
-      <div class="button"><div class="buttoninner" id="mk24">Macro 24</div></div>
-    </div>
-    <script>
-      socket = new WebSocket("ws://192.168.1.148:8765");
 
-      socket.onopen = function (event) {
-        socket.send("Client Connected");
-        let el = document.querySelectorAll(".buttoninner");
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>project-streamtab</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
 
-        for (var i = 0; i < el.length; i++){
+    .buttonrow {
+      height: 25vh;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      /* background-color: rgba(0, 0, 255, 0.13); */
+    }
+
+    .button {
+      width: calc(1 / 6 * 100%);
+      height: 25vh;
+      /* background-color:pink; */
+      padding: 0;
+      margin: 0;
+      display: inline-flex;
+    }
+
+    .buttoninner {
+      background-color: rgba(0, 0, 0, 0.13);
+      border-radius: 10px;
+      width: 100%;
+      /* height: 100%; */
+      margin: 5px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    .buttondisabled {
+      background-color: rgba(0, 0, 0, 0.233);
+      color: rgba(0, 0, 0, 0.13);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="buttonrow">
+    <div class="button">
+      <div class="buttoninner" id="a1">Macro 01</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="a2">Macro 02</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="a3">Macro 03</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="a4">Macro 04</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="a5">Macro 05</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="a6">Macro 06</div>
+    </div>
+  </div>
+  <div class="buttonrow">
+    <div class="button">
+      <div class="buttoninner" id="b1">Macro 07</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="b2">Macro 08</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="b3">Macro 09</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="b4">Macro 10</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="b5">Macro 11</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="b6">Macro 12</div>
+    </div>
+  </div>
+  <div class="buttonrow">
+    <div class="button">
+      <div class="buttoninner" id="c1">Macro 13</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="c2">Macro 14</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="c3">Macro 15</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="c4">Macro 16</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="c5">Macro 17</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="c6">Macro 18</div>
+    </div>
+  </div>
+  <div class="buttonrow">
+    <div class="button">
+      <div class="buttoninner" id="d1">Macro 19</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="d2">Macro 20</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="d3">Macro 21</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="d4">Macro 22</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="d5">Macro 23</div>
+    </div>
+    <div class="button">
+      <div class="buttoninner" id="d6">Macro 24</div>
+    </div>
+  </div>
+  <script>
+    let password = "";
+    let passwordSaved = false;
+    let connectionConfirmed = false;
+    let wasGivenAuthChallenge = false;
+    let buttonDictionary = {};
+
+    // TODO: This Setup Should be a login screen.
+    socket = new WebSocket(
+      "ws://" + prompt("IP Address To Connect To ex 192.168.1.148:8765")
+    );
+
+    socket.onopen = function (event) {
+      // Initial Connection
+      msg = {
+        type: "initial_connection",
+        date: Date.now(),
+      };
+      socket.send(JSON.stringify(msg));
+    };
+
+    socket.onmessage = function (event) {
+      /** @type {JSON} */
+      let jsonData = JSON.parse(event.data);
+
+      // Auth Challenge
+      if (jsonData.type == "authentication_required") {
+        handleAuthChallenge(jsonData);
+      }
+
+      // Connection Confirmation
+      if (jsonData.type == "connection_confirmed") {
+        handleConnectionConfirmation(jsonData);
+      }
+
+      // Receiving Page Data
+      if (jsonData.type == "page_data") {
+        handlePageData(jsonData);
+      }
+
+      // Macro Status
+      if (jsonData.type == "macro_success") {
+        handleMacroStatus(jsonData);
+      }
+
+      if (jsonData.type == "macro_error") {
+        handleMacroError(jsonData);
+      }
+
+      console.log("[Message] : " + event.data);
+    };
+
+    function resetBackground(id) {
+      document.getElementById(id).style.backgroundColor =
+        "rgba(0, 0, 0, 0.13)";
+    }
+
+    function setOnClickEvents() {
+      // Create onclick events for the grid
+      let el = document.querySelectorAll(".buttoninner");
+      for (var i = 0; i < el.length; i++) {
+        console.log(el[i].id);
+        el[i].onclick = () => {};
+        el[i].onmousedown = () => {};
+        el[i].onmouseup = () => {};
+        el[i].ontouchstart = () => {};
+        el[i].ontouchend = () => {};
+
+
+        if (buttonDictionary[el[i].id].hold_down == true) {
+          el[i].onmousedown = (event) => {
+            socket.send(JSON.stringify(generateOnPress(event.target.id, buttonDictionary[event.target.id].id)));
+          };
+
+          el[i].ontouchstart = (event) => {
+            socket.send(JSON.stringify(generateOnPress(event.target.id, buttonDictionary[event.target.id].id)));
+          };
+
+          el[i].onmouseup = (event) => {
+            socket.send(JSON.stringify(generateOnRelease(event.target.id, buttonDictionary[event.target.id].id)));
+          };
+
+          el[i].ontouchend = (event) => {
+            socket.send(JSON.stringify(generateOnRelease(event.target.id, buttonDictionary[event.target.id].id)));
+          };
+        } else {
           el[i].onclick = (event) => {
-            console.log("ONCLICK");
-            console.log(event.target.id);
-            socket.send(event.target.id);
-          }
+            socket.send(JSON.stringify(generateTap(event.target.id, buttonDictionary[event.target.id].id)));
+          };
         }
-      };
-
-      socket.onmessage = function (event) {
-
-        let successString = "success - ";
-        let errorString = "An Error Occured - "
-        if(event.data.substring(0, 10) == successString){
-          let sstring = event.data.substring(10, 15)
-          document.getElementById(sstring).style.backgroundColor = "rgba(0, 114, 38, 0.616)";
-          setTimeout(() => {resetBackground(sstring)}, 250);
-        }
-        if(event.data.substring(0, 19) == errorString){
-          let sstring = event.data.substring(19, 24)
-          document.getElementById(sstring).style.backgroundColor = "rgba(92, 0, 0, 0.575)";
-          setTimeout(() => {resetBackground(sstring)}, 250);
-        }
-        console.log("[Message] : " + event.data);
-      };
-
-      function resetBackground(id){
-        document.getElementById(id).style.backgroundColor = "rgba(0, 0, 0, 0.13)";
       }
-    </script>
-  </body>
+    }
+
+    function handleAuthChallenge(jsonData) {
+      password = prompt(
+        "A password is required to connect to this computer" // TODO: Integrate into login screen
+      );
+      wasGivenAuthChallenge = true;
+      msg = {
+        type: "auth",
+        PASSWORD: password,
+        date: Date.now(),
+      };
+      socket.send(JSON.stringify(msg));
+    }
+
+    function handleConnectionConfirmation(jsonData) {
+      if (wasGivenAuthChallenge) {
+        passwordSaved = true;
+      }
+
+      connectionConfirmed = true;
+
+      // request homepage data
+      let msg = {
+        type: "request",
+        request_type: "page_info",
+        page_id: "home",
+        date: Date.now(),
+      };
+      if (passwordSaved) {
+        msg["PASSWORD"] = password;
+      }
+      socket.send(JSON.stringify(msg));
+    }
+
+    function handlePageData(jsonData) {
+      let pageID = jsonData.page_id;
+      // TODO: If pageID is not "home" set A1 as a "home" button
+      Object.keys(jsonData).forEach((key) => {
+        if (key == "type" || key == "page_id") return; // the `continue` of forEach loops
+        let value = jsonData[key];
+        if (value.type == "unassigned") {
+          document.getElementById(key).innerText = "";
+          document.getElementById(key).classList.add("buttondisabled");
+        }
+
+        // Macro Types
+        if (value.type == "macro") {
+          document.getElementById(key).innerText = value.name;
+          document.getElementById(key).classList.remove("buttondisabled");
+        }
+
+        //TODO: Page Types
+      });
+      buttonDictionary = jsonData;
+      setOnClickEvents();
+    }
+
+    function handleMacroStatus(jsonData) {
+
+      // Highlight the button for 250 ms
+      if (jsonData.success_type == "press") {
+        document.getElementById(jsonData.location).style.backgroundColor =
+          "rgba(0, 114, 38, 0.616)";
+        setTimeout(() => {
+          resetBackground(jsonData.location);
+        }, 250);
+      }
+
+      // Highlight button while user is holding it 
+      if (jsonData.success_type == "press_and_hold") {
+        document.getElementById(jsonData.location).style.backgroundColor =
+          "rgba(0, 114, 38, 0.616)";
+      }
+
+      // De-Highlight button when user releases button
+      if (jsonData.success_type == "release") {
+        resetBackground(jsonData.location)
+      }
+    }
+
+    function handleMacroError(jsonData) {
+
+      // Highlight button red for 250ms to alert user of error.
+      document.getElementById(jsonData.location).style.backgroundColor =
+        "rgba(139, 0, 0, 0.616)";
+      setTimeout(() => {
+        resetBackground(jsonData.location);
+      }, 250);
+    }
+
+    function handleGeneralError(jsonData) {
+      // TODO: Handle General Errors
+    }
+
+    function generateOnPress(location, ID) {
+      msg = {
+        type: "macro",
+        hold_down: true,
+        hold_down_type: "press",
+        location: location,
+        id: ID,
+        date: Date.now(),
+      };
+      if (passwordSaved) {
+        msg["PASSWORD"] = password;
+      }
+      return msg;
+    }
+
+    function generateOnRelease(location, ID) {
+      msg = {
+        type: "macro",
+        hold_down: true,
+        hold_down_type: "release",
+        location: location,
+        id: ID,
+        date: Date.now(),
+      };
+      if (passwordSaved) {
+        msg["PASSWORD"] = password;
+      }
+      return msg;
+    }
+
+    function generateTap(location, ID) {
+      msg = {
+        type: "macro",
+        hold_down: false,
+        location: location,
+        id: ID,
+        date: Date.now(),
+      };
+      if (passwordSaved) {
+        msg["PASSWORD"] = password;
+      }
+      return msg;
+    }
+  </script>
+</body>
+
 </html>

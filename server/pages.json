@@ -1,0 +1,72 @@
+{
+  "home": {
+    "type": "page_data",
+    "page_id": "home",
+    "a1": {
+      "type": "macro",
+      "name": "Google Assistant",
+      "id": "00000",
+      "image": "undefined",
+      "hold_down": false
+    },
+    "a2": { "type": "unassigned" },
+    "a3": {
+      "type": "macro",
+      "name": "Discord Toggle PTT Mode",
+      "id": "00006",
+      "image": "undefined",
+      "hold_down": false
+    },
+    "a4": {
+      "type": "macro",
+      "name": "Discord PPT",
+      "id": "00005",
+      "image": "undefined",
+      "hold_down": true
+    },
+    "a5": {
+      "type": "macro",
+      "name": "Discord Deafen",
+      "id": "00001",
+      "image": "undefined",
+      "hold_down": false
+    },
+    "a6": {
+      "type": "macro",
+      "name": "Discord Mute",
+      "id": "00002",
+      "image": "undefined",
+      "hold_down": false
+    },
+    "b1": { "type": "unassigned" },
+    "b2": { "type": "unassigned" },
+    "b3": { "type": "unassigned" },
+    "b4": { "type": "unassigned" },
+    "b5": {
+      "type": "macro",
+      "name": "Zoom Toggle Video",
+      "id": "00003",
+      "image": "undefined",
+      "hold_down": false
+    },
+    "b6": {
+      "type": "macro",
+      "name": "Zoom Mute",
+      "id": "00004",
+      "image": "undefined",
+      "hold_down": false
+    },
+    "c1": { "type": "unassigned" },
+    "c2": { "type": "unassigned" },
+    "c3": { "type": "unassigned" },
+    "c4": { "type": "unassigned" },
+    "c5": { "type": "unassigned" },
+    "c6": { "type": "unassigned" },
+    "d1": { "type": "unassigned" },
+    "d2": { "type": "unassigned" },
+    "d3": { "type": "unassigned" },
+    "d4": { "type": "unassigned" },
+    "d5": { "type": "unassigned" },
+    "d6": { "type": "unassigned" }
+  }
+}
