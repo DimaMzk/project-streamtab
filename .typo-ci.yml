@@ -27,6 +27,9 @@ excluded_words:
   - onmouseup
   - ontouchend
   - ontouchstart
+  - pynput
+  - esc
+  - asyncio
 
 
 # Would you like filenames to also be spellchecked?
