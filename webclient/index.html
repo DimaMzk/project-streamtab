@@ -10,6 +10,7 @@
     body {
       margin: 0;
       padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .buttonrow {
@@ -46,6 +47,30 @@
     .buttondisabled {
       background-color: rgba(0, 0, 0, 0.233);
       color: rgba(0, 0, 0, 0.13);
+    }
+
+    .hidden {
+      visibility: hidden;
+      z-index: -1;
+      height: 0;
+      width: 0;
+    }
+    .visible {
+      visibility: visible;
+      z-index: 1;
+    }
+    .overlay {
+      z-index: 2;
+    }
+
+    #loginPanel {
+      position: absolute;
+      top: 10%;
+      bottom: 10%;
+      left: 10%;
+      right: 10%;
+      background-color: rgba(0, 0, 0, 0.13);
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -134,6 +159,12 @@
     </div>
   </div>
 
+  <div id="login">
+    <div id="loginPanel">
+      Login
+    </div>
+  </div>
+
 
   <script>
     let password = "";
@@ -141,6 +172,18 @@
     let connectionConfirmed = false;
     let wasGivenAuthChallenge = false;
     let buttonDictionary = {};
+
+    // Hide Buttons
+    document.getElementById("buttons").classList.remove('visible');
+    document.getElementById("buttons").classList.add('hidden');
+
+    // Show Login
+    document.getElementById("login").classList.remove('hidden');
+    document.getElementById("login").classList.add('visible');
+
+
+
+
 
     // Login Screen Steps:
     // On Page Load, Look for ?ip, in url
@@ -150,50 +193,54 @@
     // if receive auth challenge, move to password screen
     // if ?ip is there, and we connect to a password protected server, skip to password field.
 
+    // on connection, unhide buttons, hide login page
+
     // TODO: This Setup Should be a login screen.
-    socket = new WebSocket(
-      "ws://" + prompt("IP Address To Connect To ex 192.168.1.148:8765")
-    );
 
-    socket.onopen = function (event) {
-      // Initial Connection
-      msg = {
-        type: "initial_connection",
-        date: Date.now(),
-      };
-      socket.send(JSON.stringify(msg));
-    };
 
-    socket.onmessage = function (event) {
-      /** @type {JSON} */
-      let jsonData = JSON.parse(event.data);
+    // socket = new WebSocket(
+    //   "ws://" + prompt("IP Address To Connect To ex 192.168.1.148:8765")
+    // );
 
-      // Auth Challenge
-      if (jsonData.type == "authentication_required") {
-        handleAuthChallenge(jsonData);
-      }
+    // socket.onopen = function (event) {
+    //   // Initial Connection
+    //   msg = {
+    //     type: "initial_connection",
+    //     date: Date.now(),
+    //   };
+    //   socket.send(JSON.stringify(msg));
+    // };
 
-      // Connection Confirmation
-      if (jsonData.type == "connection_confirmed") {
-        handleConnectionConfirmation(jsonData);
-      }
+    // socket.onmessage = function (event) {
+    //   /** @type {JSON} */
+    //   let jsonData = JSON.parse(event.data);
 
-      // Receiving Page Data
-      if (jsonData.type == "page_data") {
-        handlePageData(jsonData);
-      }
+    //   // Auth Challenge
+    //   if (jsonData.type == "authentication_required") {
+    //     handleAuthChallenge(jsonData);
+    //   }
 
-      // Macro Status
-      if (jsonData.type == "macro_success") {
-        handleMacroStatus(jsonData);
-      }
+    //   // Connection Confirmation
+    //   if (jsonData.type == "connection_confirmed") {
+    //     handleConnectionConfirmation(jsonData);
+    //   }
 
-      if (jsonData.type == "macro_error") {
-        handleMacroError(jsonData);
-      }
+    //   // Receiving Page Data
+    //   if (jsonData.type == "page_data") {
+    //     handlePageData(jsonData);
+    //   }
 
-      console.log("[Message] : " + event.data);
-    };
+    //   // Macro Status
+    //   if (jsonData.type == "macro_success") {
+    //     handleMacroStatus(jsonData);
+    //   }
+
+    //   if (jsonData.type == "macro_error") {
+    //     handleMacroError(jsonData);
+    //   }
+
+    //   console.log("[Message] : " + event.data);
+    // };
 
     function resetBackground(id) {
       document.getElementById(id).style.backgroundColor =
