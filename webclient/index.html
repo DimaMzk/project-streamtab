@@ -216,7 +216,7 @@
           el[i].ontouchend = (event) => {
             socket.send(JSON.stringify(generateOnRelease(event.target.id, buttonDictionary[event.target.id].id)));
           };
-        } else {
+        } if (buttonDictionary[el[i].id].hold_down == false) {
           el[i].onclick = (event) => {
             socket.send(JSON.stringify(generateTap(event.target.id, buttonDictionary[event.target.id].id)));
           };
