@@ -55,10 +55,12 @@
       height: 0;
       width: 0;
     }
+
     .visible {
       visibility: visible;
       z-index: 1;
     }
+
     .overlay {
       z-index: 2;
     }
@@ -71,6 +73,21 @@
       right: 10%;
       background-color: rgba(0, 0, 0, 0.13);
       border-radius: 10px;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .btn-form {
+      margin: 15px;
+      padding: 15px;
+      color: rgb(0, 157, 209);
+    }
+
+    .btn-form:hover {
+      color: rgb(0, 89, 119);
+      cursor: pointer;
     }
   </style>
 </head>
@@ -160,8 +177,12 @@
   </div>
 
   <div id="login">
-    <div id="loginPanel">
-      Login
+    <div id="loginPanel" class="center">
+      <h2 class="center">Project Streamtab</h2>
+      <div id="form">
+        <input id="ipToConnect" class="" type="url" placeholder="IP Address"><input id="portToConnect" class="" type="number" placeholder="Port">
+        <div id="nextBTN" class="btn-form">Next -></div>
+      </div>
     </div>
   </div>
 
@@ -181,6 +202,15 @@
     document.getElementById("login").classList.remove('hidden');
     document.getElementById("login").classList.add('visible');
 
+    // Check URL
+    if(getParameter("ip") != null) {
+      document.getElementById("ipToConnect").value = getParameter("ip");
+
+      if(getParameter("port") != null){
+        document.getElementById("portToConnect").value = getParameter("port")
+        document.getElementById("nextBTN").click(); //TODO: Change to function call when system is out fo prototyping
+      }
+    }
 
 
 
@@ -420,6 +450,21 @@
       }
       return msg;
     }
+
+
+    function getParameter(key) {
+      // [Source: https://www.geeksforgeeks.org/how-to-retrieve-get-parameters-from-javascript/]
+      // Was originally an arrow function, converted it to an older type for compatibility
+
+      // Address of the current window
+      address = window.location.search
+      // Returns a URLSearchParams object instance
+      parameterList = new URLSearchParams(address)
+      // Returning the respected value associated
+      // with the provided key
+      return parameterList.get(key)
+    }
+
   </script>
 </body>
 
