@@ -73,6 +73,7 @@
       right: 10%;
       background-color: rgba(0, 0, 0, 0.13);
       border-radius: 10px;
+
     }
 
     .center {
@@ -89,6 +90,9 @@
       color: rgb(0, 89, 119);
       cursor: pointer;
     }
+
+
+
   </style>
 </head>
 
@@ -180,9 +184,11 @@
     <div id="loginPanel" class="center">
       <h2 class="center">Project Streamtab</h2>
       <div id="form">
-        <input id="ipToConnect" class="" type="url" placeholder="IP Address"><input id="portToConnect" class="" type="number" placeholder="Port">
+        <input id="ipToConnect" class="" type="url" placeholder="IP Address"><input id="portToConnect" class=""
+          type="number" placeholder="Port">
         <div id="nextBTN" class="btn-form">Next -></div>
       </div>
+      <div id="status"></div>
     </div>
   </div>
 
@@ -194,83 +200,119 @@
     let wasGivenAuthChallenge = false;
     let buttonDictionary = {};
 
-    // Hide Buttons
-    document.getElementById("buttons").classList.remove('visible');
-    document.getElementById("buttons").classList.add('hidden');
+    let socket = undefined; // Making this a global to make this easier.
 
-    // Show Login
-    document.getElementById("login").classList.remove('hidden');
-    document.getElementById("login").classList.add('visible');
+    showLoginScreen();
 
-    // Check URL
-    if(getParameter("ip") != null) {
-      document.getElementById("ipToConnect").value = getParameter("ip");
+    document.getElementById("nextBTN").onclick = () => {
+      // If IP Address and Port are filled in, attempts to connect to server
+      if (document.getElementById("ipToConnect").value != "" && document.getElementById("portToConnect").value !=
+        "") {
+        let ip = document.getElementById("ipToConnect").value;
+        let port = document.getElementById("portToConnect").value;
+        document.getElementById("status").innerHTML = "<img src='loading.gif' height='15px' /> Connecting"; 
+        try {
+          socket = new WebSocket("ws://" + ip + ":" + port);
+        } catch (error) {
+          console.log("Error Connecting " + error);
+          document.getElementById("status").innerText = "Failed to connect"
+        }
 
-      if(getParameter("port") != null){
-        document.getElementById("portToConnect").value = getParameter("port")
-        document.getElementById("nextBTN").click(); //TODO: Change to function call when system is out fo prototyping
+        socket.onopen = function () {
+          console.log("Connected");
+          // Send Initial Connection
+          msg = {
+            type: "initial_connection",
+            date: Date.now(),
+          };
+          socket.send(JSON.stringify(msg));
+        }
+
+        socket.onclose = function () {
+          console.log("No Longer Connected");
+        }
+
+        socket.onerror = function () {
+          document.getElementById("status").innerText =
+            "Failed to connect, please check the IP Address, and port and try again"
+        }
+
+        socket.onmessage = function (event) {
+          let jsonData = JSON.parse(event.data);
+          // Auth Challenge
+          if (jsonData.type == "authentication_required") {
+            handleAuthChallenge(jsonData);
+          }
+          // Connection Confirmation
+          if (jsonData.type == "connection_confirmed") {
+            handleConnectionConfirmation(jsonData);
+          }
+        }
+
       }
     }
 
+    // Check URL
+    if (getParameter("ip") != null) {
+      document.getElementById("ipToConnect").value = getParameter("ip");
 
+      if (getParameter("port") != null) {
+        document.getElementById("portToConnect").value = getParameter("port")
+        document.getElementById("nextBTN").click(); 
+    }}
 
+    function setSocketOnMessage() {
+      socket.onmessage = function (event) {
+        /** @type {JSON} */
+        let jsonData = JSON.parse(event.data);
 
-    // Login Screen Steps:
-    // On Page Load, Look for ?ip, in url
-    // If present, pre-fill ip field and connect
-    // else, just leave ip field
+        // Auth Challenge
+        if (jsonData.type == "authentication_required") {
+          handleAuthChallenge(jsonData);
+        }
 
-    // if receive auth challenge, move to password screen
-    // if ?ip is there, and we connect to a password protected server, skip to password field.
+        // Connection Confirmation
+        if (jsonData.type == "connection_confirmed") {
+          handleConnectionConfirmation(jsonData);
+        }
 
-    // on connection, unhide buttons, hide login page
+        // Receiving Page Data
+        if (jsonData.type == "page_data") {
+          handlePageData(jsonData);
+        }
 
-    // TODO: This Setup Should be a login screen.
+        // Macro Status
+        if (jsonData.type == "macro_success") {
+          handleMacroStatus(jsonData);
+        }
 
+        if (jsonData.type == "macro_error") {
+          handleMacroError(jsonData);
+        }
 
-    // socket = new WebSocket(
-    //   "ws://" + prompt("IP Address To Connect To ex 192.168.1.148:8765")
-    // );
+        console.log("[Message] : " + event.data);
+      };
+    }
 
-    // socket.onopen = function (event) {
-    //   // Initial Connection
-    //   msg = {
-    //     type: "initial_connection",
-    //     date: Date.now(),
-    //   };
-    //   socket.send(JSON.stringify(msg));
-    // };
+    function showLoginScreen() {
+      // Hide Buttons
+      document.getElementById("buttons").classList.remove('visible');
+      document.getElementById("buttons").classList.add('hidden');
 
-    // socket.onmessage = function (event) {
-    //   /** @type {JSON} */
-    //   let jsonData = JSON.parse(event.data);
+      // Show Login
+      document.getElementById("login").classList.remove('hidden');
+      document.getElementById("login").classList.add('visible');
+    }
 
-    //   // Auth Challenge
-    //   if (jsonData.type == "authentication_required") {
-    //     handleAuthChallenge(jsonData);
-    //   }
+    function hideLoginScreen() {
+      // Show Buttons 
+      document.getElementById("buttons").classList.remove('hidden');
+      document.getElementById("buttons").classList.add('visible');
 
-    //   // Connection Confirmation
-    //   if (jsonData.type == "connection_confirmed") {
-    //     handleConnectionConfirmation(jsonData);
-    //   }
-
-    //   // Receiving Page Data
-    //   if (jsonData.type == "page_data") {
-    //     handlePageData(jsonData);
-    //   }
-
-    //   // Macro Status
-    //   if (jsonData.type == "macro_success") {
-    //     handleMacroStatus(jsonData);
-    //   }
-
-    //   if (jsonData.type == "macro_error") {
-    //     handleMacroError(jsonData);
-    //   }
-
-    //   console.log("[Message] : " + event.data);
-    // };
+      // Hide Login 
+      document.getElementById("login").classList.remove('visible');
+      document.getElementById("login").classList.add('hidden');
+    }
 
     function resetBackground(id) {
       document.getElementById(id).style.backgroundColor =
@@ -315,19 +357,40 @@
     }
 
     function handleAuthChallenge(jsonData) {
-      password = prompt(
-        "A password is required to connect to this computer" // TODO: Integrate into login screen
-      );
+      // Make sure buttons are hidden, login form is present
+      showLoginScreen();
+      document.getElementById("nextBTN").onclick = () => {};
+      document.getElementById("form").innerHTML = " " +
+        "<h3>A Password is required to connect to this server </h3> " +
+        "<input id=\"password\" class=\"\" type=\"password\" placeholder=\"Password\"> " +
+        "<div id=\"connectBTN\" class=\"btn-form\">Connect -></div>";
+      if(wasGivenAuthChallenge){
+        document.getElementById("status").innerHTML = "Incorrect Password";
+      } else{
+        document.getElementById("status").innerHTML = "";
+      }
       wasGivenAuthChallenge = true;
-      msg = {
-        type: "auth",
-        PASSWORD: password,
-        date: Date.now(),
-      };
-      socket.send(JSON.stringify(msg));
+
+      document.getElementById("connectBTN").onclick = () => {
+
+        document.getElementById("status").innerHTML = "<img src='loading.gif' height='15px' /> Authenticating."; 
+
+        password = document.getElementById("password").value;
+        msg = {
+          type: "auth",
+          PASSWORD: document.getElementById("password").value,
+          date: Date.now(),
+        };
+        socket.send(JSON.stringify(msg));
+      }
+
     }
 
     function handleConnectionConfirmation(jsonData) {
+      hideLoginScreen();
+
+      setSocketOnMessage();
+
       if (wasGivenAuthChallenge) {
         passwordSaved = true;
       }
@@ -345,6 +408,7 @@
         msg["PASSWORD"] = password;
       }
       socket.send(JSON.stringify(msg));
+
     }
 
     function handlePageData(jsonData) {
