@@ -90,9 +90,6 @@
       color: rgb(0, 89, 119);
       cursor: pointer;
     }
-
-
-
   </style>
 </head>
 
@@ -210,7 +207,7 @@
         "") {
         let ip = document.getElementById("ipToConnect").value;
         let port = document.getElementById("portToConnect").value;
-        document.getElementById("status").innerHTML = "<img src='loading.gif' height='15px' /> Connecting"; 
+        document.getElementById("status").innerHTML = "<img src='loading.gif' height='15px' /> Connecting";
         try {
           socket = new WebSocket("ws://" + ip + ":" + port);
         } catch (error) {
@@ -258,8 +255,9 @@
 
       if (getParameter("port") != null) {
         document.getElementById("portToConnect").value = getParameter("port")
-        document.getElementById("nextBTN").click(); 
-    }}
+        document.getElementById("nextBTN").click();
+      }
+    }
 
     function setSocketOnMessage() {
       socket.onmessage = function (event) {
@@ -359,21 +357,20 @@
     function handleAuthChallenge(jsonData) {
       // Make sure buttons are hidden, login form is present
       showLoginScreen();
-      document.getElementById("nextBTN").onclick = () => {};
       document.getElementById("form").innerHTML = " " +
         "<h3>A Password is required to connect to this server </h3> " +
         "<input id=\"password\" class=\"\" type=\"password\" placeholder=\"Password\"> " +
         "<div id=\"connectBTN\" class=\"btn-form\">Connect -></div>";
-      if(wasGivenAuthChallenge){
+      if (wasGivenAuthChallenge) {
         document.getElementById("status").innerHTML = "Incorrect Password";
-      } else{
+      } else {
         document.getElementById("status").innerHTML = "";
       }
       wasGivenAuthChallenge = true;
 
       document.getElementById("connectBTN").onclick = () => {
 
-        document.getElementById("status").innerHTML = "<img src='loading.gif' height='15px' /> Authenticating."; 
+        document.getElementById("status").innerHTML = "<img src='loading.gif' height='15px' /> Authenticating.";
 
         password = document.getElementById("password").value;
         msg = {
@@ -528,7 +525,6 @@
       // with the provided key
       return parameterList.get(key)
     }
-
   </script>
 </body>
 
