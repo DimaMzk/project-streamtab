@@ -90,6 +90,10 @@
       color: rgb(0, 89, 119);
       cursor: pointer;
     }
+
+    input {
+      height: 50px;
+    }
   </style>
 </head>
 
@@ -246,6 +250,9 @@
           }
         }
 
+      } else {
+        document.getElementById("status").innerText =
+            "Invalid IP Address or PORT"
       }
     }
 

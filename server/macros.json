@@ -47,5 +47,12 @@
         "name": "Discord Toggle PPT Mode",
         "image": "undefined",
         "buttons": ["ctrl", "shift", "f3"]
+    },
+	"00007":  {
+        "type": "macro",
+        "hold_down": false,
+        "name": "Zoom End Call",
+        "image": "undefined",
+        "buttons": ["alt", "q"]
     }
 }
