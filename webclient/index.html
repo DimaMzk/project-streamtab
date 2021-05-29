@@ -94,6 +94,37 @@
     input {
       height: 50px;
     }
+
+    #reconnectionNotice {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      height: 50px;
+      width: 210px;
+      border-radius: 7px;
+      background-color: #DEDEDE;
+    }
+
+    #reconnectionNoticeImg{
+      height: 50px;
+      width: 50px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    #reconnectionNoticeText{
+      height: 50px;
+      line-height: 50px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 50px;
+      text-align: right;
+      padding-right: 5px;
+    }
   </style>
 </head>
 
@@ -193,12 +224,20 @@
     </div>
   </div>
 
+  <div id="reconnectionNotice" class="overlay hidden">
+    <img id="reconnectionNoticeImg" src="loading.gif"></img>
+    <div id="reconnectionNoticeText">Reconnecting 1 / 10</div>
+  </div>
+
 
   <script>
     let password = "";
+    let ipAddress = "";
+    let portToConnect = "";
     let passwordSaved = false;
     let connectionConfirmed = false;
     let wasGivenAuthChallenge = false;
+    let reconnectionAttempts = 0;
     let buttonDictionary = {};
 
     let socket = undefined; // Making this a global to make this easier.
@@ -210,7 +249,10 @@
       if (document.getElementById("ipToConnect").value != "" && document.getElementById("portToConnect").value !=
         "") {
         let ip = document.getElementById("ipToConnect").value;
+        ipAddress = ip;
         let port = document.getElementById("portToConnect").value;
+        portToConnect = port;
+
         document.getElementById("status").innerHTML = "<img src='loading.gif' height='15px' /> Connecting";
         try {
           socket = new WebSocket("ws://" + ip + ":" + port);
@@ -252,7 +294,7 @@
 
       } else {
         document.getElementById("status").innerText =
-            "Invalid IP Address or PORT"
+          "Invalid IP Address or PORT"
       }
     }
 
@@ -297,6 +339,10 @@
 
         console.log("[Message] : " + event.data);
       };
+
+      socket.onclose = function () {
+        handleDisconnection();
+      }
     }
 
     function showLoginScreen() {
@@ -392,6 +438,7 @@
 
     function handleConnectionConfirmation(jsonData) {
       hideLoginScreen();
+      hideReconnectionNotice();
 
       setSocketOnMessage();
 
@@ -400,6 +447,7 @@
       }
 
       connectionConfirmed = true;
+      reconnectionAttempts = 0;
 
       // request homepage data
       let msg = {
@@ -519,6 +567,86 @@
       return msg;
     }
 
+    function handleDisconnection() {
+      showReconnectionNotice();
+      connectionConfirmed = false
+      reconnectionAttempts = 0;
+      document.getElementById("reconnectionNoticeText").innerText = "Reconnecting " + (reconnectionAttempts + 1) + " / 10";
+
+      if (wasGivenAuthChallenge) {
+        setTimeout(attemptReconnect(ipAddress, portToConnect, password), 3000);
+      } else {
+        setTimeout(attemptReconnect(ipAddress, portToConnect, undefined), 3000);
+      }
+    }
+
+    function attemptReconnect(ip, port, password) {
+      if (reconnectionAttempts >= 10) {
+        window.location.reload();
+      }
+
+      document.getElementById("reconnectionNoticeText").innerText = "Reconnecting " + (reconnectionAttempts + 1 ) + " / 10";
+
+      try {
+        socket = new WebSocket("ws://" + ip + ":" + port);
+      } catch (error) {
+        console.log("Error Connecting " + error);
+        if (password != undefined) {
+          setTimeout(() => {
+            attemptReconnect(ipAddress, portToConnect, password)}
+            , 3000)
+            ;
+        } else {
+          setTimeout(() => {
+            attemptReconnect(ipAddress, portToConnect, undefined)}, 3000);
+        }
+        reconnectionAttempts++;
+      }
+
+      socket.onopen = function () {
+        if (password != undefined) {
+          msg = {
+            type: "auth",
+            PASSWORD: password,
+            date: Date.now(),
+          };
+          socket.send(JSON.stringify(msg));
+        } else {
+          msg = {
+            type: "initial_connection",
+            date: Date.now(),
+          };
+          socket.send(JSON.stringify(msg));
+        }
+      }
+
+      socket.onerror = function () {
+        if (password != undefined) {
+          setTimeout(() => {attemptReconnect(ipAddress, portToConnect, password)}, 3000);
+        } else {
+          setTimeout(() => {attemptReconnect(ipAddress, portToConnect, undefined)}, 3000);
+        }
+        reconnectionAttempts++;
+      }
+
+      socket.onmessage = function (event) {
+          let jsonData = JSON.parse(event.data);
+          // Connection Confirmation
+          if (jsonData.type == "connection_confirmed") {
+            handleConnectionConfirmation(jsonData);
+          }
+        }
+    }
+
+    function showReconnectionNotice(){
+      document.getElementById('reconnectionNotice').classList.remove('hidden');
+      document.getElementById('reconnectionNotice').classList.add('visible');
+    }
+
+    function hideReconnectionNotice() {
+      document.getElementById('reconnectionNotice').classList.add('hidden');
+      document.getElementById('reconnectionNotice').classList.remove('visible');
+    }
 
     function getParameter(key) {
       // [Source: https://www.geeksforgeeks.org/how-to-retrieve-get-parameters-from-javascript/]
