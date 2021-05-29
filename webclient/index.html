@@ -10,6 +10,7 @@
     body {
       margin: 0;
       padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .buttonrow {
@@ -47,90 +48,152 @@
       background-color: rgba(0, 0, 0, 0.233);
       color: rgba(0, 0, 0, 0.13);
     }
+
+    .hidden {
+      visibility: hidden;
+      z-index: -1;
+      height: 0;
+      width: 0;
+    }
+
+    .visible {
+      visibility: visible;
+      z-index: 1;
+    }
+
+    .overlay {
+      z-index: 2;
+    }
+
+    #loginPanel {
+      position: absolute;
+      top: 10%;
+      bottom: 10%;
+      left: 10%;
+      right: 10%;
+      background-color: rgba(0, 0, 0, 0.13);
+      border-radius: 10px;
+
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .btn-form {
+      margin: 15px;
+      padding: 15px;
+      color: rgb(0, 157, 209);
+    }
+
+    .btn-form:hover {
+      color: rgb(0, 89, 119);
+      cursor: pointer;
+    }
+
+    input {
+      height: 50px;
+    }
   </style>
 </head>
 
 <body>
-  <div class="buttonrow">
-    <div class="button">
-      <div class="buttoninner" id="a1">Macro 01</div>
+  <div id="buttons">
+    <div class="buttonrow">
+      <div class="button">
+        <div class="buttoninner" id="a1">Macro 01</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="a2">Macro 02</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="a3">Macro 03</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="a4">Macro 04</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="a5">Macro 05</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="a6">Macro 06</div>
+      </div>
     </div>
-    <div class="button">
-      <div class="buttoninner" id="a2">Macro 02</div>
+    <div class="buttonrow">
+      <div class="button">
+        <div class="buttoninner" id="b1">Macro 07</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="b2">Macro 08</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="b3">Macro 09</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="b4">Macro 10</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="b5">Macro 11</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="b6">Macro 12</div>
+      </div>
     </div>
-    <div class="button">
-      <div class="buttoninner" id="a3">Macro 03</div>
+    <div class="buttonrow">
+      <div class="button">
+        <div class="buttoninner" id="c1">Macro 13</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="c2">Macro 14</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="c3">Macro 15</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="c4">Macro 16</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="c5">Macro 17</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="c6">Macro 18</div>
+      </div>
     </div>
-    <div class="button">
-      <div class="buttoninner" id="a4">Macro 04</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="a5">Macro 05</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="a6">Macro 06</div>
+    <div class="buttonrow">
+      <div class="button">
+        <div class="buttoninner" id="d1">Macro 19</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="d2">Macro 20</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="d3">Macro 21</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="d4">Macro 22</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="d5">Macro 23</div>
+      </div>
+      <div class="button">
+        <div class="buttoninner" id="d6">Macro 24</div>
+      </div>
     </div>
   </div>
-  <div class="buttonrow">
-    <div class="button">
-      <div class="buttoninner" id="b1">Macro 07</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="b2">Macro 08</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="b3">Macro 09</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="b4">Macro 10</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="b5">Macro 11</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="b6">Macro 12</div>
+
+  <div id="login">
+    <div id="loginPanel" class="center">
+      <h2 class="center">Project Streamtab</h2>
+      <div id="form">
+        <input id="ipToConnect" class="" type="url" placeholder="IP Address"><input id="portToConnect" class=""
+          type="number" placeholder="Port">
+        <div id="nextBTN" class="btn-form">Next -></div>
+      </div>
+      <div id="status"></div>
     </div>
   </div>
-  <div class="buttonrow">
-    <div class="button">
-      <div class="buttoninner" id="c1">Macro 13</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="c2">Macro 14</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="c3">Macro 15</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="c4">Macro 16</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="c5">Macro 17</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="c6">Macro 18</div>
-    </div>
-  </div>
-  <div class="buttonrow">
-    <div class="button">
-      <div class="buttoninner" id="d1">Macro 19</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="d2">Macro 20</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="d3">Macro 21</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="d4">Macro 22</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="d5">Macro 23</div>
-    </div>
-    <div class="button">
-      <div class="buttoninner" id="d6">Macro 24</div>
-    </div>
-  </div>
+
+
   <script>
     let password = "";
     let passwordSaved = false;
@@ -138,50 +201,123 @@
     let wasGivenAuthChallenge = false;
     let buttonDictionary = {};
 
-    // TODO: This Setup Should be a login screen.
-    socket = new WebSocket(
-      "ws://" + prompt("IP Address To Connect To ex 192.168.1.148:8765")
-    );
+    let socket = undefined; // Making this a global to make this easier.
 
-    socket.onopen = function (event) {
-      // Initial Connection
-      msg = {
-        type: "initial_connection",
-        date: Date.now(),
+    showLoginScreen();
+
+    document.getElementById("nextBTN").onclick = () => {
+      // If IP Address and Port are filled in, attempts to connect to server
+      if (document.getElementById("ipToConnect").value != "" && document.getElementById("portToConnect").value !=
+        "") {
+        let ip = document.getElementById("ipToConnect").value;
+        let port = document.getElementById("portToConnect").value;
+        document.getElementById("status").innerHTML = "<img src='loading.gif' height='15px' /> Connecting";
+        try {
+          socket = new WebSocket("ws://" + ip + ":" + port);
+        } catch (error) {
+          console.log("Error Connecting " + error);
+          document.getElementById("status").innerText = "Failed to connect"
+        }
+
+        socket.onopen = function () {
+          console.log("Connected");
+          // Send Initial Connection
+          msg = {
+            type: "initial_connection",
+            date: Date.now(),
+          };
+          socket.send(JSON.stringify(msg));
+        }
+
+        socket.onclose = function () {
+          console.log("No Longer Connected");
+        }
+
+        socket.onerror = function () {
+          document.getElementById("status").innerText =
+            "Failed to connect, please check the IP Address, and port and try again"
+        }
+
+        socket.onmessage = function (event) {
+          let jsonData = JSON.parse(event.data);
+          // Auth Challenge
+          if (jsonData.type == "authentication_required") {
+            handleAuthChallenge(jsonData);
+          }
+          // Connection Confirmation
+          if (jsonData.type == "connection_confirmed") {
+            handleConnectionConfirmation(jsonData);
+          }
+        }
+
+      } else {
+        document.getElementById("status").innerText =
+            "Invalid IP Address or PORT"
+      }
+    }
+
+    // Check URL
+    if (getParameter("ip") != null) {
+      document.getElementById("ipToConnect").value = getParameter("ip");
+
+      if (getParameter("port") != null) {
+        document.getElementById("portToConnect").value = getParameter("port")
+        document.getElementById("nextBTN").click();
+      }
+    }
+
+    function setSocketOnMessage() {
+      socket.onmessage = function (event) {
+        /** @type {JSON} */
+        let jsonData = JSON.parse(event.data);
+
+        // Auth Challenge
+        if (jsonData.type == "authentication_required") {
+          handleAuthChallenge(jsonData);
+        }
+
+        // Connection Confirmation
+        if (jsonData.type == "connection_confirmed") {
+          handleConnectionConfirmation(jsonData);
+        }
+
+        // Receiving Page Data
+        if (jsonData.type == "page_data") {
+          handlePageData(jsonData);
+        }
+
+        // Macro Status
+        if (jsonData.type == "macro_success") {
+          handleMacroStatus(jsonData);
+        }
+
+        if (jsonData.type == "macro_error") {
+          handleMacroError(jsonData);
+        }
+
+        console.log("[Message] : " + event.data);
       };
-      socket.send(JSON.stringify(msg));
-    };
+    }
 
-    socket.onmessage = function (event) {
-      /** @type {JSON} */
-      let jsonData = JSON.parse(event.data);
+    function showLoginScreen() {
+      // Hide Buttons
+      document.getElementById("buttons").classList.remove('visible');
+      document.getElementById("buttons").classList.add('hidden');
 
-      // Auth Challenge
-      if (jsonData.type == "authentication_required") {
-        handleAuthChallenge(jsonData);
-      }
+      // Show Login
+      document.getElementById("login").classList.remove('hidden');
+      document.getElementById("login").classList.add('visible');
+    }
 
-      // Connection Confirmation
-      if (jsonData.type == "connection_confirmed") {
-        handleConnectionConfirmation(jsonData);
-      }
+    function hideLoginScreen() {
+      // Show Buttons 
+      document.getElementById("buttons").classList.remove('hidden');
+      document.getElementById("buttons").classList.add('visible');
 
-      // Receiving Page Data
-      if (jsonData.type == "page_data") {
-        handlePageData(jsonData);
-      }
-
-      // Macro Status
-      if (jsonData.type == "macro_success") {
-        handleMacroStatus(jsonData);
-      }
-
-      if (jsonData.type == "macro_error") {
-        handleMacroError(jsonData);
-      }
-
-      console.log("[Message] : " + event.data);
-    };
+      // Hide Login 
+      document.getElementById("login").classList.remove('visible');
+      document.getElementById("login").classList.add('hidden');
+    }
 
     function resetBackground(id) {
       document.getElementById(id).style.backgroundColor =
@@ -216,7 +352,8 @@
           el[i].ontouchend = (event) => {
             socket.send(JSON.stringify(generateOnRelease(event.target.id, buttonDictionary[event.target.id].id)));
           };
-        } if (buttonDictionary[el[i].id].hold_down == false) {
+        }
+        if (buttonDictionary[el[i].id].hold_down == false) {
           el[i].onclick = (event) => {
             socket.send(JSON.stringify(generateTap(event.target.id, buttonDictionary[event.target.id].id)));
           };
@@ -225,19 +362,39 @@
     }
 
     function handleAuthChallenge(jsonData) {
-      password = prompt(
-        "A password is required to connect to this computer" // TODO: Integrate into login screen
-      );
+      // Make sure buttons are hidden, login form is present
+      showLoginScreen();
+      document.getElementById("form").innerHTML = " " +
+        "<h3>A Password is required to connect to this server </h3> " +
+        "<input id=\"password\" class=\"\" type=\"password\" placeholder=\"Password\"> " +
+        "<div id=\"connectBTN\" class=\"btn-form\">Connect -></div>";
+      if (wasGivenAuthChallenge) {
+        document.getElementById("status").innerHTML = "Incorrect Password";
+      } else {
+        document.getElementById("status").innerHTML = "";
+      }
       wasGivenAuthChallenge = true;
-      msg = {
-        type: "auth",
-        PASSWORD: password,
-        date: Date.now(),
-      };
-      socket.send(JSON.stringify(msg));
+
+      document.getElementById("connectBTN").onclick = () => {
+
+        document.getElementById("status").innerHTML = "<img src='loading.gif' height='15px' /> Authenticating.";
+
+        password = document.getElementById("password").value;
+        msg = {
+          type: "auth",
+          PASSWORD: document.getElementById("password").value,
+          date: Date.now(),
+        };
+        socket.send(JSON.stringify(msg));
+      }
+
     }
 
     function handleConnectionConfirmation(jsonData) {
+      hideLoginScreen();
+
+      setSocketOnMessage();
+
       if (wasGivenAuthChallenge) {
         passwordSaved = true;
       }
@@ -255,6 +412,7 @@
         msg["PASSWORD"] = password;
       }
       socket.send(JSON.stringify(msg));
+
     }
 
     function handlePageData(jsonData) {
@@ -359,6 +517,20 @@
         msg["PASSWORD"] = password;
       }
       return msg;
+    }
+
+
+    function getParameter(key) {
+      // [Source: https://www.geeksforgeeks.org/how-to-retrieve-get-parameters-from-javascript/]
+      // Was originally an arrow function, converted it to an older type for compatibility
+
+      // Address of the current window
+      address = window.location.search
+      // Returns a URLSearchParams object instance
+      parameterList = new URLSearchParams(address)
+      // Returning the respected value associated
+      // with the provided key
+      return parameterList.get(key)
     }
   </script>
 </body>

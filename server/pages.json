@@ -41,7 +41,13 @@
     "b1": { "type": "unassigned" },
     "b2": { "type": "unassigned" },
     "b3": { "type": "unassigned" },
-    "b4": { "type": "unassigned" },
+    "b4": {
+      "type": "macro",
+      "name": "Zoom End Call",
+      "id": "00007",
+      "image": "undefined",
+      "hold_down": false
+    },
     "b5": {
       "type": "macro",
       "name": "Zoom Toggle Video",

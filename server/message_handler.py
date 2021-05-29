@@ -10,6 +10,9 @@ def is_authorized(message):
         return False
     if message["PASSWORD"] == constants.CONFIG["PASSWORD"]:
         return True
+    if message["PASSWORD"] != constants.CONFIG["PASSWORD"]:
+        print("[INFO] : Client attempted to connect with incorrect password")
+        return False
     print("[ERROR] : Unhandled Authorization Case")
     return False
 
