@@ -9,7 +9,8 @@ def read_config_file():
             print("[INFO] : config.json not found, creating new one with defaults")
             CONFIG = {"PASSWORD": "",
                     "PASSWORD_REQUIRED": False,
-                    "USE_SECURE_PROTOCOL": False}
+                    "USE_SECURE_PROTOCOL": False,
+                    "PORT": 8765}
             json.dump(CONFIG, config, indent=2)
             return CONFIG
 
