@@ -1,7 +1,7 @@
 # Docs
 
 # Instalation Instructions:
-[Installation Instructions](install/latest.md)
+[Installation Instructions](install/index.md)
 
 # Configuration Instructions:
-[Configuration Instructions](configure/latest.md)
+[Configuration Instructions](configure/index.md)
