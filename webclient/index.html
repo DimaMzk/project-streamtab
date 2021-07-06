@@ -337,6 +337,10 @@
           handleMacroError(jsonData);
         }
 
+        if (jsonData.type == "general_error") {
+          console.error("Something Went Wrong!");
+        }
+
         console.log("[Message] : " + event.data);
       };
 
