@@ -39,12 +39,12 @@ Please note that this project is still in the prototyping phase, and should only
 ## What is the future of this project.
 On no particular order, these are the features I would like to add.
  - [ ] Encrypted Traffic between client and server.
- - [ ] Password requirement for client to connect to server.
- - [ ] Allow keys to be held down, this would allow features like Push To Talk in Discord to work.
- - [ ] Allow the macro that is run to be modified. Ex. The server enters `alt`+`shift`+`a` instead of `ctrl`+`shift`+`F1 - F20`
+ - [x] Password requirement for client to connect to server.
+ - [x] Allow keys to be held down, this would allow features like Push To Talk in Discord to work.
+ - [x] Allow the macro that is run to be modified. Ex. The server enters `alt`+`shift`+`a` instead of `ctrl`+`shift`+`F1 - F20`
  - [ ] Folders
  - [ ] Pages
  - [ ] When the webclient page loads, it automatically enters full-screen mode.
- - [ ] Allow Macros to be Named
+ - [x] Allow Macros to be Named
  - [ ] Allow Images to be used for the buttons.
 
