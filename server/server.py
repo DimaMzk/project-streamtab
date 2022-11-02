@@ -1,16 +1,18 @@
 import asyncio
 import websockets
 import json
-from websockets import auth
-from websockets.http import d
 import message_handler
 import constants
 
 # Path is apparently Required TODO: Find out why
+
+
 async def echo(websocket, path):
     async for message in websocket:
         decoded_message = json.loads(message)
-        print(decoded_message)
+        pretty = json.dumps(decoded_message, indent=4)
+        print(pretty)
+        print('-----------------')
 
         # Ensure Message Type Exists
         if "type" not in decoded_message:
@@ -38,6 +40,17 @@ async def echo(websocket, path):
 
         print("[ERROR] : Unhandled Message")
 
-asyncio.get_event_loop().run_until_complete(
-    websockets.serve(echo, '0.0.0.0', constants.CONFIG["PORT"]))
-asyncio.get_event_loop().run_forever()
+if __name__ == '__main__':
+    print("Starting Server")
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        start_server = websockets.serve(
+            echo,  '0.0.0.0', constants.CONFIG["PORT"])
+        print("Server running on port " + str(constants.CONFIG["PORT"]))
+        loop.run_until_complete(start_server)
+        loop.run_forever()
+    except KeyboardInterrupt:
+        print("Keyboard Interrupt")
+        loop.close()
+        pass
