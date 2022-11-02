@@ -1,2 +1,2 @@
-websockets==8.1
-pynput==1.7.3
+websockets==10.4
+pynput==1.7.6
