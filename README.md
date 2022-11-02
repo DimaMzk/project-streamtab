@@ -17,12 +17,14 @@ Traffic between the client and server are currently un-encrypted.
 2. Extract the zip file.
 3. Open a terminal to the root of the extracted folder, and run `pip install -r requirements.txt` to install the projects dependencies.
      1. If the above does not work, try `py -m pip install -r requirements.txt` or `python3 -m pip install -r requirements.txt`
-4. Open `/webclient/index.html` in a text editor of your choice, and replace the IP address in line **77** with the IP address of your local machine.
-5. In the same terminal, run `python3 ./server/server.py`
+4. In the same terminal, navigate to `/server` and run `python3 ./server/server.py`
      1. If the above does not work, try `py ./server/server.py`
-6. In a second terminal, navigate to `/webclient` and run `python3 -m http.server 8080`.
+5. In a second terminal, navigate to `/webclient` and run `python3 -m http.server 8080`.
      1. If the above does not work, try `py -m http.server 8080`
-7. On a device of your choosing, navigate a web browser to `http://<YOUR IP ADDRESS>:8080`
+6. On a device of your choosing, navigate a web browser to `http://<YOUR IP ADDRESS>:8080`
+   1. In the IP address field, enter the same IP address
+   2. for the port, the default is `8765`
+   3. the default password is `PASSWORD123`
 
 Please note that this project is still in the prototyping phase, and should only be used for testing or development purposes. Running this in a production environment could put you and your data at risk.
 
