@@ -5,16 +5,19 @@ import message_handler
 import constants
 import socket
 
-# Get IP address of machine this is running on
-
 
 def get_ip_address():
     h_name = socket.gethostname()
     return socket.gethostbyname(h_name)
 
+
+def print_connection_info():
+    print("Server running on port " + str(constants.CONFIG["PORT"]))
+    print("Navigate to http://streamtab.dmaizik.ca/webclient/?ip=" +
+          get_ip_address() + "&port=" + str(constants.CONFIG["PORT"]) + " on a different device on the same network")
+
+
 # Path is apparently Required TODO: Find out why
-
-
 async def echo(websocket, path):
     async for message in websocket:
         decoded_message = json.loads(message)
@@ -55,9 +58,7 @@ if __name__ == '__main__':
     try:
         start_server = websockets.serve(
             echo,  '0.0.0.0', constants.CONFIG["PORT"])
-        print("Server running on port " + str(constants.CONFIG["PORT"]))
-        print("Navigate to http://streamtab.dmaizik.ca/webclient/?ip=" +
-              get_ip_address() + "&port=" + str(constants.CONFIG["PORT"]) + " on a different device on the same network")
+        print_connection_info()
         loop.run_until_complete(start_server)
         loop.run_forever()
     except KeyboardInterrupt:
