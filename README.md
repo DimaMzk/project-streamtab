@@ -17,8 +17,8 @@ Traffic between the client and server are currently un-encrypted.
 2. Extract the zip file.
 3. Open a terminal to the root of the extracted folder, and run `pip install -r requirements.txt` to install the projects dependencies.
      1. If the above does not work, try `py -m pip install -r requirements.txt` or `python3 -m pip install -r requirements.txt`
-4. In the same terminal, navigate to `/server` and run `python3 ./server/server.py`
-     1. If the above does not work, try `py ./server/server.py`
+4. In the same terminal, navigate to `/server` and run `python3 ./server.py`
+     1. If the above does not work, try `py ./server.py`
 5. In a second terminal, navigate to `/webclient` and run `python3 -m http.server 8080`.
      1. If the above does not work, try `py -m http.server 8080`
 6. On a device of your choosing, navigate a web browser to `http://<YOUR IP ADDRESS>:8080`
