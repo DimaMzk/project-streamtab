@@ -3,3 +3,4 @@ server/__pycache__/
 server_client/node_modules/
 
 server_client/build/
+server_client/out/
