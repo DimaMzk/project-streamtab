@@ -4,4 +4,4 @@ server_client/node_modules/
 
 server_client/build/
 server_client/out/
-server_client/.yarn-error.log
+server_client/yarn-error.log
