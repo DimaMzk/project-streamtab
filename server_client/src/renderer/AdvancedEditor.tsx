@@ -39,6 +39,23 @@ export const AdvancedEditor = () => {
     }
   `;
 
+  const SaveButton = styled.button`
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 18px;
+    outline: none;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #ddd;
+    }
+    &:focus {
+      background-color: #ddd;
+    }
+  `;
+
   // run useeffect once
   useEffect(() => {
     (async () => {
@@ -87,6 +104,30 @@ export const AdvancedEditor = () => {
         )}
         {tab === 1 && <CodeMirror className="codeMirrorJSON" height="500px" />}
         {tab === 2 && <CodeMirror className="codeMirrorJSON" height="500px" />}
+      </div>
+      <div
+        style={{
+          height: '32px',
+          border: '1px solid #ccc',
+          borderBottomLeftRadius: '5px',
+          borderBottomRightRadius: '5px',
+          backgroundColor: '#f5f5f5',
+        }}
+      >
+        <SaveButton
+          type="button"
+          style={{
+            height: '24px',
+            margin: '4px',
+            paddingLeft: '10px',
+            paddingRight: '10px',
+            borderRadius: '2px',
+            fontSize: '14px',
+            lineHeight: '14px',
+          }}
+        >
+          <span style={{ margin: '0' }}>Save</span>
+        </SaveButton>
       </div>
     </div>
   );
