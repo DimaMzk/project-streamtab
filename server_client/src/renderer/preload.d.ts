@@ -17,8 +17,8 @@ declare global {
       getMacrosFile: () => Promise<string | null>;
       getPagesFile: () => Promise<string | null>;
       writeConfigFile: (config: string) => void;
-      writeMacrosFile: (config: string) => void;
-      writePagesFile: (config: string) => void;
+      writeMacrosFile: (macros: string) => void;
+      writePagesFile: (pages: string) => void;
     };
   }
 }

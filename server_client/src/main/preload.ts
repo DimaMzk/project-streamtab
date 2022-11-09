@@ -43,7 +43,7 @@ contextBridge.exposeInMainWorld('streamtabAPI', {
 });
 
 contextBridge.exposeInMainWorld('streamtabAPI', {
-  getMacrosFile: async () => {
+  getPagesFile: async () => {
     return ipcRenderer.invoke('streamtab-read-pagest-file');
   },
   writePagesFile: (config: string) => {
