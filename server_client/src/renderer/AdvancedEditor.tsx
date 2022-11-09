@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import CodeMirror from '@uiw/react-codemirror';
+import styled from 'styled-components';
 import { json } from '@codemirror/lang-json';
 
 const jsonExtensions = [json()];
@@ -18,6 +19,26 @@ export const AdvancedEditor = () => {
     }
   };
 
+  // Buttons that look like tabs
+  const TabButton = styled.button`
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 18px;
+    outline: none;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #ddd;
+    }
+    &:focus {
+      background-color: #ddd;
+    }
+  `;
+
   // run useeffect once
   useEffect(() => {
     (async () => {
@@ -28,30 +49,33 @@ export const AdvancedEditor = () => {
   return (
     <div>
       <div>
-        <button
+        <TabButton
           type="button"
+          style={{ borderBottom: tab === 0 ? 'none' : '1px solid #ccc' }}
           onClick={() => {
             setTab(0);
           }}
         >
-          Tab 1
-        </button>
-        <button
+          Config
+        </TabButton>
+        <TabButton
           type="button"
+          style={{ borderBottom: tab === 1 ? 'none' : '1px solid #ccc' }}
           onClick={() => {
             setTab(1);
           }}
         >
-          Tab 2
-        </button>
-        <button
+          Macros
+        </TabButton>
+        <TabButton
           type="button"
+          style={{ borderBottom: tab === 2 ? 'none' : '1px solid #ccc' }}
           onClick={() => {
             setTab(2);
           }}
         >
-          Tab 3
-        </button>
+          Pages
+        </TabButton>
       </div>
       <div>
         {tab === 0 && (
