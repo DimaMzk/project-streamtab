@@ -85,8 +85,18 @@ export const AdvancedEditor = () => {
             height="500px"
           />
         )}
-        {tab === 1 && <CodeMirror className="codeMirrorJSON" height="500px" />}
-        {tab === 2 && <CodeMirror className="codeMirrorJSON" height="500px" />}
+        {tab === 1 && 
+          <CodeMirror 
+            value={macros} 
+            className="codeMirrorJSON" 
+            height="500px" 
+          />}
+        {tab === 2 && 
+          <CodeMirror 
+            value={pages}
+            className="codeMirrorJSON" 
+            height="500px" 
+          />}
       </div>
     </div>
   );
