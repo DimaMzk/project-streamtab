@@ -12,7 +12,7 @@ export const AdvancedEditor = () => {
   const [tab, setTab] = useState(0);
   const [config, setConfig] = useState<string>('hello config');
   const [macros, setMacros] = useState<string>('hello macro');
-  const [pages, setPages] = useState<string>('hello pages')
+  const [pages, setPages] = useState<string>('hello pages');
 
   const getConfigData = async () => {
     const configData = await window.streamtabAPI.getConfigFile();
@@ -74,15 +74,7 @@ export const AdvancedEditor = () => {
   useEffect(() => {
     (async () => {
       await getConfigData();
-    })();
-  }, []);
-  useEffect(() => {
-    (async () => {
       await getMacrosData();
-    })();
-  }, []);
-  useEffect(() => {
-    (async () => {
       await getPagesData();
     })();
   }, []);
@@ -126,18 +118,16 @@ export const AdvancedEditor = () => {
             height="500px"
           />
         )}
-        {tab === 1 && 
-          <CodeMirror 
-            value={macros} 
-            className="codeMirrorJSON" 
-            height="500px" 
-          />}
-        {tab === 2 && 
-          <CodeMirror 
-            value={pages}
-            className="codeMirrorJSON" 
-            height="500px" 
-          />}
+        {tab === 1 && (
+          <CodeMirror
+            value={macros}
+            className="codeMirrorJSON"
+            height="500px"
+          />
+        )}
+        {tab === 2 && (
+          <CodeMirror value={pages} className="codeMirrorJSON" height="500px" />
+        )}
       </div>
       <div
         style={{
