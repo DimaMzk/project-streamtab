@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
@@ -9,6 +9,22 @@ const jsonExtensions = [json()];
 export const AdvancedEditor = () => {
   // basic three tabbed view
   const [tab, setTab] = useState(0);
+  const [config, setConfig] = useState<string>('hello');
+
+  const getConfigData = async () => {
+    const configData = await window.streamtabAPI.getConfigFile();
+    if (configData) {
+      setConfig(JSON.stringify(configData, null, 2));
+    }
+  };
+
+  // run useeffect once
+  useEffect(() => {
+    (async () => {
+      await getConfigData();
+    })();
+  }, []);
+
   return (
     <div>
       <div>
@@ -38,7 +54,15 @@ export const AdvancedEditor = () => {
         </button>
       </div>
       <div>
-        {tab === 0 && <CodeMirror className="codeMirrorJSON" height="500px" />}
+        {tab === 0 && (
+          <CodeMirror
+            value={config}
+            className="codeMirrorJSON"
+            height="500px"
+          />
+        )}
+        {tab === 1 && <CodeMirror className="codeMirrorJSON" height="500px" />}
+        {tab === 2 && <CodeMirror className="codeMirrorJSON" height="500px" />}
       </div>
     </div>
   );
