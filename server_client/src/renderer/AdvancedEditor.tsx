@@ -17,6 +17,18 @@ export const AdvancedEditor = () => {
       setConfig(JSON.stringify(configData, null, 2));
     }
   };
+  const getMacrosData = async () => {
+    const configData = await window.streamtabAPI.getConfigFile();
+    if (configData) {
+      setConfig(JSON.stringify(configData, null, 2));
+    }
+  };
+  const getPagesData = async () => {
+    const configData = await window.streamtabAPI.getConfigFile();
+    if (configData) {
+      setConfig(JSON.stringify(configData, null, 2));
+    }
+  };
 
   // run useeffect once
   useEffect(() => {

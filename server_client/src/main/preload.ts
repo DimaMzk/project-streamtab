@@ -31,3 +31,23 @@ contextBridge.exposeInMainWorld('streamtabAPI', {
     // fs.writeFileSync("config.json", config);
   },
 });
+
+contextBridge.exposeInMainWorld('streamtabAPI', {
+  getMacrosFile: async () => {
+    return ipcRenderer.invoke('streamtab-read-macros-file');
+  },
+  writeConfigFile: (config: string) => {
+    // console.log("writingConfigFile");
+    // fs.writeFileSync("config.json", config);
+  },
+});
+
+contextBridge.exposeInMainWorld('streamtabAPI', {
+  getMacrosFile: async () => {
+    return ipcRenderer.invoke('streamtab-read-macros-file');
+  },
+  writeConfigFile: (config: string) => {
+    // console.log("writingConfigFile");
+    // fs.writeFileSync("config.json", config);
+  },
+});
