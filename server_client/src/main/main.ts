@@ -47,6 +47,36 @@ ipcMain.handle('streamtab-read-config-file', () => {
   }
 });
 
+ipcMain.handle('streamtab-read-macros-file', () => {
+  const configPath = path.join(
+    app.getPath('documents'),
+    'streamtab-config/macros.json'
+  );
+  console.log('configPath', configPath);
+  try {
+    const file = fs.readFileSync(configPath, 'utf8');
+    return JSON.parse(file);
+  } catch (error) {
+    console.error('[ERROR] Failed to read config file: ', error);
+    return null;
+  }
+});
+
+ipcMain.handle('streamtab-read-pages-file', () => {
+  const configPath = path.join(
+    app.getPath('documents'),
+    'streamtab-config/pages.json'
+  );
+  console.log('configPath', configPath);
+  try {
+    const file = fs.readFileSync(configPath, 'utf8');
+    return JSON.parse(file);
+  } catch (error) {
+    console.error('[ERROR] Failed to read config file: ', error);
+    return null;
+  }
+});
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
