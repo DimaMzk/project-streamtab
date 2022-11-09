@@ -30,4 +30,18 @@ contextBridge.exposeInMainWorld('streamtabAPI', {
     // console.log("writingConfigFile");
     // fs.writeFileSync("config.json", config);
   },
+  getMacrosFile: async () => {
+    return ipcRenderer.invoke('streamtab-read-macros-file');
+  },
+  writeMacrosFile: (config: string) => {
+    // console.log("writingMacrosFile");
+    // fs.writeFileSync("config.json", config);
+  },
+  getPagesFile: async () => {
+    return ipcRenderer.invoke('streamtab-read-pages-file');
+  },
+  writePagesFile: (config: string) => {
+    // console.log("writingPagesFile");
+    // fs.writeFileSync("config.json", config);
+  },
 });
