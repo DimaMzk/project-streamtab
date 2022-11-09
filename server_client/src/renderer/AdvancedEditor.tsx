@@ -18,15 +18,15 @@ export const AdvancedEditor = () => {
     }
   };
   const getMacrosData = async () => {
-    const configData = await window.streamtabAPI.getConfigFile();
-    if (configData) {
-      setConfig(JSON.stringify(configData, null, 2));
+    const macrosData = await window.streamtabAPI.getMacrosFile();
+    if (macrosData) {
+      setMacros(JSON.stringify(macrosData, null, 2));
     }
   };
   const getPagesData = async () => {
-    const configData = await window.streamtabAPI.getConfigFile();
-    if (configData) {
-      setConfig(JSON.stringify(configData, null, 2));
+    const pagesData = await window.streamtabAPI.getPagesFile();
+    if (pagesData) {
+      setConfig(JSON.stringify(pagesData, null, 2));
     }
   };
 

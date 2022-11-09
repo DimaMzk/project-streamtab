@@ -14,7 +14,11 @@ declare global {
     };
     streamtabAPI: {
       getConfigFile: () => Promise<string | null>;
+      getMacrosFile: () => Promise<string | null>;
+      getPagesFile: () => Promise<string | null>;
       writeConfigFile: (config: string) => void;
+      writeMacrosFile: (config: string) => void;
+      writePagesFile: (config: string) => void;
     };
   }
 }

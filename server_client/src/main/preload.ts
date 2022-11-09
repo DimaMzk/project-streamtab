@@ -37,7 +37,7 @@ contextBridge.exposeInMainWorld('streamtabAPI', {
     return ipcRenderer.invoke('streamtab-read-macros-file');
   },
   writeMacrosFile: (config: string) => {
-    // console.log("writingConfigFile");
+    // console.log("writingMacrosFile");
     // fs.writeFileSync("config.json", config);
   },
 });
@@ -47,7 +47,7 @@ contextBridge.exposeInMainWorld('streamtabAPI', {
     return ipcRenderer.invoke('streamtab-read-pagest-file');
   },
   writePagesFile: (config: string) => {
-    // console.log("writingConfigFile");
+    // console.log("writingPagesFile");
     // fs.writeFileSync("config.json", config);
   },
 });
