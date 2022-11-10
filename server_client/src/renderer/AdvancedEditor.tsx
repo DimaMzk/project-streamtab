@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import CodeMirror from '@uiw/react-codemirror';
 import styled from 'styled-components';
 import { json } from '@codemirror/lang-json';
 
 const jsonExtensions = [json()];
 
-// eslint-disable-next-line
 export const AdvancedEditor = () => {
-  // basic three tabbed view
   const [tab, setTab] = useState(0);
   const [config, setConfig] = useState<string>('hello config');
   const [macros, setMacros] = useState<string>('hello macro');
@@ -40,7 +37,6 @@ export const AdvancedEditor = () => {
     }
   };
 
-  // Buttons that look like tabs
   const TabButton = styled.button`
     background-color: #fff;
     border: 1px solid #ccc;
@@ -212,3 +208,5 @@ export const AdvancedEditor = () => {
     </div>
   );
 };
+
+export default AdvancedEditor;
