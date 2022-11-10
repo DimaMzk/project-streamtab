@@ -60,6 +60,14 @@ export const AdvancedEditor = () => {
     }
   `;
 
+  const BottomBar = styled.div`
+    height: 32px;
+    border: 1px solid #ccc;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #f5f5f5;
+  `;
+
   const SaveButton = styled.button`
     background-color: #fff;
     border: 1px solid #ccc;
@@ -80,6 +88,11 @@ export const AdvancedEditor = () => {
     &:focus {
       background-color: #ddd;
     }
+    &:disabled {
+      background-color: #ddd;
+      cursor: not-allowed;
+      transition: background-color 0.3s ease;
+    }
   `;
 
   const CodeError = styled.div`
@@ -90,7 +103,6 @@ export const AdvancedEditor = () => {
     display: inline;
   `;
 
-  // run useeffect once
   useEffect(() => {
     (async () => {
       await getConfigData();
@@ -184,21 +196,19 @@ export const AdvancedEditor = () => {
           onChange={onCodeMirrorChange}
         />
       </div>
-      <div
-        style={{
-          height: '32px',
-          border: '1px solid #ccc',
-          borderBottomLeftRadius: '5px',
-          borderBottomRightRadius: '5px',
-          backgroundColor: '#f5f5f5',
-        }}
-      >
-        <SaveButton type="button">Save</SaveButton>
-        <SaveButton onClick={onFormatClick} type="button">
+      <BottomBar>
+        <SaveButton type="button" disabled={!isValidJson()}>
+          Save
+        </SaveButton>
+        <SaveButton
+          onClick={onFormatClick}
+          disabled={!isValidJson()}
+          type="button"
+        >
           Format
         </SaveButton>
         <CodeError>{isValidJson() ? '' : 'Invalid JSON'}</CodeError>
-      </div>
+      </BottomBar>
     </div>
   );
 };
