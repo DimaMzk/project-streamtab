@@ -59,9 +59,15 @@ export const AdvancedEditor = () => {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    padding: 4px 18px;
     outline: none;
     transition: background-color 0.3s ease;
+    height: 24px;
+    margin: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 14px;
     &:hover {
       background-color: #ddd;
     }
@@ -78,6 +84,9 @@ export const AdvancedEditor = () => {
       await getPagesData();
     })();
   }, []);
+
+  // eslint-disable-next-line no-nested-ternary
+  const CodeMirrorContent = tab === 0 ? config : tab === 1 ? macros : pages;
 
   return (
     <div>
@@ -111,23 +120,17 @@ export const AdvancedEditor = () => {
         </TabButton>
       </div>
       <div>
-        {tab === 0 && (
-          <CodeMirror
-            value={config}
-            className="codeMirrorJSON"
-            height="500px"
-          />
-        )}
-        {tab === 1 && (
-          <CodeMirror
-            value={macros}
-            className="codeMirrorJSON"
-            height="500px"
-          />
-        )}
-        {tab === 2 && (
-          <CodeMirror value={pages} className="codeMirrorJSON" height="500px" />
-        )}
+        <CodeMirror
+          value={CodeMirrorContent}
+          className="codeMirrorJSON"
+          extensions={jsonExtensions}
+          height="calc(100vh - 78px)"
+          style={{
+            border: '1px solid #ccc',
+            borderBottom: 'none',
+            borderTop: 'none',
+          }}
+        />
       </div>
       <div
         style={{
@@ -138,20 +141,9 @@ export const AdvancedEditor = () => {
           backgroundColor: '#f5f5f5',
         }}
       >
-        <SaveButton
-          type="button"
-          style={{
-            height: '24px',
-            margin: '4px',
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            borderRadius: '2px',
-            fontSize: '14px',
-            lineHeight: '14px',
-          }}
-        >
-          <span style={{ margin: '0' }}>Save</span>
-        </SaveButton>
+        <SaveButton type="button">Save</SaveButton>
+        <SaveButton type="button">Format</SaveButton>
+        <div></div>
       </div>
     </div>
   );
