@@ -14,22 +14,29 @@ export const AdvancedEditor = () => {
   const [macros, setMacros] = useState<string>('hello macro');
   const [pages, setPages] = useState<string>('hello pages');
 
+  const [oldConfig, setOldConfig] = useState<string>('hello config');
+  const [oldMacros, setOldMacros] = useState<string>('hello macro');
+  const [oldPages, setOldPages] = useState<string>('hello pages');
+
   const getConfigData = async () => {
     const configData = await window.streamtabAPI.getConfigFile();
     if (configData) {
       setConfig(JSON.stringify(configData, null, 2));
+      setOldConfig(JSON.stringify(configData, null, 2));
     }
   };
   const getMacrosData = async () => {
     const macrosData = await window.streamtabAPI.getMacrosFile();
     if (macrosData) {
       setMacros(JSON.stringify(macrosData, null, 2));
+      setOldMacros(JSON.stringify(macrosData, null, 2));
     }
   };
   const getPagesData = async () => {
     const pagesData = await window.streamtabAPI.getPagesFile();
     if (pagesData) {
       setPages(JSON.stringify(pagesData, null, 2));
+      setOldPages(JSON.stringify(pagesData, null, 2));
     }
   };
 
@@ -58,7 +65,6 @@ export const AdvancedEditor = () => {
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
     outline: none;
     transition: background-color 0.3s ease;
     height: 24px;
@@ -76,6 +82,14 @@ export const AdvancedEditor = () => {
     }
   `;
 
+  const CodeError = styled.div`
+    color: red;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 34px;
+    display: inline;
+  `;
+
   // run useeffect once
   useEffect(() => {
     (async () => {
@@ -88,6 +102,43 @@ export const AdvancedEditor = () => {
   // eslint-disable-next-line no-nested-ternary
   const CodeMirrorContent = tab === 0 ? config : tab === 1 ? macros : pages;
 
+  const onCodeMirrorChange = (value: string) => {
+    if (tab === 0) {
+      setConfig(value);
+    } else if (tab === 1) {
+      setMacros(value);
+    } else {
+      setPages(value);
+    }
+  };
+
+  const onFormatClick = () => {
+    try {
+      const parsed = JSON.parse(CodeMirrorContent);
+      const formatted = JSON.stringify(parsed, null, 2);
+      onCodeMirrorChange(formatted);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const isValidJson = () => {
+    try {
+      JSON.parse(CodeMirrorContent);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const FileChanges = () => {
+    return (
+      <svg height="12.5" width="12.5">
+        <circle cx="6.25" cy="6.25" r="5" strokeWidth="3" fill="#ccc" />
+      </svg>
+    );
+  };
+
   return (
     <div>
       <div>
@@ -98,7 +149,7 @@ export const AdvancedEditor = () => {
             setTab(0);
           }}
         >
-          Config
+          Config {config !== oldConfig && <FileChanges />}
         </TabButton>
         <TabButton
           type="button"
@@ -107,7 +158,7 @@ export const AdvancedEditor = () => {
             setTab(1);
           }}
         >
-          Macros
+          Macros {macros !== oldMacros && <FileChanges />}
         </TabButton>
         <TabButton
           type="button"
@@ -116,7 +167,7 @@ export const AdvancedEditor = () => {
             setTab(2);
           }}
         >
-          Pages
+          Pages {pages !== oldPages && <FileChanges />}
         </TabButton>
       </div>
       <div>
@@ -124,12 +175,13 @@ export const AdvancedEditor = () => {
           value={CodeMirrorContent}
           className="codeMirrorJSON"
           extensions={jsonExtensions}
-          height="calc(100vh - 78px)"
+          height="calc(100vh - 150px)"
           style={{
             border: '1px solid #ccc',
             borderBottom: 'none',
             borderTop: 'none',
           }}
+          onChange={onCodeMirrorChange}
         />
       </div>
       <div
@@ -142,8 +194,10 @@ export const AdvancedEditor = () => {
         }}
       >
         <SaveButton type="button">Save</SaveButton>
-        <SaveButton type="button">Format</SaveButton>
-        <div></div>
+        <SaveButton onClick={onFormatClick} type="button">
+          Format
+        </SaveButton>
+        <CodeError>{isValidJson() ? '' : 'Invalid JSON'}</CodeError>
       </div>
     </div>
   );
