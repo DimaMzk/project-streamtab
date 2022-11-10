@@ -175,7 +175,7 @@ export const AdvancedEditor = () => {
           value={CodeMirrorContent}
           className="codeMirrorJSON"
           extensions={jsonExtensions}
-          height="calc(100vh - 150px)"
+          height="calc(100vh - 78px)"
           style={{
             border: '1px solid #ccc',
             borderBottom: 'none',
