@@ -249,7 +249,7 @@ export const AdvancedEditor = () => {
           disabled={!isValidJson()}
           onClick={onSaveClick}
         >
-          Save Files
+          Save File
         </SaveButton>
         <SaveButton
           type="button"
