@@ -15,6 +15,14 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import {
+  streamtabReadConfigFile,
+  streamtabReadMacrosFile,
+  streamtabReadPagesFile,
+  streamtabWriteConfigFile,
+  streamtabWriteMacrosFile,
+  streamtabWritePagesFile,
+} from './fileManager';
 
 class AppUpdater {
   constructor() {
@@ -26,6 +34,7 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
+// TODO: Remove
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
@@ -33,48 +42,27 @@ ipcMain.on('ipc-example', async (event, arg) => {
 });
 
 ipcMain.handle('streamtab-read-config-file', () => {
-  const configPath = path.join(
-    app.getPath('documents'),
-    'streamtab-config/config.json'
-  );
-  console.log('configPath', configPath);
-  try {
-    const file = fs.readFileSync(configPath, 'utf8');
-    return JSON.parse(file);
-  } catch (error) {
-    console.error('[ERROR] Failed to read config file: ', error);
-    return null;
-  }
+  return streamtabReadConfigFile();
 });
 
 ipcMain.handle('streamtab-read-macros-file', () => {
-  const configPath = path.join(
-    app.getPath('documents'),
-    'streamtab-config/macros.json'
-  );
-  console.log('configPath', configPath);
-  try {
-    const file = fs.readFileSync(configPath, 'utf8');
-    return JSON.parse(file);
-  } catch (error) {
-    console.error('[ERROR] Failed to read config file: ', error);
-    return null;
-  }
+  return streamtabReadMacrosFile();
 });
 
 ipcMain.handle('streamtab-read-pages-file', () => {
-  const configPath = path.join(
-    app.getPath('documents'),
-    'streamtab-config/pages.json'
-  );
-  console.log('configPath', configPath);
-  try {
-    const file = fs.readFileSync(configPath, 'utf8');
-    return JSON.parse(file);
-  } catch (error) {
-    console.error('[ERROR] Failed to read config file: ', error);
-    return null;
-  }
+  return streamtabReadPagesFile();
+});
+
+ipcMain.handle('streamtab-write-config-file', (_, config: string) => {
+  return streamtabWriteConfigFile(config);
+});
+
+ipcMain.handle('streamtab-write-macros-file', (_, macros: string) => {
+  return streamtabWriteMacrosFile(macros);
+});
+
+ipcMain.handle('streamtab-write-pages-file', (_, pages: string) => {
+  return streamtabWritePagesFile(pages);
 });
 
 if (process.env.NODE_ENV === 'production') {

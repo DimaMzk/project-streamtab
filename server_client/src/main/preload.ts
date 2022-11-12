@@ -26,22 +26,19 @@ contextBridge.exposeInMainWorld('streamtabAPI', {
   getConfigFile: async () => {
     return ipcRenderer.invoke('streamtab-read-config-file');
   },
-  writeConfigFile: (config: string) => {
-    // console.log("writingConfigFile");
-    // fs.writeFileSync("config.json", config);
+  writeConfigFile: async (config: string) => {
+    return ipcRenderer.invoke('streamtab-write-config-file', config);
   },
   getMacrosFile: async () => {
     return ipcRenderer.invoke('streamtab-read-macros-file');
   },
-  writeMacrosFile: (config: string) => {
-    // console.log("writingMacrosFile");
-    // fs.writeFileSync("config.json", config);
+  writeMacrosFile: async (macros: string) => {
+    return ipcRenderer.invoke('streamtab-write-macros-file', macros);
   },
   getPagesFile: async () => {
     return ipcRenderer.invoke('streamtab-read-pages-file');
   },
-  writePagesFile: (config: string) => {
-    // console.log("writingPagesFile");
-    // fs.writeFileSync("config.json", config);
+  writePagesFile: async (pages: string) => {
+    return ipcRenderer.invoke('streamtab-write-pages-file', pages);
   },
 });
