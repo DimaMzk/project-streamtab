@@ -148,24 +148,40 @@ export const AdvancedEditor = () => {
     })();
   }, []);
 
-  // eslint-disable-next-line no-nested-ternary
-  const CodeMirrorContent = tab === 0 ? config : tab === 1 ? macros : pages;
+  const getCurrentCodemirrorContent = () => {
+    switch (tab) {
+      case 0:
+        return config;
+      case 1:
+        return macros;
+      case 2:
+        return pages;
+      default:
+        return '';
+    }
+  };
 
-  const onCodeMirrorChange = (value: string) => {
-    if (tab === 0) {
-      setConfig(value);
-    } else if (tab === 1) {
-      setMacros(value);
-    } else {
-      setPages(value);
+  const updateCurrentCodemirrorContent = (value: string) => {
+    switch (tab) {
+      case 0:
+        setConfig(value);
+        break;
+      case 1:
+        setMacros(value);
+        break;
+      case 2:
+        setPages(value);
+        break;
+      default:
+        throw new Error('Invalid tab');
     }
   };
 
   const onFormatClick = () => {
     try {
-      const parsed = JSON.parse(CodeMirrorContent);
+      const parsed = JSON.parse(getCurrentCodemirrorContent());
       const formatted = JSON.stringify(parsed, null, 2);
-      onCodeMirrorChange(formatted);
+      updateCurrentCodemirrorContent(formatted);
     } catch (e) {
       console.error(e);
     }
@@ -183,7 +199,7 @@ export const AdvancedEditor = () => {
 
   const isValidJson = () => {
     try {
-      JSON.parse(CodeMirrorContent);
+      JSON.parse(getCurrentCodemirrorContent());
       return true;
     } catch (e) {
       return false;
@@ -229,18 +245,58 @@ export const AdvancedEditor = () => {
           Pages {pages !== oldPages && <FileChanges />}
         </TabButton>
       </div>
-      <div>
+      <div
+        style={{
+          height: 'calc(100vh - 78px)',
+        }}
+      >
         <CodeMirror
-          value={CodeMirrorContent}
+          value={config}
           className="codeMirrorJSON"
           extensions={jsonExtensions}
-          height="calc(100vh - 78px)"
+          height="100%"
           style={{
             border: '1px solid #ccc',
             borderBottom: 'none',
             borderTop: 'none',
+            height: '100%',
           }}
-          onChange={onCodeMirrorChange}
+          onChange={(value: string) => {
+            setConfig(value);
+          }}
+          hidden={tab !== 0}
+        />
+        <CodeMirror
+          value={macros}
+          className="codeMirrorJSON"
+          extensions={jsonExtensions}
+          height="100%"
+          style={{
+            border: '1px solid #ccc',
+            borderBottom: 'none',
+            borderTop: 'none',
+            height: '100%',
+          }}
+          onChange={(value: string) => {
+            setMacros(value);
+          }}
+          hidden={tab !== 1}
+        />
+        <CodeMirror
+          value={pages}
+          className="codeMirrorJSON"
+          extensions={jsonExtensions}
+          height="100%"
+          style={{
+            border: '1px solid #ccc',
+            borderBottom: 'none',
+            borderTop: 'none',
+            height: '100%',
+          }}
+          onChange={(value: string) => {
+            setPages(value);
+          }}
+          hidden={tab !== 2}
         />
       </div>
       <BottomBar>
