@@ -8,21 +8,13 @@ const jsonExtensions = [json()];
 
 const TabButton = styled.button`
   background-color: #fff;
-  border: 1px solid #ccc;
-  border-bottom: none;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border: none;
   cursor: pointer;
   font-size: 16px;
   padding: 4px 18px;
+  margin-right: 4px;
   outline: none;
   transition: background-color 0.3s ease;
-  &:hover {
-    background-color: #ddd;
-  }
-  &:focus {
-    background-color: #ddd;
-  }
 `;
 
 const BottomBar = styled.div`
@@ -219,7 +211,9 @@ export const AdvancedEditor = () => {
       <div>
         <TabButton
           type="button"
-          style={{ borderBottom: tab === 0 ? 'none' : '1px solid #ccc' }}
+          style={{
+            borderBottom: tab === 0 ? '2px solid #ccc' : '1px solid #ccc',
+          }}
           onClick={() => {
             setTab(0);
           }}
@@ -228,7 +222,9 @@ export const AdvancedEditor = () => {
         </TabButton>
         <TabButton
           type="button"
-          style={{ borderBottom: tab === 1 ? 'none' : '1px solid #ccc' }}
+          style={{
+            borderBottom: tab === 1 ? '2px solid #ccc' : '1px solid #ccc',
+          }}
           onClick={() => {
             setTab(1);
           }}
@@ -237,7 +233,9 @@ export const AdvancedEditor = () => {
         </TabButton>
         <TabButton
           type="button"
-          style={{ borderBottom: tab === 2 ? 'none' : '1px solid #ccc' }}
+          style={{
+            borderBottom: tab === 2 ? '2px solid #ccc' : '1px solid #ccc',
+          }}
           onClick={() => {
             setTab(2);
           }}
@@ -247,7 +245,7 @@ export const AdvancedEditor = () => {
       </div>
       <div
         style={{
-          height: 'calc(100vh - 78px)',
+          height: 'calc(100vh - 112px)',
         }}
       >
         <CodeMirror
