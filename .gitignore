@@ -10,3 +10,7 @@ server_client/.husky/
 
 server_client_old/
 server_client/.vscode/
+
+server/dist/
+server/build/
+server/server.spec

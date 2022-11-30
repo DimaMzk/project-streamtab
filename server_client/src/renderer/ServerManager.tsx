@@ -3,22 +3,32 @@ import { useState } from 'react';
 export const ServerManager = () => {
   const [serverRunning, setServerRunning] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-
-  // TODO: In a proper implementation, we'll use Electron to manage the server
-  // and use IPC to query it's status when this component loads.
-  // We'll do this for now though.
+  const [serverPort, setServerPort] = useState(0);
+  const [serverIp, setServerIp] = useState('0.0.0.0');
 
   const startServer = async () => {
-    // This is fake for npw lol
-    setServerRunning(true);
-    setServerError(null);
+    await window.streamtabAPI.startServer();
+    const ip = await window.streamtabAPI.getServerIp();
+    if (ip) {
+      setServerIp(ip);
+    }
+    const port = await window.streamtabAPI.getConfigFile();
+    if (port) {
+      setServerPort(port.PORT);
+    }
   };
 
   const stopServer = async () => {
-    // This is fake for now lol
-    setServerRunning(false);
-    setServerError(null);
+    await window.streamtabAPI.stopServer();
   };
+
+  const getServerStatus = async () => {
+    const status = await window.streamtabAPI.getServerStatus();
+    if (status !== null) {
+      setServerRunning(status.isRunning);
+    }
+  };
+  setInterval(getServerStatus, 500);
 
   return (
     <div>
@@ -36,7 +46,14 @@ export const ServerManager = () => {
           Stop Server
         </button>
       </div>
-      {serverRunning && <div>Server is running</div>}
+      {serverRunning && (
+        <div>
+          Server is running <br /> navigate to
+          http://streamtab.dmaizik.ca/webclient/?ip={serverIp}&port={serverPort}{' '}
+          <br />
+          On another device on the same network to use StreamTab
+        </div>
+      )}
       {serverError && <div>Server error: {serverError}</div>}
     </div>
   );
