@@ -1,26 +1,4 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-
-export type Channels = 'ipc-example';
-
-contextBridge.exposeInMainWorld('electron', {
-  ipcRenderer: {
-    sendMessage(channel: Channels, args: unknown[]) {
-      ipcRenderer.send(channel, args);
-    },
-    on(channel: Channels, func: (...args: unknown[]) => void) {
-      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
-        func(...args);
-      ipcRenderer.on(channel, subscription);
-
-      return () => {
-        ipcRenderer.removeListener(channel, subscription);
-      };
-    },
-    once(channel: Channels, func: (...args: unknown[]) => void) {
-      ipcRenderer.once(channel, (_event, ...args) => func(...args));
-    },
-  },
-});
+import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('streamtabAPI', {
   getConfigFile: async () => {
@@ -40,5 +18,17 @@ contextBridge.exposeInMainWorld('streamtabAPI', {
   },
   writePagesFile: async (pages: string) => {
     return ipcRenderer.invoke('streamtab-write-pages-file', pages);
+  },
+  startServer: async () => {
+    return ipcRenderer.invoke('streamtab-start-server');
+  },
+  stopServer: async () => {
+    return ipcRenderer.invoke('streamtab-stop-server');
+  },
+  getServerStatus: async () => {
+    return ipcRenderer.invoke('streamtab-get-server-status');
+  },
+  getServerIp: async () => {
+    return ipcRenderer.invoke('streamtab-get-server-ip');
   },
 });
