@@ -1,8 +1,14 @@
 import json
+from sys import argv
+
+def get_config_directory():
+    if len(argv) == 2:
+        return argv[1]
+    return ""
 
 def read_config_file():
     try:
-        with open("./config.json") as config:
+        with open(get_config_directory() + "/config.json") as config:
             return json.load(config)
     except FileNotFoundError:
         with open("./config.json", "w+") as config:
@@ -20,9 +26,9 @@ def read_pages_and_macros_file():
         both even if only one is missing.
     """
     try:
-        with open('./pages.json') as pages:
+        with open(get_config_directory() + "/pages.json") as pages:
             PAGES = json.loads(pages.read())
-        with open('./macros.json') as macros:
+        with open(get_config_directory() + "/macros.json") as macros:
             MACROS = json.loads(macros.read())
         return PAGES, MACROS
     except FileNotFoundError:
