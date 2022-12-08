@@ -6,6 +6,7 @@ import constants
 import socket
 
 
+
 def get_ip_address():
     h_name = socket.gethostname()
     return socket.gethostbyname(h_name)

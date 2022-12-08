@@ -1,5 +1,6 @@
 import { ChildProcess, spawn } from 'child_process';
 import path from 'path';
+import { app } from 'electron';
 import kill from 'tree-kill';
 import { consoleLog, consoleError } from './logger';
 
@@ -18,7 +19,14 @@ export class ServerInstance {
       return;
     }
     const serverPath = path.join(__dirname, 'server.exe');
-    const server = spawn(serverPath);
+
+    const configDirectory = path.join(
+      app.getPath('documents'),
+      'streamtab-config'
+    );
+
+    const server = spawn(serverPath, [configDirectory]);
+
     if (!server.pid) {
       consoleError(`No PID`);
       return;
