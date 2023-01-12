@@ -3,7 +3,7 @@ import './App.css';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { AdvancedEditor } from './AdvancedEditor';
-import { ServerManager } from './ServerManager';
+import { MainPage } from './MainPage';
 
 const TabButton = styled.button`
   background-color: #fff;
@@ -41,7 +41,7 @@ const MainTabbedView = () => {
           Edit Configuration
         </TabButton>
       </div>
-      {tab === 0 && <ServerManager />}
+      {tab === 0 && <MainPage />}
       {tab === 1 && <AdvancedEditor />}
     </div>
   );
@@ -51,7 +51,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<MainTabbedView />} />
+        <Route path="/" element={<MainPage />} />
       </Routes>
     </Router>
   );

@@ -1,0 +1,6 @@
+{
+  "PASSWORD": "",
+  "PASSWORD_REQUIRED": false,
+  "USE_SECURE_PROTOCOL": false,
+  "PORT": 8765
+}
