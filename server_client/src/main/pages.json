@@ -1,6 +1,5 @@
-{
-  "home": {
-    "type": "page_data",
+[
+  {
     "page_id": "home",
     "a1": {
       "type": "unassigned"
@@ -75,4 +74,4 @@
       "type": "unassigned"
     }
   }
-}
+]

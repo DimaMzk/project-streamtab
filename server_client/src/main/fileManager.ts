@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { app } from 'electron';
 import { defaultConfig, defaultMacros, defaultPages } from './defaultData';
+import { Button, Page, ConfigFile } from './types';
 import { consoleError } from './logger';
 
 /*
@@ -66,7 +67,7 @@ const createConfigFilesIfNotExists = () => {
   HELPERS END
 */
 
-export const streamtabReadConfigFile = () => {
+export const streamtabReadConfigFile = (): ConfigFile | null => {
   createConfigFilesIfNotExists();
   const configPath = path.join(
     app.getPath('documents'),
@@ -96,7 +97,7 @@ export const streamtabReadMacrosFile = () => {
   }
 };
 
-export const streamtabReadPagesFile = () => {
+export const streamtabReadPagesFile = (): [Page] | null => {
   createConfigDirectoryIfNotExists();
   const configPath = path.join(
     app.getPath('documents'),

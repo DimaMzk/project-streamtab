@@ -17,14 +17,17 @@ declare global {
 
 export interface ServerStatus {
   isRunning: boolean;
-  pid: number;
+  webSocketPort: number;
+  webServerPort: number;
+  ip: string;
 }
 
 export interface Config {
-  PASSWORD: string;
-  PASSWORD_REQUIRED: boolean;
-  USE_SECURE_PROTOCOL: boolean;
-  PORT: number;
+  password: string;
+  passwordRequired: boolean;
+  useSecureProtocol: boolean;
+  webSocketPort: number;
+  webServerPort: number;
 }
 
 export {};

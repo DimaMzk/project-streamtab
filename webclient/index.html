@@ -105,7 +105,7 @@
       background-color: #DEDEDE;
     }
 
-    #reconnectionNoticeImg{
+    #reconnectionNoticeImg {
       height: 50px;
       width: 50px;
       position: absolute;
@@ -114,7 +114,7 @@
       left: 0;
     }
 
-    #reconnectionNoticeText{
+    #reconnectionNoticeText {
       height: 50px;
       line-height: 50px;
       position: absolute;
@@ -324,7 +324,7 @@
         }
 
         // Receiving Page Data
-        if (jsonData.type == "page_data") {
+        if (jsonData.type == "pageData") {
           handlePageData(jsonData);
         }
 
@@ -379,11 +379,11 @@
       let el = document.querySelectorAll(".buttoninner");
       for (var i = 0; i < el.length; i++) {
         console.log(el[i].id);
-        el[i].onclick = () => {};
-        el[i].onmousedown = () => {};
-        el[i].onmouseup = () => {};
-        el[i].ontouchstart = () => {};
-        el[i].ontouchend = () => {};
+        el[i].onclick = () => { };
+        el[i].onmousedown = () => { };
+        el[i].onmouseup = () => { };
+        el[i].ontouchstart = () => { };
+        el[i].ontouchend = () => { };
 
 
         if (buttonDictionary[el[i].id].hold_down == true) {
@@ -468,8 +468,11 @@
     }
 
     function handlePageData(jsonData) {
-      let pageID = jsonData.page_id;
+      let pageID = jsonData.data.id;
       // TODO: If pageID is not "home" set A1 as a "home" button
+
+
+      console.log(jsonData.data);
       Object.keys(jsonData).forEach((key) => {
         if (key == "type" || key == "page_id") return; // the `continue` of forEach loops
         let value = jsonData[key];
@@ -589,7 +592,7 @@
         window.location.reload();
       }
 
-      document.getElementById("reconnectionNoticeText").innerText = "Reconnecting " + (reconnectionAttempts + 1 ) + " / 10";
+      document.getElementById("reconnectionNoticeText").innerText = "Reconnecting " + (reconnectionAttempts + 1) + " / 10";
 
       try {
         socket = new WebSocket("ws://" + ip + ":" + port);
@@ -597,12 +600,14 @@
         console.log("Error Connecting " + error);
         if (password != undefined) {
           setTimeout(() => {
-            attemptReconnect(ipAddress, portToConnect, password)}
+            attemptReconnect(ipAddress, portToConnect, password)
+          }
             , 3000)
             ;
         } else {
           setTimeout(() => {
-            attemptReconnect(ipAddress, portToConnect, undefined)}, 3000);
+            attemptReconnect(ipAddress, portToConnect, undefined)
+          }, 3000);
         }
         reconnectionAttempts++;
       }
@@ -626,23 +631,23 @@
 
       socket.onerror = function () {
         if (password != undefined) {
-          setTimeout(() => {attemptReconnect(ipAddress, portToConnect, password)}, 3000);
+          setTimeout(() => { attemptReconnect(ipAddress, portToConnect, password) }, 3000);
         } else {
-          setTimeout(() => {attemptReconnect(ipAddress, portToConnect, undefined)}, 3000);
+          setTimeout(() => { attemptReconnect(ipAddress, portToConnect, undefined) }, 3000);
         }
         reconnectionAttempts++;
       }
 
       socket.onmessage = function (event) {
-          let jsonData = JSON.parse(event.data);
-          // Connection Confirmation
-          if (jsonData.type == "connection_confirmed") {
-            handleConnectionConfirmation(jsonData);
-          }
+        let jsonData = JSON.parse(event.data);
+        // Connection Confirmation
+        if (jsonData.type == "connection_confirmed") {
+          handleConnectionConfirmation(jsonData);
         }
+      }
     }
 
-    function showReconnectionNotice(){
+    function showReconnectionNotice() {
       document.getElementById('reconnectionNotice').classList.remove('hidden');
       document.getElementById('reconnectionNotice').classList.add('visible');
     }

@@ -1,70 +1,109 @@
-import { ChildProcess, spawn } from 'child_process';
-import path from 'path';
-import { app } from 'electron';
-import kill from 'tree-kill';
+import { WebSocketServer } from 'ws';
 import { consoleLog, consoleError } from './logger';
+import {
+  handleInitialConnection,
+  handleAuth,
+  handleRequest,
+  handleMacro,
+} from './serverjs/message_handler';
+import { Button, Page, ConfigFile } from './types';
+import {
+  streamtabReadConfigFile,
+  streamtabReadMacrosFile,
+  streamtabReadPagesFile,
+  streamtabWriteConfigFile,
+  streamtabWriteMacrosFile,
+  streamtabWritePagesFile,
+} from './fileManager';
 
 export class ServerInstance {
-  constructor(pid: number, server: ChildProcess | null) {
-    this.pid = pid;
-    this.server = server;
-    this.restarting = false;
-    this.stderr = '';
-    this.stdout = '';
+  constructor() {
+    this.server = null;
+    this.port = null;
+    this.config = null;
+    this.pages = null;
   }
 
   serverStart = () => {
-    if (this.pid !== 0) {
-      consoleLog('Server already running');
+    // TODO: Start server
+
+    // Get Config
+    this.config = streamtabReadConfigFile();
+    if (!this.config) {
+      consoleError('Failed to read config file');
       return;
     }
-    const serverPath = path.join(__dirname, 'server.exe');
 
-    const configDirectory = path.join(
-      app.getPath('documents'),
-      'streamtab-config'
-    );
-
-    const server = spawn(serverPath, [configDirectory]);
-
-    if (!server.pid) {
-      consoleError(`No PID`);
+    // Get Page Data
+    this.pages = streamtabReadPagesFile();
+    if (!this.pages) {
+      consoleError('Failed to read pages file');
       return;
     }
-    this.pid = server.pid;
-    this.server = server;
-    server.on('exit', (code, signal) => {
-      consoleLog(`Server exited with code ${code} and signal ${signal}`);
-      this.pid = 0;
-      this.server = null;
+
+    this.port = this.config.webSocketPort;
+    this.server = new WebSocketServer({ port: this.port });
+
+    this.server.on('connection', (ws) => {
+      ws.on('message', (message) => {
+        const decodedMessage = message.toString();
+        let decodedMessageJson = null;
+        try {
+          decodedMessageJson = JSON.parse(decodedMessage);
+        } catch (e) {
+          consoleError('Invalid JSON object');
+          return;
+        }
+
+        if (!decodedMessageJson.type) {
+          consoleError('Invalid message type');
+          return;
+        }
+
+        // Makes typescript happy
+        if (!this.config || !this.pages) {
+          consoleError('Server not initialized');
+          return;
+        }
+
+        switch (decodedMessageJson.type) {
+          case 'initial_connection':
+            ws.send(handleInitialConnection(this.config));
+            break;
+          case 'auth': // TODO: Implement
+            ws.send(handleAuth(decodedMessageJson));
+            break;
+          case 'request':
+            ws.send(handleRequest(decodedMessageJson, this.config, this.pages));
+            break;
+          case 'macro':
+            ws.send(handleMacro(decodedMessageJson));
+            break;
+          default:
+            consoleError('Invalid message type');
+            break;
+        }
+
+        consoleLog('message: ', message.toString());
+      });
+      ws.send('something');
     });
-
-    consoleLog(`Server started with PID ${this.pid}`);
   };
+
+  // https://www.npmjs.com/package/ws
 
   serverStop = () => {
-    // kill the process + all children
-    if (this.pid === 0) {
-      // no server running
-      return;
-    }
-    consoleLog(`Stopping server with PID ${this.pid}`);
-    kill(this.pid, 'SIGTERM', (err) => {
-      if (err) {
-        consoleError(`Failed to kill server with PID ${this.pid}`);
-      }
-    });
+    this.server?.close();
+    this.server = null;
   };
 
-  pid: number;
+  server: WebSocketServer | null;
 
-  server: ChildProcess | null;
+  port: number | null;
 
-  restarting: boolean;
+  config: ConfigFile | null;
 
-  stdout: string;
-
-  stderr: string;
+  pages: Page[] | null;
 }
 
-export const server = new ServerInstance(0, null);
+export const server = new ServerInstance();
