@@ -9,8 +9,6 @@ import {
 
 import { Button, Page, ConfigFile, RequestMessage } from '../types';
 
-// TODO: Move to types.d.ts
-
 const GENERAL_ERROR = JSON.stringify({ type: 'general_error' });
 const CONNECTION_CONFIRMED = JSON.stringify({ type: 'connection_confirmed' });
 const AUTH_REQUIRED = JSON.stringify({ type: 'authentication_required' });
@@ -26,7 +24,6 @@ export const handleAuth = (message: string) => {
   return 'something';
 };
 
-// '{"type":"request","request_type":"page_info","page_id":"home","date":1673494955742}'
 export const handleRequest = (
   message: RequestMessage,
   config: ConfigFile,

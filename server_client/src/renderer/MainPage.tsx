@@ -7,23 +7,163 @@ import styled from 'styled-components';
 import { useDebounce } from 'use-debounce';
 import { AdvancedEditor } from './AdvancedEditor';
 import { ShortSecondaryButton } from './components/buttons';
-import {
-  ServerStartingButton,
-  StopServerButton,
-  StartServerButton,
-  PageWrapper,
-  LeftPanel,
-  RightPanelWrapper,
-  RightPanelControlsWrapper,
-  QRCodeWrapper,
-  SettingWrapper,
-  ToggleWrapper,
-  ToggleSwitchThing,
-  InputLabel,
-  InputBox,
-  RightPanelStartStopWrapper,
-  RightPanelStartStopWrappedWrapper,
-} from './MainPage_Components';
+
+const PageWrapper = styled.div`
+  display: flex;
+`;
+
+const LeftPanel = styled.div`
+  position: absolute;
+  right: 308pz;
+  top: 0;
+  bottom: 0;
+  left: 0;
+`;
+
+const RightPanelWrapper = styled.div`
+  width: 300px;
+  background-color: #f6f6f6;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  top: 8px;
+  border-radius: 8px;
+  padding-top: 8px;
+`;
+
+const RightPanelControlsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const QRCodeWrapper = styled.div`
+  background-color: white;
+  border-radius: 4px;
+`;
+
+const RightPanelStartStopWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+`;
+
+const RightPanelStartStopWrappedWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const StopServerButton = styled.button`
+  margin: 8px;
+  height: 42px;
+  background-color: red;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  align-self: stretch;
+  vertical-align: bottom;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: darkred;
+  }
+`;
+
+const StartServerButton = styled.button`
+  margin: 8px;
+  height: 42px;
+  background-color: green;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  align-self: stretch;
+  vertical-align: bottom;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: darkgreen;
+  }
+`;
+
+const InputLabel = styled.label`
+  margin: 2px 12px 2px 12px;
+  font-size: 12px;
+  align-self: stretch;
+`;
+
+const InputBox = styled.input`
+  margin: 2px 12px 8px 12px;
+  height: 42px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  align-self: stretch;
+  vertical-align: bottom;
+  padding: 0 8px;
+  border: 1px solid #ccc;
+`;
+
+const ServerStartingButton = styled.button`
+  margin: 8px;
+  height: 42px;
+  background-color: #014001;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  align-self: stretch;
+  vertical-align: bottom;
+`;
+
+const ToggleWrapper = styled.div<{
+  useCustomPort: boolean;
+  disabled: boolean;
+}>`
+  width: 42px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: ${(props) =>
+    // eslint-disable-next-line no-nested-ternary
+    props.disabled
+      ? props.useCustomPort
+        ? 'darkgreen'
+        : 'darkred'
+      : props.useCustomPort
+      ? 'green'
+      : 'red'};
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: ${(props) =>
+    props.useCustomPort ? 'flex-end' : 'flex-start'};
+  cursor: pointer;
+  padding: 0 2px;
+  transition: background-color 0.2s;
+`;
+
+const ToggleSwitchThing = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: white;
+`;
+
+const SettingWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: stretch;
+  justify-content: space-between;
+  padding: 0 12px;
+  margin-bottom: 6px;
+`;
 
 const StartStopButton = (props: {
   serverStarting: boolean;

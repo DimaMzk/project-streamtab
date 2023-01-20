@@ -25,8 +25,6 @@ export class ServerInstance {
   }
 
   serverStart = () => {
-    // TODO: Start server
-
     // Get Config
     this.config = streamtabReadConfigFile();
     if (!this.config) {
@@ -89,8 +87,6 @@ export class ServerInstance {
       ws.send('something');
     });
   };
-
-  // https://www.npmjs.com/package/ws
 
   serverStop = () => {
     this.server?.close();

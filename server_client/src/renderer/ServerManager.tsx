@@ -68,7 +68,6 @@ export const ServerManager = () => {
           />
         )}
         {serverError && <div>Server error: {serverError}</div>}
-        {/* 150px wide bar on the right */}
       </div>
       <div
         style={{
