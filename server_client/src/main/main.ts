@@ -61,7 +61,6 @@ ipcMain.handle('streamtab-write-pages-file', (_, pages: string) => {
 });
 
 ipcMain.handle('streamtab-start-server', () => {
-  // TODO:need to get config to this executable
   return server.serverStart();
 });
 
@@ -72,7 +71,9 @@ ipcMain.handle('streamtab-stop-server', () => {
 ipcMain.handle('streamtab-get-server-status', () => {
   return {
     isRunning: server.server !== null,
-    pid: server.pid,
+    webSocketPort: server.port,
+    webServerPort: 8081,
+    ip: '192.168.1.159',
   };
 });
 
@@ -142,7 +143,7 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 728,
+    height: 778,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged

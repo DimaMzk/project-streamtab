@@ -3,6 +3,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import styled from 'styled-components';
 import { json } from '@codemirror/lang-json';
 import { defaultConfig, defaultPages, defaultMacros } from './defaultData';
+import { ShortSecondaryButton } from './components/buttons';
 
 const jsonExtensions = [json()];
 
@@ -60,7 +61,11 @@ const CodeError = styled.div`
   display: inline;
 `;
 
-export const AdvancedEditor = () => {
+export const AdvancedEditor = (props: {
+  serverRunning: boolean;
+  setShowAdvanced: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const { serverRunning, setShowAdvanced } = props;
   const [tab, setTab] = useState(0);
   const [config, setConfig] = useState<string>(
     JSON.stringify(defaultConfig, null, 2)
@@ -208,6 +213,14 @@ export const AdvancedEditor = () => {
 
   return (
     <div>
+      <ShortSecondaryButton
+        type="button"
+        onClick={() => {
+          setShowAdvanced(false);
+        }}
+      >
+        &lt;- Close
+      </ShortSecondaryButton>
       <div>
         <TabButton
           type="button"
@@ -242,13 +255,19 @@ export const AdvancedEditor = () => {
         >
           Pages {pages !== oldPages && <FileChanges />}
         </TabButton>
+        {serverRunning && (
+          <TabButton>
+            <b>Changes cannot be made while the server is running.</b>
+          </TabButton>
+        )}
       </div>
       <div
         style={{
-          height: 'calc(100vh - 112px)',
+          height: 'calc(100vh - 102px)',
         }}
       >
         <CodeMirror
+          editable={!serverRunning}
           value={config}
           className="codeMirrorJSON"
           extensions={jsonExtensions}
@@ -265,6 +284,7 @@ export const AdvancedEditor = () => {
           hidden={tab !== 0}
         />
         <CodeMirror
+          editable={!serverRunning}
           value={macros}
           className="codeMirrorJSON"
           extensions={jsonExtensions}
@@ -281,6 +301,7 @@ export const AdvancedEditor = () => {
           hidden={tab !== 1}
         />
         <CodeMirror
+          editable={!serverRunning}
           value={pages}
           className="codeMirrorJSON"
           extensions={jsonExtensions}
