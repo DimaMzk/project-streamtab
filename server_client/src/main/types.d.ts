@@ -9,7 +9,7 @@ export interface Button {
   name: string;
   macro?: Macro;
   page_id?: string;
-  value?: string;
+  value?: string; // TODO: Hmmmm
 }
 
 export interface Page {

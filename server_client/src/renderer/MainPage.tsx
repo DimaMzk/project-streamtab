@@ -7,14 +7,46 @@ import styled from 'styled-components';
 import { useDebounce } from 'use-debounce';
 import { AdvancedEditor } from './AdvancedEditor';
 import { ShortSecondaryButton } from './components/buttons';
+import { LeftPanel } from './LeftPanel';
+
+const defaultPage = {
+  id: 'home',
+  height: 2,
+  width: 2,
+  background_color: null,
+  background_image: null,
+  buttons: [
+    {
+      x: 0,
+      y: 0,
+      name: 'Configure StreamTab from Desktop App',
+    },
+    {
+      x: 1,
+      y: 0,
+      name: 'Oh Sure Buddy',
+    },
+    {
+      x: 1,
+      y: 1,
+      name: 'Gettiy up',
+    },
+    {
+      x: 0,
+      y: 1,
+      name: 'Poppy Doppy',
+    },
+  ],
+  name: 'Home',
+};
 
 const PageWrapper = styled.div`
   display: flex;
 `;
 
-const LeftPanel = styled.div`
+const LeftPanelWrapper = styled.div`
   position: absolute;
-  right: 308pz;
+  right: 308px;
   top: 0;
   bottom: 0;
   left: 0;
@@ -202,6 +234,7 @@ export const MainPage = () => {
   const [requirePassword, setRequirePassword] = useState(false);
   const [password, setPassword] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [pages, setPages] = useState();
 
   const [debouncedServerPort] = useDebounce(serverPort, 500);
   const [debouncedWebPort] = useDebounce(webPort, 500);
@@ -370,7 +403,9 @@ export const MainPage = () => {
 
   return (
     <PageWrapper>
-      <LeftPanel>Hello World</LeftPanel>
+      <LeftPanelWrapper>
+        <LeftPanel page={defaultPage} />
+      </LeftPanelWrapper>
       <RightPanelWrapper>
         <RightPanelControlsWrapper>
           {serverRunning && (
