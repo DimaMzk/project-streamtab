@@ -32,22 +32,48 @@ const ButtonGrid = styled.div<{
   backgroundColor: string | null;
   backgroundImage: string | null;
 }>`
-  height: 100vh;
-  border-radius: 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 50px;
+  right: 0;
   display: grid;
   grid-template-columns: repeat(${(props) => props.colCount}, 1fr);
   grid-template-rows: repeat(${(props) => props.rowCount}, 1fr);
-  grid-gap: 1px;
+  grid-gap: 5px;
   background-color: ${(props) => props.backgroundColor || 'grey'};
   background-image: ${(props) => props.backgroundImage || 'none'};
   color: #444;
-  // we want the grid to be centered
   justify-content: center;
   align-items: center;
-  // we want to items in the grid to be the same size
-  // and to fill the grid
   justify-items: stretch;
   align-items: stretch;
+  padding: 5px;
+`;
+
+const ButtonGridButtonsForcedAsSquare = styled.div<{
+  colCount: number;
+  rowCount: number;
+  backgroundColor: string | null;
+  backgroundImage: string | null;
+}>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 50px;
+  right: 0;
+  display: grid;
+  grid-template-columns: ${(props) => `repeat(${props.colCount}, 200px)`};
+  grid-template-rows: ${(props) => `repeat(${props.rowCount}, 200px)`};
+  grid-gap: 5px;
+  background-color: ${(props) => props.backgroundColor || 'grey'};
+  background-image: ${(props) => props.backgroundImage || 'none'};
+  color: #444;
+  align-items: stretch;
+  padding: 5px;
+  align-content: center;
+  justify-items: stretch;
+  justify-content: center;
 `;
 
 const ButtonStyled = styled.div`
@@ -64,27 +90,155 @@ const ButtonStyled = styled.div`
   }
 `;
 
+const BottomBarContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+`;
+
+const ToggleWrapper = styled.div<{
+  useCustomPort: boolean;
+  disabled: boolean;
+}>`
+  width: 42px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: ${(props) =>
+    // eslint-disable-next-line no-nested-ternary
+    props.disabled
+      ? props.useCustomPort
+        ? 'darkgreen'
+        : 'darkred'
+      : props.useCustomPort
+      ? 'green'
+      : 'red'};
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: ${(props) =>
+    props.useCustomPort ? 'flex-end' : 'flex-start'};
+  cursor: pointer;
+  padding: 0 2px;
+  transition: background-color 0.2s;
+`;
+
+const ToggleSwitchThing = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: white;
+`;
+
+const SettingWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: stretch;
+  justify-content: space-between;
+  padding: 0 12px;
+  margin-bottom: 6px;
+`;
+
+const BottomBar = (props: {
+  setStretchButtons: React.Dispatch<React.SetStateAction<boolean>>;
+  stretchButtons: boolean;
+}) => {
+  const { setStretchButtons, stretchButtons } = props;
+
+  const toggleStretchButtons = () => {
+    setStretchButtons(!stretchButtons);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter') {
+      toggleStretchButtons();
+    }
+  };
+
+  return (
+    <BottomBarContainer>
+      <div style={{ width: '215px' }}>
+        <SettingWrapper>
+          <div>Stretch Buttons</div>
+          <ToggleWrapper
+            disabled={false}
+            useCustomPort={stretchButtons}
+            onClick={toggleStretchButtons}
+            onKeyDown={handleKeyDown}
+            role="switch"
+            aria-checked={stretchButtons}
+            tabIndex={0}
+          >
+            <ToggleSwitchThing />
+          </ToggleWrapper>
+        </SettingWrapper>
+      </div>
+    </BottomBarContainer>
+  );
+};
+
 export const LeftPanel = (props: { page: Page }) => {
   const { page } = props;
-  // make a grid colCount x rowCount
+  const [stretchButtons, setStretchButtons] = useState(true);
+
   return (
-    <ButtonGrid
-      colCount={page.width}
-      rowCount={page.height}
-      backgroundColor={page.background_color}
-      backgroundImage={page.background_image}
-    >
-      {page.buttons.map((button) => (
-        <ButtonStyled
-          style={{
-            gridColumn: button.x + 1,
-            gridRow: button.y + 1,
-          }}
+    <>
+      {stretchButtons ? (
+        <ButtonGrid
+          colCount={page.width}
+          rowCount={page.height}
+          backgroundColor={page.background_color}
+          backgroundImage={page.background_image}
         >
-          {button.name}
-        </ButtonStyled>
-      ))}
-    </ButtonGrid>
+          {page.buttons.map((button) => (
+            <ButtonStyled
+              style={{
+                gridColumn: button.x + 1,
+                gridRow: button.y + 1,
+                gridColumnStart: button.x + 1,
+                gridRowStart: button.y + 1,
+                gridColumnEnd: button.x + 2,
+                gridRowEnd: button.y + 2,
+              }}
+            >
+              {button.name}
+            </ButtonStyled>
+          ))}
+        </ButtonGrid>
+      ) : (
+        <ButtonGridButtonsForcedAsSquare
+          colCount={page.width}
+          rowCount={page.height}
+          backgroundColor={page.background_color}
+          backgroundImage={page.background_image}
+        >
+          {page.buttons.map((button) => (
+            <ButtonStyled
+              style={{
+                gridColumn: button.x + 1,
+                gridRow: button.y + 1,
+                gridColumnStart: button.x + 1,
+                gridRowStart: button.y + 1,
+                gridColumnEnd: button.x + 2,
+                gridRowEnd: button.y + 2,
+              }}
+            >
+              {button.name}
+            </ButtonStyled>
+          ))}
+        </ButtonGridButtonsForcedAsSquare>
+      )}
+
+      <BottomBar
+        setStretchButtons={setStretchButtons}
+        stretchButtons={stretchButtons}
+      />
+    </>
   );
 };
 

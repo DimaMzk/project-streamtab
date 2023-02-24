@@ -12,7 +12,7 @@ import { LeftPanel } from './LeftPanel';
 const defaultPage = {
   id: 'home',
   height: 2,
-  width: 2,
+  width: 3,
   background_color: null,
   background_image: null,
   buttons: [
@@ -35,6 +35,16 @@ const defaultPage = {
       x: 0,
       y: 1,
       name: 'Poppy Doppy',
+    },
+    {
+      x: 2,
+      y: 1,
+      name: 'Poppy Doppy 123',
+    },
+    {
+      x: 2,
+      y: 0,
+      name: 'Poppy Doppy 1324',
     },
   ],
   name: 'Home',
