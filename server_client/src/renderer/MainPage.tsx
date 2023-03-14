@@ -64,7 +64,7 @@ const LeftPanelWrapper = styled.div`
 
 const RightPanelWrapper = styled.div`
   width: 300px;
-  background-color: #f6f6f6;
+  background-color: #ebecf0;
   position: absolute;
   bottom: 8px;
   right: 8px;
@@ -80,7 +80,7 @@ const RightPanelControlsWrapper = styled.div`
 `;
 
 const QRCodeWrapper = styled.div`
-  background-color: white;
+  background-color: #fdfdfe;
   border-radius: 4px;
 `;
 
@@ -194,7 +194,7 @@ const ToggleSwitchThing = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  background-color: white;
+  background-color: #fdfdfe;
 `;
 
 const SettingWrapper = styled.div`

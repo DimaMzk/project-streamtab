@@ -33,15 +33,15 @@ const ButtonGrid = styled.div<{
   backgroundImage: string | null;
 }>`
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 50px;
-  right: 0;
+  top: 4px;
+  left: 4px;
+  bottom: 58px;
+  right: 4px;
   display: grid;
   grid-template-columns: repeat(${(props) => props.colCount}, 1fr);
   grid-template-rows: repeat(${(props) => props.rowCount}, 1fr);
-  grid-gap: 5px;
-  background-color: ${(props) => props.backgroundColor || 'grey'};
+  grid-gap: 4px;
+  background-color: ${(props) => props.backgroundColor || '#FDFDFE'};
   background-image: ${(props) => props.backgroundImage || 'none'};
   color: #444;
   justify-content: center;
@@ -58,15 +58,15 @@ const ButtonGridButtonsForcedAsSquare = styled.div<{
   backgroundImage: string | null;
 }>`
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 50px;
-  right: 0;
+  top: 4px;
+  left: 4px;
+  bottom: 58px;
+  right: 4px;
   display: grid;
   grid-template-columns: ${(props) => `repeat(${props.colCount}, 200px)`};
   grid-template-rows: ${(props) => `repeat(${props.rowCount}, 200px)`};
-  grid-gap: 5px;
-  background-color: ${(props) => props.backgroundColor || 'grey'};
+  grid-gap: 4px;
+  background-color: ${(props) => props.backgroundColor || '#FDFDFE'};
   background-image: ${(props) => props.backgroundImage || 'none'};
   color: #444;
   align-items: stretch;
@@ -81,7 +81,7 @@ const ButtonStyled = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: #ebecf0;
   // hover
   cursor: pointer;
   transition: background-color 0.2s;
@@ -90,15 +90,16 @@ const ButtonStyled = styled.div`
   }
 `;
 
-const BottomBarContainer = styled.div`
+const BottomBarWrapper = styled.div`
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
   height: 50px;
-  background-color: white;
+  background-color: #ebecf0;
   display: flex;
   align-items: center;
+  border-radius: 8px;
 `;
 
 const ToggleWrapper = styled.div<{
@@ -131,7 +132,7 @@ const ToggleSwitchThing = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  background-color: white;
+  background-color: #fdfdfe;
 `;
 
 const SettingWrapper = styled.div`
@@ -141,7 +142,6 @@ const SettingWrapper = styled.div`
   align-self: stretch;
   justify-content: space-between;
   padding: 0 12px;
-  margin-bottom: 6px;
 `;
 
 const BottomBar = (props: {
@@ -161,7 +161,7 @@ const BottomBar = (props: {
   };
 
   return (
-    <BottomBarContainer>
+    <BottomBarWrapper>
       <div style={{ width: '215px' }}>
         <SettingWrapper>
           <div>Stretch Buttons</div>
@@ -178,13 +178,13 @@ const BottomBar = (props: {
           </ToggleWrapper>
         </SettingWrapper>
       </div>
-    </BottomBarContainer>
+    </BottomBarWrapper>
   );
 };
 
 export const LeftPanel = (props: { page: Page }) => {
   const { page } = props;
-  const [stretchButtons, setStretchButtons] = useState(true);
+  const [stretchButtons, setStretchButtons] = useState(false);
 
   return (
     <>
