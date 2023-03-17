@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 // ^^^ These are being followed, the linter just requires manual
 // configuration to understand that the label is associated with :/
+import { Page } from 'main/types';
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import styled from 'styled-components';
@@ -24,31 +25,31 @@ const defaultPage = {
     {
       x: 1,
       y: 0,
-      name: 'Oh Sure Buddy',
-    },
-    {
-      x: 1,
-      y: 1,
-      name: 'Gettiy up',
-    },
-    {
-      x: 0,
-      y: 1,
-      name: 'Poppy Doppy',
-    },
-    {
-      x: 2,
-      y: 1,
-      name: 'Poppy Doppy 123',
-    },
-    {
-      x: 2,
-      y: 0,
-      name: 'Poppy Doppy 1324',
+      name: 'Open other page',
+      page_id: 'other',
     },
   ],
   name: 'Home',
 };
+
+const otherPage = {
+  id: 'other',
+  height: 2,
+  width: 3,
+  background_color: null,
+  background_image: null,
+  buttons: [
+    {
+      x: 0,
+      y: 0,
+      name: '< Back',
+      page_id: 'home',
+    },
+  ],
+  name: 'Some Other Page',
+};
+
+const pages = [defaultPage, otherPage];
 
 const PageWrapper = styled.div`
   display: flex;
@@ -244,7 +245,7 @@ export const MainPage = () => {
   const [requirePassword, setRequirePassword] = useState(false);
   const [password, setPassword] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [pages, setPages] = useState();
+  // const [pages, setPages] = useState();
 
   const [debouncedServerPort] = useDebounce(serverPort, 500);
   const [debouncedWebPort] = useDebounce(webPort, 500);
@@ -414,7 +415,7 @@ export const MainPage = () => {
   return (
     <PageWrapper>
       <LeftPanelWrapper>
-        <LeftPanel page={defaultPage} />
+        <LeftPanel pages={pages} />
       </LeftPanelWrapper>
       <RightPanelWrapper>
         <RightPanelControlsWrapper>

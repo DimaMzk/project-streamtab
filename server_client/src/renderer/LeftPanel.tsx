@@ -182,9 +182,67 @@ const BottomBar = (props: {
   );
 };
 
-export const LeftPanel = (props: { page: Page }) => {
-  const { page } = props;
+const Buttons = (props: {
+  page: Page;
+  onButtonClick: (button: Button) => void;
+}) => {
+  const { page, onButtonClick } = props;
+
+  return (
+    <>
+      {Array.from(Array(page.height).keys()).map((y) =>
+        Array.from(Array(page.width).keys()).map((x) => {
+          const button = page.buttons.find((b) => b.x === x && b.y === y);
+          if (button) {
+            return (
+              <ButtonStyled
+                style={{
+                  gridColumn: button.x + 1,
+                  gridRow: button.y + 1,
+                  gridColumnStart: button.x + 1,
+                  gridRowStart: button.y + 1,
+                  gridColumnEnd: button.x + 2,
+                  gridRowEnd: button.y + 2,
+                }}
+                onClick={() => onButtonClick(button)}
+              >
+                {button.name}
+              </ButtonStyled>
+            );
+          }
+          return (
+            <ButtonStyled
+              style={{
+                gridColumn: x + 1,
+                gridRow: y + 1,
+                gridColumnStart: x + 1,
+                gridRowStart: y + 1,
+                gridColumnEnd: x + 2,
+                gridRowEnd: y + 2,
+              }}
+            >
+              +
+            </ButtonStyled>
+          );
+        })
+      )}
+    </>
+  );
+};
+
+export const LeftPanel = (props: { pages: Page[] }) => {
+  const { pages } = props;
   const [stretchButtons, setStretchButtons] = useState(false);
+  const [page, setPage] = useState(pages[0]);
+
+  const onButtonClick = (button: Button) => {
+    if (button.page_id) {
+      const newPage = pages.find((p) => p.id === button.page_id);
+      if (newPage) {
+        setPage(newPage);
+      }
+    }
+  };
 
   return (
     <>
@@ -195,20 +253,7 @@ export const LeftPanel = (props: { page: Page }) => {
           backgroundColor={page.background_color}
           backgroundImage={page.background_image}
         >
-          {page.buttons.map((button) => (
-            <ButtonStyled
-              style={{
-                gridColumn: button.x + 1,
-                gridRow: button.y + 1,
-                gridColumnStart: button.x + 1,
-                gridRowStart: button.y + 1,
-                gridColumnEnd: button.x + 2,
-                gridRowEnd: button.y + 2,
-              }}
-            >
-              {button.name}
-            </ButtonStyled>
-          ))}
+          <Buttons page={page} onButtonClick={onButtonClick} />
         </ButtonGrid>
       ) : (
         <ButtonGridButtonsForcedAsSquare
@@ -217,20 +262,7 @@ export const LeftPanel = (props: { page: Page }) => {
           backgroundColor={page.background_color}
           backgroundImage={page.background_image}
         >
-          {page.buttons.map((button) => (
-            <ButtonStyled
-              style={{
-                gridColumn: button.x + 1,
-                gridRow: button.y + 1,
-                gridColumnStart: button.x + 1,
-                gridRowStart: button.y + 1,
-                gridColumnEnd: button.x + 2,
-                gridRowEnd: button.y + 2,
-              }}
-            >
-              {button.name}
-            </ButtonStyled>
-          ))}
+          <Buttons page={page} onButtonClick={onButtonClick} />
         </ButtonGridButtonsForcedAsSquare>
       )}
 
