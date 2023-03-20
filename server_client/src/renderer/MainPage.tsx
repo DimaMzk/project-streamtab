@@ -10,47 +10,6 @@ import { AdvancedEditor } from './AdvancedEditor';
 import { ShortSecondaryButton } from './components/buttons';
 import { LeftPanel } from './LeftPanel';
 
-const defaultPage = {
-  id: 'home',
-  height: 2,
-  width: 3,
-  background_color: null,
-  background_image: null,
-  buttons: [
-    {
-      x: 0,
-      y: 0,
-      name: 'Configure StreamTab from Desktop App',
-    },
-    {
-      x: 1,
-      y: 0,
-      name: 'Open other page',
-      page_id: 'other',
-    },
-  ],
-  name: 'Home',
-};
-
-const otherPage = {
-  id: 'other',
-  height: 2,
-  width: 3,
-  background_color: null,
-  background_image: null,
-  buttons: [
-    {
-      x: 0,
-      y: 0,
-      name: '< Back',
-      page_id: 'home',
-    },
-  ],
-  name: 'Some Other Page',
-};
-
-const pages = [defaultPage, otherPage];
-
 const PageWrapper = styled.div`
   display: flex;
 `;
@@ -245,7 +204,7 @@ export const MainPage = () => {
   const [requirePassword, setRequirePassword] = useState(false);
   const [password, setPassword] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
-  // const [pages, setPages] = useState();
+  const [pages, setPages] = useState<Page[] | null>(null);
 
   const [debouncedServerPort] = useDebounce(serverPort, 500);
   const [debouncedWebPort] = useDebounce(webPort, 500);
@@ -294,8 +253,16 @@ export const MainPage = () => {
           config.webServerPort !== DEFAULT_WEBSERVER_PORT
       );
     };
+    const getServerPages = async () => {
+      const p = await window.streamtabAPI.getPagesFile();
+      if (!p) {
+        return;
+      }
+      setPages(p);
+    };
     getServerConfig();
-  }, []);
+    getServerPages();
+  }, [showAdvanced]);
 
   const stopServer = async () => {
     setServerRunning(false);
@@ -415,7 +382,7 @@ export const MainPage = () => {
   return (
     <PageWrapper>
       <LeftPanelWrapper>
-        <LeftPanel pages={pages} />
+        {pages !== null && <LeftPanel pages={pages} />}
       </LeftPanelWrapper>
       <RightPanelWrapper>
         <RightPanelControlsWrapper>

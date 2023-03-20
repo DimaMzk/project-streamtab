@@ -1,30 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-export interface Page {
-  id: string;
-  height: number;
-  width: number;
-  background_color: string | null;
-  background_image: string | null;
-  buttons: Button[];
-  name: string;
-}
-
-interface Button {
-  x: number;
-  y: number;
-  name: string;
-  macro?: Macro;
-  page_id?: string;
-  value?: string; // TODO: Hmmmm
-}
-
-interface Macro {
-  type: string;
-  id: string;
-}
+import { Button, Page } from '../main/types';
 
 const ButtonGrid = styled.div<{
   colCount: number;
@@ -196,6 +173,7 @@ const Buttons = (props: {
           if (button) {
             return (
               <ButtonStyled
+                key={`${x}-${y}`}
                 style={{
                   gridColumn: button.x + 1,
                   gridRow: button.y + 1,
@@ -212,6 +190,7 @@ const Buttons = (props: {
           }
           return (
             <ButtonStyled
+              key={`${x}-${y}`}
               style={{
                 gridColumn: x + 1,
                 gridRow: y + 1,

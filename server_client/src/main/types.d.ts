@@ -12,13 +12,17 @@ export interface Button {
   value?: string; // TODO: Hmmmm
 }
 
+export interface Macro {
+  type: string;
+  id: string;
+}
+
 export interface Page {
   id: string;
   height: number;
   width: number;
   background_color: string | null;
   background_image: string | null;
-  background_image_opacity: number | null;
   buttons: Button[];
   name: string;
 }
