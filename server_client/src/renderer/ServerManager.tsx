@@ -87,7 +87,7 @@ export const ServerManager = () => {
           {serverRunning && (
             <div
               style={{
-                backgroundColor: 'white',
+                backgroundColor: '#FDFDFE',
                 borderRadius: '8px',
                 padding: '0',
                 width: '258px',

@@ -3,7 +3,7 @@ declare global {
     streamtabAPI: {
       getConfigFile: () => Promise<Config | null>;
       getMacrosFile: () => Promise<string | null>;
-      getPagesFile: () => Promise<string | null>;
+      getPagesFile: () => Promise<Page[] | null>;
       writeConfigFile: (config: string) => Promise<boolean | null>;
       writeMacrosFile: (macros: string) => Promise<boolean | null>;
       writePagesFile: (pages: string) => Promise<boolean | null>;
@@ -28,6 +28,30 @@ export interface Config {
   useSecureProtocol: boolean;
   webSocketPort: number;
   webServerPort: number;
+}
+
+export interface Page {
+  id: string;
+  height: number;
+  width: number;
+  background_color: string | null;
+  background_image: string | null;
+  buttons: Button[];
+  name: string;
+}
+
+export interface Button {
+  x: number;
+  y: number;
+  name: string;
+  macro?: Macro;
+  page_id?: string;
+  value?: string; // TODO: Hmmmm
+}
+
+export interface Macro {
+  type: string;
+  id: string;
 }
 
 export {};

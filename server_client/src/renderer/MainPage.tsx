@@ -1,20 +1,22 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 // ^^^ These are being followed, the linter just requires manual
 // configuration to understand that the label is associated with :/
+import { Page } from 'main/types';
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import styled from 'styled-components';
 import { useDebounce } from 'use-debounce';
 import { AdvancedEditor } from './AdvancedEditor';
 import { ShortSecondaryButton } from './components/buttons';
+import { LeftPanel } from './LeftPanel';
 
 const PageWrapper = styled.div`
   display: flex;
 `;
 
-const LeftPanel = styled.div`
+const LeftPanelWrapper = styled.div`
   position: absolute;
-  right: 308pz;
+  right: 308px;
   top: 0;
   bottom: 0;
   left: 0;
@@ -22,7 +24,7 @@ const LeftPanel = styled.div`
 
 const RightPanelWrapper = styled.div`
   width: 300px;
-  background-color: #f6f6f6;
+  background-color: #ebecf0;
   position: absolute;
   bottom: 8px;
   right: 8px;
@@ -38,7 +40,7 @@ const RightPanelControlsWrapper = styled.div`
 `;
 
 const QRCodeWrapper = styled.div`
-  background-color: white;
+  background-color: #fdfdfe;
   border-radius: 4px;
 `;
 
@@ -152,7 +154,7 @@ const ToggleSwitchThing = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  background-color: white;
+  background-color: #fdfdfe;
 `;
 
 const SettingWrapper = styled.div`
@@ -202,6 +204,7 @@ export const MainPage = () => {
   const [requirePassword, setRequirePassword] = useState(false);
   const [password, setPassword] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [pages, setPages] = useState<Page[] | null>(null);
 
   const [debouncedServerPort] = useDebounce(serverPort, 500);
   const [debouncedWebPort] = useDebounce(webPort, 500);
@@ -250,8 +253,16 @@ export const MainPage = () => {
           config.webServerPort !== DEFAULT_WEBSERVER_PORT
       );
     };
+    const getServerPages = async () => {
+      const p = await window.streamtabAPI.getPagesFile();
+      if (!p) {
+        return;
+      }
+      setPages(p);
+    };
     getServerConfig();
-  }, []);
+    getServerPages();
+  }, [showAdvanced]);
 
   const stopServer = async () => {
     setServerRunning(false);
@@ -370,7 +381,9 @@ export const MainPage = () => {
 
   return (
     <PageWrapper>
-      <LeftPanel>Hello World</LeftPanel>
+      <LeftPanelWrapper>
+        {pages !== null && <LeftPanel pages={pages} />}
+      </LeftPanelWrapper>
       <RightPanelWrapper>
         <RightPanelControlsWrapper>
           {serverRunning && (

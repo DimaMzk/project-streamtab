@@ -9,7 +9,12 @@ export interface Button {
   name: string;
   macro?: Macro;
   page_id?: string;
-  value?: string;
+  value?: string; // TODO: Hmmmm
+}
+
+export interface Macro {
+  type: string;
+  id: string;
 }
 
 export interface Page {
@@ -18,7 +23,6 @@ export interface Page {
   width: number;
   background_color: string | null;
   background_image: string | null;
-  background_image_opacity: number | null;
   buttons: Button[];
   name: string;
 }
