@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Page } from '../main/types';
+import Toggle from './components/toggle';
 
 const ButtonGrid = styled.div<{
   colCount: number;
@@ -105,13 +106,6 @@ const ToggleWrapper = styled.div<{
   transition: background-color 0.2s;
 `;
 
-const ToggleSwitchThing = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  background-color: #fdfdfe;
-`;
-
 const SettingWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -142,17 +136,14 @@ const BottomBar = (props: {
       <div style={{ width: '215px' }}>
         <SettingWrapper>
           <div>Stretch Buttons</div>
-          <ToggleWrapper
+          <Toggle
             disabled={false}
-            useCustomPort={stretchButtons}
+            isOn={stretchButtons}
             onClick={toggleStretchButtons}
             onKeyDown={handleKeyDown}
-            role="switch"
             aria-checked={stretchButtons}
             tabIndex={0}
-          >
-            <ToggleSwitchThing />
-          </ToggleWrapper>
+          />
         </SettingWrapper>
       </div>
     </BottomBarWrapper>

@@ -7,7 +7,9 @@ import QRCode from 'react-qr-code';
 import styled from 'styled-components';
 import { useDebounce } from 'use-debounce';
 import { AdvancedEditor } from './AdvancedEditor';
-import { ShortSecondaryButton } from './components/buttons';
+import { ShortSecondaryButton, StartStopButton } from './components/buttons';
+import Input from './components/input';
+import Toggle from './components/toggle';
 import { LeftPanel } from './LeftPanel';
 
 const PageWrapper = styled.div`
@@ -56,107 +58,6 @@ const RightPanelStartStopWrappedWrapper = styled.div`
   align-items: center;
 `;
 
-const StopServerButton = styled.button`
-  margin: 8px;
-  height: 42px;
-  background-color: red;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 4px;
-  border: none;
-  align-self: stretch;
-  vertical-align: bottom;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  &:hover {
-    background-color: darkred;
-  }
-`;
-
-const StartServerButton = styled.button`
-  margin: 8px;
-  height: 42px;
-  background-color: green;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 4px;
-  border: none;
-  align-self: stretch;
-  vertical-align: bottom;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  &:hover {
-    background-color: darkgreen;
-  }
-`;
-
-const InputLabel = styled.label`
-  margin: 2px 12px 2px 12px;
-  font-size: 12px;
-  align-self: stretch;
-`;
-
-const InputBox = styled.input`
-  margin: 2px 12px 8px 12px;
-  height: 42px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 4px;
-  border: none;
-  align-self: stretch;
-  vertical-align: bottom;
-  padding: 0 8px;
-  border: 1px solid #ccc;
-`;
-
-const ServerStartingButton = styled.button`
-  margin: 8px;
-  height: 42px;
-  background-color: #014001;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 4px;
-  border: none;
-  align-self: stretch;
-  vertical-align: bottom;
-`;
-
-const ToggleWrapper = styled.div<{
-  useCustomPort: boolean;
-  disabled: boolean;
-}>`
-  width: 42px;
-  height: 24px;
-  border-radius: 12px;
-  background-color: ${(props) =>
-    // eslint-disable-next-line no-nested-ternary
-    props.disabled
-      ? props.useCustomPort
-        ? 'darkgreen'
-        : 'darkred'
-      : props.useCustomPort
-      ? 'green'
-      : 'red'};
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: ${(props) =>
-    props.useCustomPort ? 'flex-end' : 'flex-start'};
-  cursor: pointer;
-  padding: 0 2px;
-  transition: background-color 0.2s;
-`;
-
-const ToggleSwitchThing = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  background-color: #fdfdfe;
-`;
-
 const SettingWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -166,32 +67,6 @@ const SettingWrapper = styled.div`
   padding: 0 12px;
   margin-bottom: 6px;
 `;
-
-const StartStopButton = (props: {
-  serverStarting: boolean;
-  serverRunning: boolean;
-  stopServer: () => Promise<void>;
-  startServer: () => Promise<void>;
-}) => {
-  const { serverStarting, serverRunning, stopServer, startServer } = props;
-  if (serverStarting) {
-    return <ServerStartingButton>Starting Server</ServerStartingButton>;
-  }
-
-  if (serverRunning) {
-    return (
-      <StopServerButton type="button" onClick={stopServer}>
-        Stop Server
-      </StopServerButton>
-    );
-  }
-
-  return (
-    <StartServerButton type="button" onClick={startServer}>
-      Start Server
-    </StartServerButton>
-  );
-};
 
 export const MainPage = () => {
   const [serverRunning, setServerRunning] = useState(false);
@@ -409,31 +284,27 @@ export const MainPage = () => {
           )}
           <SettingWrapper>
             <div>Use Custom Ports</div>
-            <ToggleWrapper
+            <Toggle
               disabled={serverRunning || serverStarting}
-              useCustomPort={useCustomPort}
+              isOn={useCustomPort}
               onClick={toggleCustomPortClickHandler}
               onKeyDown={toggleCustomPortKeyDownHandler}
-              role="switch"
-              aria-checked={useCustomPort}
               tabIndex={0}
-            >
-              <ToggleSwitchThing />
-            </ToggleWrapper>
+            />
           </SettingWrapper>
           {useCustomPort && !serverRunning && (
             <>
-              <InputLabel htmlFor="serverPort">Web Socket Port</InputLabel>
-              <InputBox
+              <Input
                 id="serverPort"
+                label="Web Socket Port"
                 disabled={serverRunning || serverStarting}
                 type="number"
                 value={serverPort}
                 onChange={(e) => setServerPort(parseInt(e.target.value, 10))}
               />
-              <InputLabel htmlFor="webPort">Web Server Port</InputLabel>
-              <InputBox
+              <Input
                 id="webPort"
+                label="Web Server Port"
                 disabled={serverRunning || serverStarting}
                 type="number"
                 value={webPort}
@@ -443,43 +314,33 @@ export const MainPage = () => {
           )}
           <SettingWrapper>
             <div>Use Encryption</div>
-            <ToggleWrapper
+            <Toggle
               disabled={serverRunning || serverStarting}
-              useCustomPort={useEncryption}
+              isOn={useEncryption}
               onClick={toggleEncryptionClickHandler}
               onKeyDown={toggleEncryptionKeyDownHandler}
-              role="switch"
-              aria-checked={useEncryption}
               tabIndex={0}
-            >
-              <ToggleSwitchThing />
-            </ToggleWrapper>
+            />
           </SettingWrapper>
           <SettingWrapper>
             <div>Require Password</div>
-            <ToggleWrapper
+            <Toggle
               disabled={!useEncryption || serverRunning || serverStarting}
-              useCustomPort={requirePassword}
+              isOn={requirePassword}
               onClick={togglePasswordClickHandler}
               onKeyDown={togglePasswordKeyDownHandler}
-              role="switch"
-              aria-checked={requirePassword}
               tabIndex={0}
-            >
-              <ToggleSwitchThing />
-            </ToggleWrapper>
+            />
           </SettingWrapper>
           {requirePassword && !serverRunning && (
-            <>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <InputBox
-                id="password"
-                disabled={!useEncryption || serverRunning || serverStarting}
-                type="text"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </>
+            <Input
+              id="password"
+              label="Password"
+              disabled={!useEncryption || serverRunning || serverStarting}
+              type="text"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           )}
         </RightPanelControlsWrapper>
         <RightPanelStartStopWrapper>
