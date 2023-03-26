@@ -221,7 +221,7 @@ export const LeftPanel = (props: { pages: Page[] }) => {
       setRowHeight(size);
     };
 
-    setSize();
+    setSize);
     window.addEventListener('resize', setSize);
     return () => {
       window.removeEventListener('resize', setSize);
