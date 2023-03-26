@@ -1,0 +1,24 @@
+name: Electron Build Check
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies and build
+        working-directory: ./server_client
+        run: |
+          yarn
+          yarn build
+      - name: Check for errors
+        run: |
+          if [ $? -ne 0 ]; then
+            echo "Error: Build failed"
+            exit 1
+          fi
