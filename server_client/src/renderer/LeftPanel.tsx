@@ -34,6 +34,8 @@ const ButtonGridButtonsForcedAsSquare = styled.div<{
   rowCount: number;
   backgroundColor: string | null;
   backgroundImage: string | null;
+  colWidth: number;
+  rowHeight: number;
 }>`
   position: absolute;
   top: 4px;
@@ -41,8 +43,15 @@ const ButtonGridButtonsForcedAsSquare = styled.div<{
   bottom: 58px;
   right: 4px;
   display: grid;
-  grid-template-columns: ${(props) => `repeat(${props.colCount}, 200px)`};
-  grid-template-rows: ${(props) => `repeat(${props.rowCount}, 200px)`};
+  grid-template-columns: repeat(
+    ${(props) => props.colCount},
+    ${(props) => props.colWidth}px
+  );
+  grid-template-rows: repeat(
+    ${(props) => props.rowCount},
+    ${(props) => props.rowHeight}px
+  );
+  grid-auto-rows: 1fr;
   grid-gap: 4px;
   background-color: ${(props) => props.backgroundColor || '#FDFDFE'};
   background-image: ${(props) => props.backgroundImage || 'none'};
@@ -52,6 +61,7 @@ const ButtonGridButtonsForcedAsSquare = styled.div<{
   align-content: center;
   justify-items: stretch;
   justify-content: center;
+  ratio: 1/1;
 `;
 
 const ButtonStyled = styled.div`
@@ -78,32 +88,6 @@ const BottomBarWrapper = styled.div`
   display: flex;
   align-items: center;
   border-radius: 8px;
-`;
-
-const ToggleWrapper = styled.div<{
-  useCustomPort: boolean;
-  disabled: boolean;
-}>`
-  width: 42px;
-  height: 24px;
-  border-radius: 12px;
-  background-color: ${(props) =>
-    // eslint-disable-next-line no-nested-ternary
-    props.disabled
-      ? props.useCustomPort
-        ? 'darkgreen'
-        : 'darkred'
-      : props.useCustomPort
-      ? 'green'
-      : 'red'};
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: ${(props) =>
-    props.useCustomPort ? 'flex-end' : 'flex-start'};
-  cursor: pointer;
-  padding: 0 2px;
-  transition: background-color 0.2s;
 `;
 
 const SettingWrapper = styled.div`
@@ -203,7 +187,46 @@ const Buttons = (props: {
 export const LeftPanel = (props: { pages: Page[] }) => {
   const { pages } = props;
   const [stretchButtons, setStretchButtons] = useState(false);
+  const [colWidth, setColWidth] = useState(150);
+  const [rowHeight, setRowHeight] = useState(150);
   const [page, setPage] = useState(pages[0]);
+
+  useEffect(() => {
+    const setSize = () => {
+      // I truly hate doing this this way, but every way I've seen of doing this in
+      //    CSS looks equally bad in my mind, and this is more readable.
+      let w = window.innerWidth;
+      let h = window.innerHeight;
+
+      w -= 300; // Sidebar
+      w -= 8; // padding
+      h -= 8; // padding
+      h -= 50; // bottom bar
+      h -= 20; // margin of error
+      w -= 20; // margin of error
+
+      let col = h / page.height;
+      const row = w / page.width;
+
+      if (col > row) {
+        col = row;
+      }
+
+      let size = col;
+      if (size > 150) {
+        size = 150;
+      }
+
+      setColWidth(size);
+      setRowHeight(size);
+    };
+
+    setSize();
+    window.addEventListener('resize', setSize);
+    return () => {
+      window.removeEventListener('resize', setSize);
+    };
+  }, [page.height, page.width]);
 
   const onButtonClick = (button: Button) => {
     if (button.page_id) {
@@ -231,6 +254,8 @@ export const LeftPanel = (props: { pages: Page[] }) => {
           rowCount={page.height}
           backgroundColor={page.background_color}
           backgroundImage={page.background_image}
+          colWidth={colWidth}
+          rowHeight={rowHeight}
         >
           <Buttons page={page} onButtonClick={onButtonClick} />
         </ButtonGridButtonsForcedAsSquare>
