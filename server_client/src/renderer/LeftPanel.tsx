@@ -203,7 +203,7 @@ export const LeftPanel = (props: { pages: Page[] }) => {
       h -= 8; // padding
       h -= 50; // bottom bar
       h -= 20; // margin of error
-      w -= 20; // margin of error
+      w -= 20; // margin of errorkk
 
       let col = h / page.height;
       const row = w / page.width;
