@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-    branches: 
+    branches:
       - main
 
 jobs:
@@ -19,8 +19,6 @@ jobs:
         run: |
           yarn
           yarn build
-      - name: Check for errors
-        run: |
           if [ $? -ne 0 ]; then
             echo "Error: Build failed"
             curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} -d '{"state": "failure", "description": "Build failed", "context": "Electron Build Check"}'
