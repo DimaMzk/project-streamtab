@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Page } from '../main/types';
+import CounterInput from './components/counter';
 import Toggle from './components/toggle';
 
 const ButtonGrid = styled.div<{
@@ -100,16 +101,20 @@ const SettingWrapper = styled.div`
 `;
 
 const BottomBar = (props: {
+  pageWidth: number;
+  pageHeight: number;
   setStretchButtons: React.Dispatch<React.SetStateAction<boolean>>;
   stretchButtons: boolean;
 }) => {
-  const { setStretchButtons, stretchButtons } = props;
+  const { setStretchButtons, stretchButtons, pageHeight, pageWidth } = props;
 
   const toggleStretchButtons = () => {
     setStretchButtons(!stretchButtons);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleStretchToggleKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>
+  ) => {
     if (event.key === 'Enter') {
       toggleStretchButtons();
     }
@@ -124,12 +129,36 @@ const BottomBar = (props: {
             disabled={false}
             isOn={stretchButtons}
             onClick={toggleStretchButtons}
-            onKeyDown={handleKeyDown}
+            onKeyDown={handleStretchToggleKeyDown}
             aria-checked={stretchButtons}
             tabIndex={0}
           />
         </SettingWrapper>
       </div>
+      <SettingWrapper>
+        <CounterInput
+          label="Page Width"
+          value={pageWidth}
+          id="pWidth"
+          min={1}
+          max={10}
+          step={1}
+          disabled={false}
+          onChange={() => {}}
+        />
+      </SettingWrapper>
+      <SettingWrapper>
+        <CounterInput
+          label="Page Height"
+          value={pageHeight}
+          id="pWidth"
+          min={1}
+          max={10}
+          step={1}
+          disabled={false}
+          onChange={() => {}}
+        />
+      </SettingWrapper>
     </BottomBarWrapper>
   );
 };
@@ -268,6 +297,8 @@ export const LeftPanel = (props: { pages: Page[] }) => {
       )}
 
       <BottomBar
+        pageWidth={page.width}
+        pageHeight={page.height}
         setStretchButtons={setStretchButtons}
         stretchButtons={stretchButtons}
       />

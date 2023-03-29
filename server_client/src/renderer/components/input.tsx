@@ -32,7 +32,7 @@ const Input = (props: {
 
   return (
     <>
-      <InputLabel htmlFor={label}>{label}</InputLabel>
+      <InputLabel htmlFor={id}>{label}</InputLabel>
       <InputBox
         id={id}
         disabled={disabled}
