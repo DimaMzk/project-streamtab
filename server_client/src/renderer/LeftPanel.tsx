@@ -192,6 +192,12 @@ export const LeftPanel = (props: { pages: Page[] }) => {
   const [page, setPage] = useState(pages[0]);
 
   useEffect(() => {
+    // If the pages data gets modified externally (i.e the advanced editor), we
+    //   need to refresh the data here
+    setPage(pages[0]);
+  }, [pages]);
+
+  useEffect(() => {
     const setSize = () => {
       // I truly hate doing this this way, but every way I've seen of doing this in
       //    CSS looks equally bad in my mind, and this is more readable.
