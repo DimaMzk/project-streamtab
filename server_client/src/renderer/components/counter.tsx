@@ -84,16 +84,23 @@ const CounterInput = (props: {
   min: number;
   max: number;
   disabled: boolean;
-  value: string | ReadonlyArray<string> | number;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value: number;
+  setValue: React.Dispatch<React.SetStateAction<number>>;
   step: number;
 }) => {
-  const { label, id, disabled, value, onChange, min, max, step } = props;
+  const { label, id, disabled, value, setValue, min, max, step } = props;
 
   return (
     <FlexWrapper>
       <CounterLabel htmlFor={id}>{label}</CounterLabel>
-      <DecrementButton>-</DecrementButton>
+      <DecrementButton
+        onClick={() => {
+          setValue(value - 1);
+        }}
+        disabled={value <= min}
+      >
+        -
+      </DecrementButton>
       <CounterInputBox
         id={id}
         disabled={disabled}
@@ -101,10 +108,21 @@ const CounterInput = (props: {
         min={min}
         max={max}
         value={value}
-        onChange={onChange}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          if (value !== parseInt(event.currentTarget.value, 10)) {
+            setValue(parseInt(event.currentTarget.value, 10));
+          }
+        }}
         step={step}
       />
-      <IncrementButton>+</IncrementButton>
+      <IncrementButton
+        onClick={() => {
+          setValue(value + 1);
+        }}
+        disabled={value >= max}
+      >
+        +
+      </IncrementButton>
     </FlexWrapper>
   );
 };
