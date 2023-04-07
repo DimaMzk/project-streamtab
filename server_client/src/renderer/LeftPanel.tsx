@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -105,8 +106,21 @@ const BottomBar = (props: {
   pageHeight: number;
   setStretchButtons: React.Dispatch<React.SetStateAction<boolean>>;
   stretchButtons: boolean;
+  setPageHeight: React.Dispatch<React.SetStateAction<number>>;
+  setPageWidth: React.Dispatch<React.SetStateAction<number>>;
+  minPageWidth: number;
+  minPageHeight: number;
 }) => {
-  const { setStretchButtons, stretchButtons, pageHeight, pageWidth } = props;
+  const {
+    setStretchButtons,
+    stretchButtons,
+    pageHeight,
+    pageWidth,
+    setPageHeight,
+    setPageWidth,
+    minPageHeight,
+    minPageWidth,
+  } = props;
 
   const toggleStretchButtons = () => {
     setStretchButtons(!stretchButtons);
@@ -140,11 +154,11 @@ const BottomBar = (props: {
           label="Page Width"
           value={pageWidth}
           id="pWidth"
-          min={1}
+          min={minPageWidth}
           max={10}
           step={1}
           disabled={false}
-          onChange={() => {}}
+          setValue={setPageWidth}
         />
       </SettingWrapper>
       <SettingWrapper>
@@ -152,11 +166,11 @@ const BottomBar = (props: {
           label="Page Height"
           value={pageHeight}
           id="pWidth"
-          min={1}
+          min={minPageHeight}
           max={10}
           step={1}
           disabled={false}
-          onChange={() => {}}
+          setValue={setPageHeight}
         />
       </SettingWrapper>
     </BottomBarWrapper>
@@ -165,14 +179,16 @@ const BottomBar = (props: {
 
 const Buttons = (props: {
   page: Page;
+  pageHeight: number;
+  pageWidth: number;
   onButtonClick: (button: Button) => void;
 }) => {
-  const { page, onButtonClick } = props;
+  const { page, onButtonClick, pageHeight, pageWidth } = props;
 
   return (
     <>
-      {Array.from(Array(page.height).keys()).map((y) =>
-        Array.from(Array(page.width).keys()).map((x) => {
+      {Array.from(Array(pageHeight).keys()).map((y) =>
+        Array.from(Array(pageWidth).keys()).map((x) => {
           const button = page.buttons.find((b) => b.x === x && b.y === y);
           if (button) {
             return (
@@ -218,18 +234,54 @@ export const LeftPanel = (props: { pages: Page[] }) => {
   const [stretchButtons, setStretchButtons] = useState(false);
   const [colWidth, setColWidth] = useState(150);
   const [rowHeight, setRowHeight] = useState(150);
+  const [pageHeight, setPageHeight] = useState(0);
+  const [minPageHeight, setMinPageHeight] = useState(0);
+  const [minPageWidth, setMinPageWidth] = useState(0);
+  const [pageWidth, setPageWidth] = useState(0);
+  const [pageId, setPageId] = useState(pages[0].id);
   const [page, setPage] = useState(pages[0]);
 
   useEffect(() => {
-    // If the pages data gets modified externally (i.e the advanced editor), we
-    //   need to refresh the data here
-    setPage(pages[0]);
-  }, [pages]);
+    const determineMinWidthHeight = (p: Page) => {
+      let highestX = 0;
+      let highestY = 0;
+
+      for (let y = 0; y < p.height - 1; y++) {
+        for (let x = 0; x < p.width - 1; x++) {
+          const button = p.buttons.find((b) => b.x === x && b.y === y);
+          if (button) {
+            if (y > highestY) {
+              highestY = y;
+            }
+            if (x > highestX) {
+              highestX = x;
+            }
+          }
+        }
+      }
+      setMinPageHeight(highestY + 1);
+      setMinPageWidth(highestX + 1);
+    };
+    // If the pages data gets modified externally or we change the current page ID
+    //    refresh the data and show the page
+    const newPage = pages.find((p) => p.id === pageId);
+    if (newPage) {
+      setPage(newPage);
+      setPageHeight(newPage.height);
+      setPageWidth(newPage.width);
+      determineMinWidthHeight(newPage);
+    } else {
+      setPage(pages[0]);
+      setPageHeight(pages[0].height);
+      setPageWidth(pages[0].width);
+      determineMinWidthHeight(pages[0]);
+    }
+  }, [pages, pageId]);
 
   useEffect(() => {
     const setSize = () => {
       // I truly hate doing this this way, but every way I've seen of doing this in
-      //    CSS looks equally bad in my mind, and this is more readable.
+      //    CSS looks equally bad in my mind, and this is way more readable.
       let w = window.innerWidth;
       let h = window.innerHeight;
 
@@ -237,11 +289,11 @@ export const LeftPanel = (props: { pages: Page[] }) => {
       w -= 8; // padding
       h -= 8; // padding
       h -= 50; // bottom bar
-      h -= 20; // margin of error
-      w -= 20; // margin of error
+      h -= 50; // margin of error
+      w -= 50; // margin of error
 
-      let col = h / page.height;
-      const row = w / page.width;
+      let col = h / pageHeight;
+      const row = w / pageWidth;
 
       if (col > row) {
         col = row;
@@ -261,14 +313,11 @@ export const LeftPanel = (props: { pages: Page[] }) => {
     return () => {
       window.removeEventListener('resize', setSize);
     };
-  }, [page.height, page.width]);
+  }, [pageHeight, pageWidth]);
 
   const onButtonClick = (button: Button) => {
     if (button.page_id) {
-      const newPage = pages.find((p) => p.id === button.page_id);
-      if (newPage) {
-        setPage(newPage);
-      }
+      setPageId(button.page_id);
     }
   };
 
@@ -276,29 +325,43 @@ export const LeftPanel = (props: { pages: Page[] }) => {
     <>
       {stretchButtons ? (
         <ButtonGrid
-          colCount={page.width}
-          rowCount={page.height}
+          colCount={pageWidth}
+          rowCount={pageHeight}
           backgroundColor={page.background_color}
           backgroundImage={page.background_image}
         >
-          <Buttons page={page} onButtonClick={onButtonClick} />
+          <Buttons
+            page={page}
+            pageHeight={pageHeight}
+            pageWidth={pageWidth}
+            onButtonClick={onButtonClick}
+          />
         </ButtonGrid>
       ) : (
         <ButtonGridButtonsForcedAsSquare
-          colCount={page.width}
-          rowCount={page.height}
+          colCount={pageWidth}
+          rowCount={pageHeight}
           backgroundColor={page.background_color}
           backgroundImage={page.background_image}
           colWidth={colWidth}
           rowHeight={rowHeight}
         >
-          <Buttons page={page} onButtonClick={onButtonClick} />
+          <Buttons
+            page={page}
+            pageHeight={pageHeight}
+            pageWidth={pageWidth}
+            onButtonClick={onButtonClick}
+          />
         </ButtonGridButtonsForcedAsSquare>
       )}
 
       <BottomBar
-        pageWidth={page.width}
-        pageHeight={page.height}
+        pageWidth={pageWidth}
+        pageHeight={pageHeight}
+        setPageHeight={setPageHeight}
+        setPageWidth={setPageWidth}
+        minPageHeight={minPageHeight}
+        minPageWidth={minPageWidth}
         setStretchButtons={setStretchButtons}
         stretchButtons={stretchButtons}
       />
