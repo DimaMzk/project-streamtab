@@ -85,7 +85,7 @@ const CounterInput = (props: {
   max: number;
   disabled: boolean;
   value: number;
-  setValue: React.Dispatch<React.SetStateAction<number>>;
+  setValue: (v: number) => void;
   step: number;
 }) => {
   const { label, id, disabled, value, setValue, min, max, step } = props;

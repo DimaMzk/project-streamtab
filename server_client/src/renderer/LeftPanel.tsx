@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import _ from 'lodash';
 import { Button, Page } from '../main/types';
 import CounterInput from './components/counter';
 import Toggle from './components/toggle';
@@ -106,8 +107,8 @@ const BottomBar = (props: {
   pageHeight: number;
   setStretchButtons: React.Dispatch<React.SetStateAction<boolean>>;
   stretchButtons: boolean;
-  setPageHeight: React.Dispatch<React.SetStateAction<number>>;
-  setPageWidth: React.Dispatch<React.SetStateAction<number>>;
+  setPageHeight: (h: number) => void;
+  setPageWidth: (w: number) => void;
   minPageWidth: number;
   minPageHeight: number;
 }) => {
@@ -229,17 +230,35 @@ const Buttons = (props: {
   );
 };
 
-export const LeftPanel = (props: { pages: Page[] }) => {
-  const { pages } = props;
+export const LeftPanel = (props: {
+  pages: Page[];
+  setPages: React.Dispatch<React.SetStateAction<Page[] | null>>;
+}) => {
+  const { pages, setPages } = props;
   const [stretchButtons, setStretchButtons] = useState(false);
   const [colWidth, setColWidth] = useState(150);
   const [rowHeight, setRowHeight] = useState(150);
-  const [pageHeight, setPageHeight] = useState(0);
-  const [minPageHeight, setMinPageHeight] = useState(0);
-  const [minPageWidth, setMinPageWidth] = useState(0);
-  const [pageWidth, setPageWidth] = useState(0);
+  const [minPageHeight, setMinPageHeight] = useState(1);
+  const [minPageWidth, setMinPageWidth] = useState(1);
   const [pageId, setPageId] = useState(pages[0].id);
   const [page, setPage] = useState(pages[0]);
+
+  useEffect(() => {
+    if (!pages || pages === null || pages === undefined) {
+      return;
+    }
+    const savedPage = pages.find((p) => p.id === page.id);
+    if (savedPage && !_.isEqual(savedPage, page)) {
+      const newPages = _.cloneDeep(pages);
+      const index = newPages.findIndex((p) => p.id === page.id);
+      if (index === -1) {
+        return;
+      }
+      newPages[index] = page;
+
+      setPages(newPages);
+    }
+  }, [page, pages, setPages]);
 
   useEffect(() => {
     const determineMinWidthHeight = (p: Page) => {
@@ -260,21 +279,22 @@ export const LeftPanel = (props: { pages: Page[] }) => {
     };
     // If the pages data gets modified externally or we change the current page ID
     //    refresh the data and show the page
-    const newPage = pages.find((p) => p.id === pageId);
+    if (!pages) {
+      return;
+    }
+    const newPage = _.find(pages, (p) => p.id === pageId);
     if (newPage) {
       setPage(newPage);
-      setPageHeight(newPage.height);
-      setPageWidth(newPage.width);
       determineMinWidthHeight(newPage);
     } else {
       setPage(pages[0]);
-      setPageHeight(pages[0].height);
-      setPageWidth(pages[0].width);
       determineMinWidthHeight(pages[0]);
     }
   }, [pages, pageId]);
 
   useEffect(() => {
+    const pWidth = page.width;
+    const pHeight = page.height;
     const setSize = () => {
       // I truly hate doing this this way, but every way I've seen of doing this in
       //    CSS looks equally bad in my mind, and this is way more readable.
@@ -288,8 +308,8 @@ export const LeftPanel = (props: { pages: Page[] }) => {
       h -= 50; // margin of error
       w -= 50; // margin of error
 
-      let col = h / pageHeight;
-      const row = w / pageWidth;
+      let col = h / pHeight;
+      const row = w / pWidth;
 
       if (col > row) {
         col = row;
@@ -309,7 +329,7 @@ export const LeftPanel = (props: { pages: Page[] }) => {
     return () => {
       window.removeEventListener('resize', setSize);
     };
-  }, [pageHeight, pageWidth]);
+  }, [page.height, page.width]);
 
   const onButtonClick = (button: Button) => {
     if (button.page_id) {
@@ -321,22 +341,22 @@ export const LeftPanel = (props: { pages: Page[] }) => {
     <>
       {stretchButtons ? (
         <ButtonGrid
-          colCount={pageWidth}
-          rowCount={pageHeight}
+          colCount={page.width}
+          rowCount={page.height}
           backgroundColor={page.background_color}
           backgroundImage={page.background_image}
         >
           <Buttons
             page={page}
-            pageHeight={pageHeight}
-            pageWidth={pageWidth}
+            pageHeight={page.height}
+            pageWidth={page.width}
             onButtonClick={onButtonClick}
           />
         </ButtonGrid>
       ) : (
         <ButtonGridButtonsForcedAsSquare
-          colCount={pageWidth}
-          rowCount={pageHeight}
+          colCount={page.width}
+          rowCount={page.height}
           backgroundColor={page.background_color}
           backgroundImage={page.background_image}
           colWidth={colWidth}
@@ -344,18 +364,22 @@ export const LeftPanel = (props: { pages: Page[] }) => {
         >
           <Buttons
             page={page}
-            pageHeight={pageHeight}
-            pageWidth={pageWidth}
+            pageHeight={page.height}
+            pageWidth={page.width}
             onButtonClick={onButtonClick}
           />
         </ButtonGridButtonsForcedAsSquare>
       )}
 
       <BottomBar
-        pageWidth={pageWidth}
-        pageHeight={pageHeight}
-        setPageHeight={setPageHeight}
-        setPageWidth={setPageWidth}
+        pageWidth={page.width}
+        pageHeight={page.height}
+        setPageHeight={(h: number) => {
+          setPage({ ...page, height: h });
+        }}
+        setPageWidth={(w: number) => {
+          setPage({ ...page, width: w });
+        }}
         minPageHeight={minPageHeight}
         minPageWidth={minPageWidth}
         setStretchButtons={setStretchButtons}

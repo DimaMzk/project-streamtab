@@ -86,6 +86,7 @@ export const MainPage = () => {
   const [debouncedUseEncryption] = useDebounce(useEncryption, 500);
   const [debouncedUsePassword] = useDebounce(requirePassword, 500);
   const [debouncedPassword] = useDebounce(password, 500);
+  const [debouncedPages] = useDebounce(pages, 500);
 
   const DEFAULT_WEBSOCKET_PORT = 8765;
   const DEFAULT_WEBSERVER_PORT = 8766;
@@ -154,12 +155,19 @@ export const MainPage = () => {
     };
 
     window.streamtabAPI.writeConfigFile(JSON.stringify(config, null, 2));
+
+    if (debouncedPages) {
+      window.streamtabAPI.writePagesFile(
+        JSON.stringify(debouncedPages, null, 2)
+      );
+    }
   }, [
     debouncedServerPort,
     debouncedWebPort,
     debouncedUseEncryption,
     debouncedUsePassword,
     debouncedPassword,
+    debouncedPages,
   ]);
 
   if (showAdvanced) {
@@ -257,7 +265,7 @@ export const MainPage = () => {
   return (
     <PageWrapper>
       <LeftPanelWrapper>
-        {pages !== null && <LeftPanel pages={pages} />}
+        {pages !== null && <LeftPanel pages={pages} setPages={setPages} />}
       </LeftPanelWrapper>
       <RightPanelWrapper>
         <RightPanelControlsWrapper>
