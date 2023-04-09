@@ -246,19 +246,15 @@ export const LeftPanel = (props: { pages: Page[] }) => {
       let highestX = 0;
       let highestY = 0;
 
-      for (let y = 0; y < p.height - 1; y++) {
-        for (let x = 0; x < p.width - 1; x++) {
-          const button = p.buttons.find((b) => b.x === x && b.y === y);
-          if (button) {
-            if (y > highestY) {
-              highestY = y;
-            }
-            if (x > highestX) {
-              highestX = x;
-            }
-          }
+      p.buttons.forEach((button: Button) => {
+        if (button.y > highestY) {
+          highestY = button.y;
         }
-      }
+        if (button.x > highestX) {
+          highestX = button.x;
+        }
+      });
+
       setMinPageHeight(highestY + 1);
       setMinPageWidth(highestX + 1);
     };
