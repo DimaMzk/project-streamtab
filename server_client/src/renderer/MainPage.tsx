@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import styled from 'styled-components';
 import { useDebounce } from 'use-debounce';
+import * as Switch from '@radix-ui/react-switch';
 import { AdvancedEditor } from './AdvancedEditor';
 import { ShortSecondaryButton, StartStopButton } from './components/buttons';
 import Input from './components/input';
-import Toggle from './components/toggle';
 import { LeftPanel } from './LeftPanel';
 
 const PageWrapper = styled.div`
@@ -206,20 +206,6 @@ export const MainPage = () => {
     );
   };
 
-  const toggleCustomPortKeyDownHandler = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      if (useCustomPort && !(serverRunning || serverStarting)) {
-        setServerPort(DEFAULT_WEBSOCKET_PORT);
-        setWebPort(DEFAULT_WEBSERVER_PORT);
-      }
-      toggleField(
-        useCustomPort,
-        setUseCustomPort,
-        serverRunning || serverStarting
-      );
-    }
-  };
-
   const toggleEncryptionClickHandler = () => {
     if (useEncryption) {
       setRequirePassword(false);
@@ -231,35 +217,12 @@ export const MainPage = () => {
     );
   };
 
-  const toggleEncryptionKeyDownHandler = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      if (useEncryption) {
-        setRequirePassword(false);
-      }
-      toggleField(
-        useEncryption,
-        setUseEncryption,
-        serverRunning || serverStarting
-      );
-    }
-  };
-
   const togglePasswordClickHandler = () => {
     toggleField(
       requirePassword,
       setRequirePassword,
       !useEncryption || serverRunning || serverStarting
     );
-  };
-
-  const togglePasswordKeyDownHandler = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      toggleField(
-        requirePassword,
-        setRequirePassword,
-        !useEncryption || serverRunning || serverStarting
-      );
-    }
   };
 
   return (
@@ -291,14 +254,18 @@ export const MainPage = () => {
             </>
           )}
           <SettingWrapper>
-            <div>Use Custom Ports</div>
-            <Toggle
+            <label className="Label" htmlFor="custom-ports">
+              Use Custom Ports
+            </label>
+            <Switch.Root
+              onCheckedChange={toggleCustomPortClickHandler}
+              className="SwitchRoot"
+              id="custom-ports"
               disabled={serverRunning || serverStarting}
-              isOn={useCustomPort}
-              onClick={toggleCustomPortClickHandler}
-              onKeyDown={toggleCustomPortKeyDownHandler}
-              tabIndex={0}
-            />
+              checked={useCustomPort}
+            >
+              <Switch.Thumb className="SwitchThumb" />
+            </Switch.Root>
           </SettingWrapper>
           {useCustomPort && !serverRunning && (
             <>
@@ -321,24 +288,32 @@ export const MainPage = () => {
             </>
           )}
           <SettingWrapper>
-            <div>Use Encryption</div>
-            <Toggle
+            <label className="Label" htmlFor="use-encryption">
+              Use Encryption
+            </label>
+            <Switch.Root
+              onCheckedChange={toggleEncryptionClickHandler}
+              className="SwitchRoot"
+              id="use-encryption"
+              checked={useEncryption}
               disabled={serverRunning || serverStarting}
-              isOn={useEncryption}
-              onClick={toggleEncryptionClickHandler}
-              onKeyDown={toggleEncryptionKeyDownHandler}
-              tabIndex={0}
-            />
+            >
+              <Switch.Thumb className="SwitchThumb" />
+            </Switch.Root>
           </SettingWrapper>
           <SettingWrapper>
-            <div>Require Password</div>
-            <Toggle
+            <label className="Label" htmlFor="require-password">
+              Require Password
+            </label>
+            <Switch.Root
+              onCheckedChange={togglePasswordClickHandler}
+              className="SwitchRoot"
+              id="require-password"
+              checked={requirePassword}
               disabled={!useEncryption || serverRunning || serverStarting}
-              isOn={requirePassword}
-              onClick={togglePasswordClickHandler}
-              onKeyDown={togglePasswordKeyDownHandler}
-              tabIndex={0}
-            />
+            >
+              <Switch.Thumb className="SwitchThumb" />
+            </Switch.Root>
           </SettingWrapper>
           {requirePassword && !serverRunning && (
             <Input
