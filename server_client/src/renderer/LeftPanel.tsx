@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
+import * as Switch from '@radix-ui/react-switch';
 import { Button, Page } from '../main/types';
 import CounterInput from './components/counter';
-import Toggle from './components/toggle';
 
 const ButtonGrid = styled.div<{
   colCount: number;
@@ -127,27 +127,21 @@ const BottomBar = (props: {
     setStretchButtons(!stretchButtons);
   };
 
-  const handleStretchToggleKeyDown = (
-    event: React.KeyboardEvent<HTMLDivElement>
-  ) => {
-    if (event.key === 'Enter') {
-      toggleStretchButtons();
-    }
-  };
-
   return (
     <BottomBarWrapper>
       <div style={{ width: '215px' }}>
         <SettingWrapper>
-          <div>Stretch Buttons</div>
-          <Toggle
-            disabled={false}
-            isOn={stretchButtons}
-            onClick={toggleStretchButtons}
-            onKeyDown={handleStretchToggleKeyDown}
-            aria-checked={stretchButtons}
-            tabIndex={0}
-          />
+          <label className="Label" htmlFor="stretch-buttons">
+            Stretch Buttons
+          </label>
+          <Switch.Root
+            onCheckedChange={toggleStretchButtons}
+            className="SwitchRoot"
+            id="require-password"
+            checked={stretchButtons}
+          >
+            <Switch.Thumb className="SwitchThumb" />
+          </Switch.Root>
         </SettingWrapper>
       </div>
       <SettingWrapper>
