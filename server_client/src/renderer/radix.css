@@ -19,7 +19,6 @@ button[class='SwitchRoot'] {
   transition: background-color 100ms, box-shadow 100ms;
 }
 
-/* more distict box-shadow on hover */
 .SwitchRoot:hover {
   box-shadow: 0 3px 5px var(--black-a8);
 }
