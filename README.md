@@ -3,14 +3,10 @@
 ![](https://github.com/DimaMzk/project-streamtab/blob/a0b052eb2201536c7dfd42dcf9742a84fccd3323/readme_assets/demogif.gif)
 
 ## What is it?
-This project aims to allow any user to convert their old device into a macro keypad. Similar to the Elgato Stream Deck.
+This project aims to allow any user to convert their old device into a macro keypad. Similar to a Stream Deck.
 
 ## What's the status of this project?
-This project is currently in the prototyping phase.
-
-Currently, is has 20 functional macro keys. It uses uses `ctrl` + `shift` + `F1 - F20` for the macros.
-
-Traffic between the client and server are currently un-encrypted.
+Very Slowly being re-built as a proper electron application. In the future, if time permits, I'd also like to create native Windows/Mac/Linux(GTK) varients as well, but that currently seems very unlikely.
 
 ## How do I use it?
 1. Download the latest release from the releases tab.
@@ -37,7 +33,4 @@ Please note that this project is still in the prototyping phase, and should only
      1. If the client receives a success, it will highlight the key in green for 250ms
  6. If the server encounters an issues, it returns an error
      1. If the client receives an error, it will highlight the key in red for 250ms.
-     
-## What is the future of this project.
-Currently, I'm writing a proper version of this app with a user facing front end written in electron
 
