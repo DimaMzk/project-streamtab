@@ -2,21 +2,12 @@ import { useEffect, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import styled from 'styled-components';
 import { json } from '@codemirror/lang-json';
+import * as Tabs from '@radix-ui/react-tabs';
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { defaultConfig, defaultPages, defaultMacros } from './defaultData';
 import { ShortSecondaryButton } from './components/buttons';
 
 const jsonExtensions = [json()];
-
-const TabButton = styled.button`
-  background-color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 4px 18px;
-  margin-right: 4px;
-  outline: none;
-  transition: background-color 0.3s ease;
-`;
 
 const BottomBar = styled.div`
   height: 32px;
@@ -59,6 +50,10 @@ const CodeError = styled.div`
   font-weight: bold;
   line-height: 34px;
   display: inline;
+`;
+
+const CMWrapper = styled.div`
+  height: calc(100vh - 120px);
 `;
 
 export const AdvancedEditor = (props: {
@@ -180,7 +175,7 @@ export const AdvancedEditor = (props: {
       const formatted = JSON.stringify(parsed, null, 2);
       updateCurrentCodemirrorContent(formatted);
     } catch (e) {
-      console.error(e);
+      // do nothing
     }
   };
 
@@ -205,7 +200,7 @@ export const AdvancedEditor = (props: {
 
   const FileChanges = () => {
     return (
-      <svg height="12.5" width="12.5">
+      <svg height="12.5" width="12.5" style={{ marginLeft: '10px' }}>
         <circle cx="6.25" cy="6.25" r="5" strokeWidth="3" fill="#ccc" />
       </svg>
     );
@@ -218,106 +213,105 @@ export const AdvancedEditor = (props: {
         onClick={() => {
           setShowAdvanced(false);
         }}
-      >
-        &lt;- Close
-      </ShortSecondaryButton>
-      <div>
-        <TabButton
-          type="button"
-          style={{
-            borderBottom: tab === 0 ? '2px solid #ccc' : '1px solid #ccc',
-          }}
-          onClick={() => {
-            setTab(0);
-          }}
-        >
-          Config {config !== oldConfig && <FileChanges />}
-        </TabButton>
-        <TabButton
-          type="button"
-          style={{
-            borderBottom: tab === 1 ? '2px solid #ccc' : '1px solid #ccc',
-          }}
-          onClick={() => {
-            setTab(1);
-          }}
-        >
-          Macros {macros !== oldMacros && <FileChanges />}
-        </TabButton>
-        <TabButton
-          type="button"
-          style={{
-            borderBottom: tab === 2 ? '2px solid #ccc' : '1px solid #ccc',
-          }}
-          onClick={() => {
-            setTab(2);
-          }}
-        >
-          Pages {pages !== oldPages && <FileChanges />}
-        </TabButton>
-        {serverRunning && (
-          <TabButton>
-            <b>Changes cannot be made while the server is running.</b>
-          </TabButton>
-        )}
-      </div>
-      <div
         style={{
-          height: 'calc(100vh - 102px)',
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
-        <CodeMirror
-          editable={!serverRunning}
-          value={config}
-          className="codeMirrorJSON"
-          extensions={jsonExtensions}
-          height="100%"
-          style={{
-            border: '1px solid #ccc',
-            borderBottom: 'none',
-            borderTop: 'none',
-            height: '100%',
-          }}
-          onChange={(value: string) => {
-            setConfig(value);
-          }}
-          hidden={tab !== 0}
-        />
-        <CodeMirror
-          editable={!serverRunning}
-          value={macros}
-          className="codeMirrorJSON"
-          extensions={jsonExtensions}
-          height="100%"
-          style={{
-            border: '1px solid #ccc',
-            borderBottom: 'none',
-            borderTop: 'none',
-            height: '100%',
-          }}
-          onChange={(value: string) => {
-            setMacros(value);
-          }}
-          hidden={tab !== 1}
-        />
-        <CodeMirror
-          editable={!serverRunning}
-          value={pages}
-          className="codeMirrorJSON"
-          extensions={jsonExtensions}
-          height="100%"
-          style={{
-            border: '1px solid #ccc',
-            borderBottom: 'none',
-            borderTop: 'none',
-            height: '100%',
-          }}
-          onChange={(value: string) => {
-            setPages(value);
-          }}
-          hidden={tab !== 2}
-        />
-      </div>
+        <ArrowLeftIcon /> Close
+      </ShortSecondaryButton>
+      <Tabs.Root className="TabsRoot" defaultValue="tab1">
+        <Tabs.List className="TabsList" aria-label="Manage your account">
+          <Tabs.Trigger
+            className="TabsTrigger"
+            value="tab1"
+            onClick={() => {
+              setTab(0);
+            }}
+          >
+            Config {config !== oldConfig && <FileChanges />}
+          </Tabs.Trigger>
+          <Tabs.Trigger
+            className="TabsTrigger"
+            value="tab2"
+            onClick={() => {
+              setTab(1);
+            }}
+          >
+            Macros {macros !== oldMacros && <FileChanges />}
+          </Tabs.Trigger>
+          <Tabs.Trigger
+            className="TabsTrigger"
+            value="tab3"
+            onClick={() => {
+              setTab(2);
+            }}
+          >
+            Pages {pages !== oldPages && <FileChanges />}
+          </Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content className="TabsContent" value="tab1">
+          <CMWrapper>
+            <CodeMirror
+              editable={!serverRunning}
+              value={config}
+              className="codeMirrorJSON"
+              extensions={jsonExtensions}
+              height="100%"
+              style={{
+                border: '1px solid #ccc',
+                borderBottom: 'none',
+                borderTop: 'none',
+                height: '100%',
+              }}
+              onChange={(value: string) => {
+                setConfig(value);
+              }}
+            />
+          </CMWrapper>
+        </Tabs.Content>
+        <Tabs.Content className="TabsContent" value="tab2">
+          <CMWrapper>
+            <CodeMirror
+              editable={!serverRunning}
+              value={macros}
+              className="codeMirrorJSON"
+              extensions={jsonExtensions}
+              height="100%"
+              style={{
+                border: '1px solid #ccc',
+                borderBottom: 'none',
+                borderTop: 'none',
+                height: '100%',
+              }}
+              onChange={(value: string) => {
+                setMacros(value);
+              }}
+            />
+          </CMWrapper>
+        </Tabs.Content>
+        <Tabs.Content className="TabsContent" value="tab3">
+          <CMWrapper>
+            <CodeMirror
+              editable={!serverRunning}
+              value={pages}
+              className="codeMirrorJSON"
+              extensions={jsonExtensions}
+              height="100%"
+              style={{
+                border: '1px solid #ccc',
+                borderBottom: 'none',
+                borderTop: 'none',
+                height: '100%',
+              }}
+              onChange={(value: string) => {
+                setPages(value);
+              }}
+            />
+          </CMWrapper>
+        </Tabs.Content>
+      </Tabs.Root>
+
       <BottomBar>
         <SaveButton
           type="button"
