@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { MinusIcon, PlusIcon } from '@radix-ui/react-icons';
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -8,52 +9,57 @@ const FlexWrapper = styled.div`
 
 const CounterLabel = styled.label`
   margin: 2px 12px 2px 12px;
-  font-size: 16px;
-  // Make text aligned vertically with the input box
+  font-size: 15px;
   align-self: center;
+  color: #202020;
 `;
 
 const IncrementButton = styled.button`
   margin: 2px 0px 2px 0px;
   height: 42px;
-  font-size: 16px;
-  font-weight: bold;
   align-self: center;
   vertical-align: bottom;
-  padding: 0 8px;
-  border: 1px solid #ccc;
   width: 30px;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.2s;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border: 1px solid #0000002b;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 100ms;
   &:hover {
-    background-color: #ccc;
+    background-color: #0000002b;
   }
 `;
 
 const DecrementButton = styled.button`
   margin: 2px 0px 2px 0px;
   height: 42px;
-  font-size: 16px;
-  font-weight: bold;
   align-self: center;
   vertical-align: bottom;
-  padding: 0 8px;
-  border: 1px solid #ccc;
   width: 30px;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.2s;
+  border: 1px solid #0000002b;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  background-color: white;
+  color: #202020;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 100ms;
   &:hover {
-    background-color: #ccc;
+    background-color: #0000002b;
   }
 `;
 
@@ -61,16 +67,18 @@ const CounterInputBox = styled.input`
   margin: 2px 0px 2px 0px;
   height: 40px;
   font-size: 16px;
-  font-weight: bold;
+  font-family: Roboto, sans-serif;
   border-radius: 0px;
-  border: none;
+  border: 1px solid #0000002b;
+  border-left: none;
+  border-right: none;
   align-self: center;
   vertical-align: bottom;
   padding: 0 8px;
   appearance: textfield;
-  border: 1px solid #ccc;
   width: 30px;
   text-align: center;
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -99,7 +107,7 @@ const CounterInput = (props: {
         }}
         disabled={value <= min}
       >
-        -
+        <MinusIcon />
       </DecrementButton>
       <CounterInputBox
         id={id}
@@ -109,9 +117,17 @@ const CounterInput = (props: {
         max={max}
         value={value}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          if (value !== parseInt(event.currentTarget.value, 10)) {
-            setValue(parseInt(event.currentTarget.value, 10));
+          let input = parseInt(event.target.value, 10);
+          if (Number.isNaN(input)) {
+            return;
           }
+          if (input < min) {
+            input = min;
+          } else if (input > max) {
+            input = max;
+          }
+
+          setValue(input);
         }}
         step={step}
       />
@@ -121,7 +137,7 @@ const CounterInput = (props: {
         }}
         disabled={value >= max}
       >
-        +
+        <PlusIcon />
       </IncrementButton>
     </FlexWrapper>
   );
